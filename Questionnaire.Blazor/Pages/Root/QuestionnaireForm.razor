@@ -1,0 +1,87 @@
+﻿@page "/root/questionnaireForm"
+
+@using Questionnaire.Domain.Models
+
+<h3>Создать опросник</h3>
+<EditForm OnSubmit=CreateQuestionnaire Model=formQuestionnaire Context="Questionnaire">
+    <div class="form-group">
+        <InputText @bind-Value=formQuestionnaire.DisplayName ></InputText>
+        <label>@DisplayNameLabel</label>
+    </div>
+
+    <div class="form-group">
+        <InputText @bind-Value=formQuestionnaire.JsonName ></InputText>
+        <label>@JsonNameLabel</label>
+    </div>
+
+    <EditForm OnSubmit=AddQuestion Model=formQuestion Context="Question" class="m-4">
+        <h4>Добавить вопрос</h4>
+        <div class="form-group">
+            <InputText @bind-Value=@formQuestion.DisplayName />
+            <label>@DisplayNameLabel</label>
+        </div>
+
+        <div class="form-group">
+            <InputText @bind-Value=@formQuestion.JsonName />
+            <label>@JsonNameLabel</label>
+        </div>
+
+        <div class="form-group">
+            <InputSelect @bind-Value=@formQuestion.QuestionType>
+                @foreach (var type in Enum.GetValues(typeof(QuestionType)))
+                {
+                    <option value=@type>@type</option>
+                }
+            </InputSelect>
+            <label>@QuestionTypeLabel</label>
+        </div>
+        <button class="btn btn-primary">Добавить вопрос</button>
+    </EditForm>
+    
+    @foreach (var question in formQuestionnaire.Questions)
+    {
+        @*<EditForm Model=question Context="CurrentQuestion" class="m-4">*@@*
+            <TextInputGroup Label=@DisplayNameLabel @bind-ValueInput=@formQuestion.DisplayName />*@
+            @*<TextInputGroup @bind-ValueInput=@question.JsonName Label=@JsonNameLabel />*@
+        @*</EditForm>*@
+    }
+    <button class="btn btn-success">Создать опросник</button>
+</EditForm>
+
+<TextInputGroup Label="23"></TextInputGroup>
+
+@code {
+    private EditContext QuestionnaireContext;
+    private EditContext QuestionContext;
+
+    private Questionnaire formQuestionnaire = new();
+    private Question formQuestion = new();
+
+    private const string DisplayNameLabel = "Отображаемое имя вопроса";
+    private const string JsonNameLabel = "Имя вопроса в json";
+    private const string QuestionTypeLabel = "Тип вопроса";
+
+    protected override void OnInitialized()
+    {
+        QuestionnaireContext = new(formQuestionnaire);
+        QuestionContext = new(formQuestion);
+    }
+
+    private void AddQuestion()
+    {
+        Question newQuestion = new()
+        {
+            DisplayName = formQuestion.DisplayName,
+            JsonName = formQuestion.JsonName,
+            QuestionType = formQuestion.QuestionType,
+        };
+
+        formQuestionnaire.Questions.Add(newQuestion);
+        StateHasChanged();
+    }
+
+    private void CreateQuestionnaire()
+    {
+        
+    }
+}
