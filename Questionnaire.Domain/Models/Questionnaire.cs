@@ -1,6 +1,6 @@
 ﻿namespace Questionnaire.Domain.Models
 {
-    public class Questionnaire
+    public class QuestionnaireModel
     {
         public string? JsonName { get; set; }
         public string? DisplayName { get; set; }

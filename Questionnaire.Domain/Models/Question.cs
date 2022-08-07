@@ -9,7 +9,7 @@ namespace Questionnaire.Domain.Models
         public QuestionType QuestionType { get; set; }
 
         public string? JsonName { get; set; }
-        public string DisplayName { get; set; }
+        public string? DisplayName { get; set; }
 
         public string? DefaultValue {get; set; }
     }

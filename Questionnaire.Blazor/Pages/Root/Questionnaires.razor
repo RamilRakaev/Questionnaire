@@ -1,5 +1,47 @@
-﻿<h3>Questionnaires</h3>
+﻿@page "/root/"
+
+@using Questionnaire.Domain.Models
+
+<h3>Опросники</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Наименование</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var questionnaire in questionnaires)
+        {
+            <tr>
+                <td>@questionnaire.DisplayName</td>
+                <td>
+                    <button class="btn btn-primary m-3">Перейти</button>
+                    <button class="btn btn-danger m-3">Удалить</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
+    private QuestionnaireModel[] questionnaires = {
+        new()
+        {
+            DisplayName = "DisplayName",
+            JsonName = "m",
+            Questions = new()
+            {
+                new()
+                {
+                    Id = 1,
+                    DefaultValue = "DefaultValue",
+                    DisplayName = "DisplayName",
+                    JsonName = "JsonName",
+                    QuestionType = QuestionType.Enumeration,
+                }
+            },
+        }
+    };
 
 }

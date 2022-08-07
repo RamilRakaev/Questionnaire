@@ -1,0 +1,25 @@
+﻿
+<div class="form-group">
+    <input type="text" value=@ValueInput @oninput=SetValue />
+    <label>@Label</label>
+</div>
+
+@code {
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public string ValueInput { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ValueInputChanged { get; set; }
+
+    private async Task SetValue(ChangeEventArgs eventArgs)
+    {
+        if (ValueInput != (string) eventArgs.Value)
+        {
+            ValueInput = (string) eventArgs.Value;
+            await ValueInputChanged.InvokeAsync((string) eventArgs.Value);
+        }
+    }
+}
