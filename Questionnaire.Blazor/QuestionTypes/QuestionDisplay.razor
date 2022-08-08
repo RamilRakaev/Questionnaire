@@ -1,0 +1,12 @@
+﻿@using Questionnaire.Blazor.Interfaces
+@using Questionnaire.Blazor.Models
+
+<h3>QuestionDisplay</h3>
+@QuestionType.Draw()
+@code {
+    [Parameter]
+    public IQuestionType QuestionType { get; set; }
+
+    [Parameter]
+    public Question Question { get; set; }
+}

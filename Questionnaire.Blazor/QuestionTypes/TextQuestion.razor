@@ -1,0 +1,35 @@
+﻿@using Questionnaire.Blazor.Interfaces
+@using Questionnaire.Blazor.Models
+
+@implements IQuestionType
+
+<div class="form-group">
+    <label>@Label</label>
+    <input type="text" value=@ValueInput class="form-control col-4" @oninput=SetValue />
+</div>
+
+@code {
+    private TextInputGroup _myCounter = null;
+    private readonly Question question;
+    private readonly Answer answer;
+
+    protected override void OnInitialized()
+    {
+        _myCounter.ValueInputChanged = new EventCallback<string>(Change);
+    }
+    public RenderFragment Draw()
+    {
+        return new RenderFragment(builder =>
+        {
+            builder.OpenComponent<TextInputGroup>(0);
+            builder.AddAttribute(1, "ValueInput", text);
+            builder.AddComponentReferenceCapture(2, inst => { _myCounter = (TextInputGroup)inst; });
+            builder.CloseComponent();
+        });
+    }
+
+    private void Change(string value)
+    {
+        answer.Value = value;
+    }
+}

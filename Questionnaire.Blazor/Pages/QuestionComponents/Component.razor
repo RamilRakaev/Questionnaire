@@ -1,0 +1,30 @@
+﻿@using Questionnaire.Blazor.QuestionTypes
+<h3>Component</h3>
+
+@DrawCounter()
+<button @onclick=Click>Нажать</button>
+
+@code{
+
+    private TextInputGroup _myCounter = null;
+    private string text = "text";
+    RenderFragment DrawCounter()
+    {
+        return new RenderFragment(builder =>
+        {
+            builder.OpenComponent<TextInputGroup>(0);
+            builder.AddAttribute(1, "ValueInput", text);
+            builder.AddComponentReferenceCapture(2, inst => { _myCounter = (TextInputGroup)inst; });
+            builder.CloseComponent();
+        });
+    }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private void Click()
+    {
+        
+    }
+}

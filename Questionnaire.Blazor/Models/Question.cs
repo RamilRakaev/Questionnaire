@@ -1,6 +1,6 @@
-﻿using Questionnaire.Domain.Interfaces;
+﻿using Questionnaire.Blazor.Interfaces;
 
-namespace Questionnaire.Domain.Models
+namespace Questionnaire.Blazor.Models
 {
     public class Question
     {

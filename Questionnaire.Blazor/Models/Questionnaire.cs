@@ -1,4 +1,6 @@
-﻿namespace Questionnaire.Domain.Models
+﻿using System.Collections.Generic;
+
+namespace Questionnaire.Blazor.Models
 {
     public class QuestionnaireModel
     {

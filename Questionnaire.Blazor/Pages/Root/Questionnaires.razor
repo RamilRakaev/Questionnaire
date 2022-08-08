@@ -1,7 +1,8 @@
 ﻿@page "/root/"
 
-@using Questionnaire.Domain.Models
-@CreateComponent()
+@using Questionnaire.Blazor.Models
+
+<Component/>
 <h3>Опросники</h3>
 <table>
     <thead>
@@ -41,17 +42,6 @@
                     QuestionType = QuestionType.Enumeration,
                 }
             },
-        }
-    };
-
-    private RenderFragment CreateComponent() => builder =>
-    {
-        for (var i = 0; i < 3; i++) 
-        {
-            builder.OpenComponent(0, typeof(EnumerationGroup<QuestionType>));
-            builder.AddAttribute(1, "ValueInput", QuestionType.DateTime);
-            builder.AddAttribute(1, "Label", "Бредятина");
-            builder.CloseComponent();
         }
     };
 }

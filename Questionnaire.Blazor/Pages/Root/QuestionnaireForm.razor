@@ -1,6 +1,7 @@
 ﻿@page "/root/questionnaireForm"
 
-@using Questionnaire.Domain.Models
+@using Questionnaire.Blazor.Models
+
 
 <h3>Создать опросник</h3>
 <EditForm OnSubmit=CreateQuestionnaire Model=formQuestionnaire Context="Questionnaire">
@@ -28,8 +29,6 @@
     <button class="btn btn-success">Создать опросник</button>
 </EditForm>
 
-<TextInputGroup Label="23"></TextInputGroup>
-
 @code {
     private QuestionnaireModel formQuestionnaire = new();
     private Question formQuestion = new();
@@ -41,6 +40,7 @@
 
     protected override void OnInitialized()
     {
+        
     }
 
     private void AddQuestion()
