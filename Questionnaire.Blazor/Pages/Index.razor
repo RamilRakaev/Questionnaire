@@ -1,7 +1,23 @@
 ﻿@page "/"
+@using Questionnaire.Blazor.Models
+@using Questionnaire.Blazor.QuestionTypes
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+<Questionnaire.Blazor.QuestionTypes.QuestionDisplay Question=question Answer=answer />
+
+@code{
+    private TextQuestion text;
+    private Question question;
+    private Answer answer;
+
+    protected override void OnInitialized()
+    {
+        text = new();
+        question = new();
+        answer = new();
+    }
+}

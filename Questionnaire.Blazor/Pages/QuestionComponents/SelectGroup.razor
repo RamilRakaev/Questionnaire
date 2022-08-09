@@ -1,0 +1,34 @@
+﻿@using Questionnaire.Blazor.Models
+
+<div class="form-group">
+    <select class="custom-select" @oninput=SetValue>
+        @foreach (var value in AllowedValues)
+        {
+            <option value=@value>@value</option>
+        }
+    </select>
+    <label>@Label</label>
+</div>
+
+@code {
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public string[] AllowedValues { get; set; }
+
+    [Parameter]
+    public string? ValueInput { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> ValueInputChanged { get; set; }
+
+    private async Task SetValue(ChangeEventArgs eventArgs)
+    {
+        if (ValueInput != (string) eventArgs.Value)
+        {
+            ValueInput = (string) eventArgs.Value;
+            await ValueInputChanged.InvokeAsync((string) eventArgs.Value);
+        }
+    }
+}

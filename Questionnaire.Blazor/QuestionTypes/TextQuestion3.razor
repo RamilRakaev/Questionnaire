@@ -1,0 +1,14 @@
+﻿@using Questionnaire.Blazor.Models
+
+@code {
+    public Question Question { get; set; }
+    public Answer Answer { get; set; }
+
+        public RenderFragment Draw()
+    {
+        return __builder =>
+        {
+            <TextQuestion Question=@Question Answer=@Answer />
+        };
+    }
+}

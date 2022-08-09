@@ -1,35 +1,28 @@
 ﻿@using Questionnaire.Blazor.Interfaces
 @using Questionnaire.Blazor.Models
 
-@implements IQuestionType
 
 <div class="form-group">
-    <label>@Label</label>
-    <input type="text" value=@ValueInput class="form-control col-4" @oninput=SetValue />
+    <label>@Question.DisplayName</label>
+    <input type="text" value=@Question.DefaultValue class="form-control col-4" @oninput=SetValue />
 </div>
 
 @code {
-    private TextInputGroup _myCounter = null;
-    private readonly Question question;
-    private readonly Answer answer;
+    [Parameter]
+    public Question Question { get; set; }
 
-    protected override void OnInitialized()
+    [Parameter]
+    public Answer Answer { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ValueInputChanged { get; set; }
+
+    private async Task SetValue(ChangeEventArgs eventArgs)
     {
-        _myCounter.ValueInputChanged = new EventCallback<string>(Change);
-    }
-    public RenderFragment Draw()
-    {
-        return new RenderFragment(builder =>
+        if (Answer.Value != (string) eventArgs.Value)
         {
-            builder.OpenComponent<TextInputGroup>(0);
-            builder.AddAttribute(1, "ValueInput", text);
-            builder.AddComponentReferenceCapture(2, inst => { _myCounter = (TextInputGroup)inst; });
-            builder.CloseComponent();
-        });
-    }
-
-    private void Change(string value)
-    {
-        answer.Value = value;
+            Answer.Value = (string) eventArgs.Value.ToString();
+            await ValueInputChanged.InvokeAsync(Answer.Value.ToString());
+        }
     }
 }

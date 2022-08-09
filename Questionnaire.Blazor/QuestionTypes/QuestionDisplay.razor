@@ -2,11 +2,51 @@
 @using Questionnaire.Blazor.Models
 
 <h3>QuestionDisplay</h3>
-@QuestionType.Draw()
+@switch(Question.QuestionType)
+{
+    case QuestionType.Text:
+        @TextQuestionDisplay()
+        break;
+    case QuestionType.Enumeration:
+
+        break;
+}
+
+<button @onclick=Push>Нажми</button>
 @code {
     [Parameter]
-    public IQuestionType QuestionType { get; set; }
+    public Question Question { get; set; }
 
     [Parameter]
-    public Question Question { get; set; }
+    public Answer Answer { get; set; }
+
+    public RenderFragment TextQuestionDisplay()
+    {
+        return __builder =>
+        {
+            <TextInputGroup Label=@Question.DisplayName @bind-ValueInput="@Answer.Value" />
+        };
+    }
+
+    //public RenderFragment TextQuestion3Display()
+    //{
+    //    var render = __builder =>
+    //    {
+    //        <TextQuestion3 Label=@Question.DisplayName @bind-ValueInput="@Answer.Value" />
+    //    };
+
+    //    return render;
+    //}
+    //public RenderFragment EnumerationQuestionDisplay()
+    //{
+    //    return __builder =>
+    //    {
+    //        <EnumerationGroup Label=@Question.DisplayName @bind-ValueInput="@Answer.Value" />
+    //    };
+    //}
+
+    private void Push()
+    {
+        
+    }
 }
