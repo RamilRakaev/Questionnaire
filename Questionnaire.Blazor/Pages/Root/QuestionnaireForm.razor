@@ -1,7 +1,7 @@
 ﻿@page "/root/questionnaireForm"
 
+@using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Blazor.Models
-
 
 <h3>Создать опросник</h3>
 <EditForm OnSubmit=CreateQuestionnaire Model=formQuestionnaire Context="Questionnaire">
@@ -13,7 +13,7 @@
         <TextInputGroup @bind-ValueInput=formQuestion.DisplayName Label=@DisplayNameLabel />
         <TextInputGroup @bind-ValueInput=formQuestion.JsonName Label=@JsonNameLabel />
         <TextInputGroup @bind-ValueInput=formQuestion.DefaultValue Label=@DefaultValueLabel />
-        <EnumerationGroup @bind-ValueInput=formQuestion.QuestionType Enumeration=typeof(QuestionType) Label=@QuestionTypeLabel />
+        <EnumerationGroup @bind-ValueInput=formQuestion.QuestionType Enumeration="QuestionType" Label=@QuestionTypeLabel />
         <button class="btn btn-primary">Добавить вопрос</button>
     </EditForm>
 
@@ -23,15 +23,17 @@
             <TextInputGroup @bind-ValueInput=question.DisplayName Label=@DisplayNameLabel />
             <TextInputGroup @bind-ValueInput=question.JsonName Label=@JsonNameLabel />
             <TextInputGroup @bind-ValueInput=question.DefaultValue Label=@DefaultValueLabel />
-            <EnumerationGroup @bind-ValueInput=question.QuestionType Enumeration=typeof(QuestionType) Label=@QuestionTypeLabel />
+            <EnumerationGroup @bind-ValueInput=question.QuestionType Enumeration="QuestionType" Label=@QuestionTypeLabel />
         </EditForm>
     }
     <button class="btn btn-success">Создать опросник</button>
 </EditForm>
 
+<TextInputGroup Label="23"></TextInputGroup>
+
 @code {
     private QuestionnaireModel formQuestionnaire = new();
-    private Question formQuestion = new();
+    private TextQuestion formQuestion = new();
 
     private const string DisplayNameLabel = "Отображаемое имя вопроса";
     private const string JsonNameLabel = "Имя вопроса в json";
@@ -40,17 +42,16 @@
 
     protected override void OnInitialized()
     {
-        
     }
 
     private void AddQuestion()
     {
-        Question newQuestion = new()
-        {
-            DisplayName = formQuestion.DisplayName,
-            JsonName = formQuestion.JsonName,
-            QuestionType = formQuestion.QuestionType,
-        };
+        TextQuestion newQuestion = new()
+            {
+                DisplayName = formQuestion.DisplayName,
+                JsonName = formQuestion.JsonName,
+                QuestionType = formQuestion.QuestionType,
+            };
 
         formQuestionnaire.Questions.Add(newQuestion);
         StateHasChanged();

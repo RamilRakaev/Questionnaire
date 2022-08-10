@@ -14,9 +14,14 @@
     [Parameter]
     public EventCallback<string> ValueInputChanged { get; set; }
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
     private async Task SetValue(ChangeEventArgs eventArgs)
     {
-        if (ValueInput.Equals(eventArgs.Value) == false)
+        if (ValueInput.ToString() != eventArgs.Value.ToString())
         {
             ValueInput = eventArgs.Value.ToString();
             await ValueInputChanged.InvokeAsync(ValueInput);

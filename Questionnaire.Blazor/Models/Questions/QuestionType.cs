@@ -1,4 +1,4 @@
-﻿namespace Questionnaire.Blazor.Models
+﻿namespace Questionnaire.Blazor.Models.Questions
 {
     public enum QuestionType
     {

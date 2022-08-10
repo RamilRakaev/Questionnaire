@@ -1,30 +1,68 @@
-﻿@using Questionnaire.Blazor.QuestionTypes
-<h3>Component</h3>
-
-@DrawCounter()
-<button @onclick=Click>Нажать</button>
+﻿@using Questionnaire.Blazor.Models
+@using Questionnaire.Blazor.QuestionTypes
 
 @code{
 
-    private TextInputGroup _myCounter = null;
-    private string text = "text";
-    RenderFragment DrawCounter()
+    public TextInputGroup textInputGroup = null;
+
+    public string Text { get; set; } = "text";
+
+    //[Parameter]
+    //public Question Question { get; set; }
+
+    //[Parameter]
+    //public Answer Answer { get; set; }
+
+    //public ElementReference? Element { get; protected set; }
+
+    //public RenderFragment Draw()
+    //{
+    //    return new RenderFragment(builder =>
+    //    {
+    //        builder.OpenComponent<TextInputGroup>(0);
+    //        //builder.AddElementReferenceCapture(1, __inputReference => Element = __inputReference);
+    //        builder.AddAttribute(2, "ValueInput", text);
+    //        builder.AddComponentReferenceCapture(3, inst => { _myCounter = (TextInputGroup)inst; });
+    //        builder.CloseComponent();
+    //    });
+    //}
+
+    //public RenderFragment Draw()
+    //{
+    //    Question = new();
+    //    Question.DisplayName = "name";
+    //    Answer = new();
+    //    Answer.Value = "popka";
+    //    return __builder =>
+    //    {
+    //        <TextInputGroup @bind-ValueInput=Answer.Value Label=@Question.DisplayName />
+    //    };
+    //}
+    [Parameter]
+    public EventCallback<string> ValueInputChanged { get; set; }
+
+    public RenderFragment Draw()
     {
         return new RenderFragment(builder =>
         {
             builder.OpenComponent<TextInputGroup>(0);
-            builder.AddAttribute(1, "ValueInput", text);
-            builder.AddComponentReferenceCapture(2, inst => { _myCounter = (TextInputGroup)inst; });
+            builder.AddAttribute(1, "ValueInput", Text);
+            builder.AddComponentReferenceCapture(3, inst => { textInputGroup = (TextInputGroup)inst; });
+            builder.AddAttribute(4, "onchange", EventCallback.Factory.CreateBinder<string?>(this, __value => Text = __value, Text));
             builder.CloseComponent();
         });
     }
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-    }
 
-    private void Click()
+    public void Method()
     {
         
     }
+
+    //protected override void OnInitialized()
+    //{
+    //    Question = new();
+    //    Question.DisplayName = "name";
+    //    Answer = new();
+    //    Answer.Value = "popka";
+    //}
 }

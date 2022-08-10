@@ -1,0 +1,35 @@
+﻿@using Questionnaire.Blazor.Models
+@using Questionnaire.Blazor.Models.Questions
+
+@code {
+    [Parameter]
+    public TextQuestion Question { get; set; }
+
+    [Parameter]
+    public Answer Answer { get; set; }
+
+    //public RenderFragment Draw()
+    //{
+    //    return __builder =>
+    //    {
+    //        <div class="form-group">
+    //            <label>@Question.DisplayName</label>
+    //            <input type="text" value=@Question.DefaultValue class="form-control col-4" />
+    //    </div>
+    //    };
+    //}
+
+    event Action SetValue;
+
+    [Parameter]
+    public EventCallback<string> ValueInputChanged { get; set; }
+
+    //private async Task SetValue(ChangeEventArgs eventArgs)
+    //{
+    //    if (Answer.Value != eventArgs.Value.ToString())
+    //    {
+    //        Answer.Value = eventArgs.Value.ToString();
+    //        await ValueInputChanged.InvokeAsync(Answer.Value.ToString());
+    //    }
+    //}
+}

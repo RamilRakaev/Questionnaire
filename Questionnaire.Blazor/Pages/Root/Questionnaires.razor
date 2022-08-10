@@ -1,8 +1,8 @@
 ﻿@page "/root/"
 
+@using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Blazor.Models
 
-<Component/>
 <h3>Опросники</h3>
 <table>
     <thead>
@@ -39,7 +39,7 @@
                     DefaultValue = "DefaultValue",
                     DisplayName = "DisplayName",
                     JsonName = "JsonName",
-                    QuestionType = QuestionType.Enumeration,
+                    QuestionType = QuestionTypes.Text,
                 }
             },
         }

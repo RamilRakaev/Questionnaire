@@ -1,23 +1,42 @@
 ﻿@page "/"
 @using Questionnaire.Blazor.Models
-@using Questionnaire.Blazor.QuestionTypes
+@using Questionnaire.Blazor.Models.Questions
+@using Questionnaire.Blazor.Trash
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
-<Questionnaire.Blazor.QuestionTypes.QuestionDisplay Question=question Answer=answer />
 
+@comp.Draw()
+<button @onclick=Click>Нажать</button>
 @code{
-    private TextQuestion text;
-    private Question question;
-    private Answer answer;
+    private Component comp;
+    private TextQuestion Question;
+    private Answer Answer;
 
     protected override void OnInitialized()
     {
-        text = new();
-        question = new();
-        answer = new();
+        comp = new();
+        Question = new();
+        Question.DisplayName = "name";
+        Answer = new();
+        Answer.Value = "popka";
+        //comp.Question = question = new();
+        //comp.Answer = answer = new();
+    }
+
+    public RenderFragment Draw()
+    {
+        return __builder =>
+        {
+            <TextInputGroup @bind-ValueInput=Answer.Value Label=@Question.DisplayName />
+        };
+    }
+
+    private void Click()
+    {
+        
     }
 }
