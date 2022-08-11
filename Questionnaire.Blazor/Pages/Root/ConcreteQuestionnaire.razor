@@ -1,0 +1,69 @@
+﻿@page "/"
+
+@using Questionnaire.Blazor.Models
+@using Questionnaire.Blazor.Models.Questions
+
+<h3>ConcreteQuestionnaire</h3>
+<EditForm Model=@Questionnaire OnValidSubmit=Send>
+    @foreach(var pair in Questionnaire.QuestionAnswerPairs)
+    {
+        <QuestionDisplay Question=pair.Key Answer=pair.Value />
+    }
+    <button class="btn btn-success">Отправить</button>
+</EditForm>
+@code {
+    [Parameter]
+    public QuestionnaireModel Questionnaire { get; set; } = new()
+    {
+        DisplayName = "DisplayName",
+        JsonName = "m",
+        QuestionAnswerPairs = new()
+        {
+            {
+                new TextQuestion()
+                {
+                    Id = 1,
+                    DefaultValue = "DefaultValue",
+                    DisplayName = "DisplayName",
+                    JsonName = "JsonName",
+                },
+                new Answer()
+            },
+            {
+                new EnumerationQuestion()
+                {
+                    Id = 2,
+                    DisplayName = "Вопрос с перечислением",
+                    JsonName = "Вопрос с перечислением",
+                    AllowedValues = new string[]{ "Пукнуть", "Пописать" },
+                },
+                new Answer()
+            },
+            {
+                new DateTimeQuestion()
+                {
+                    Id = 2,
+                    DisplayName = "Вопрос с датой",
+                    JsonName = "Вопрос с датой",
+                    DefaultValue = DateTime.Now.ToString("s"),
+                },
+                new Answer()
+            },
+            {
+                new BoolQuestion()
+                {
+                    Id = 2,
+                    DisplayName = "Вопрос с датой",
+                    JsonName = "Вопрос с датой",
+                    DefaultValue = "true",
+                },
+                new Answer()
+            },
+        },
+    };
+
+    private void Send()
+    {
+        NavigationManager.NavigateTo(NavigationLinks.Questionnaires);
+    }
+}

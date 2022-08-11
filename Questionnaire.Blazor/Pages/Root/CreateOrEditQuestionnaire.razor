@@ -1,4 +1,4 @@
-﻿@page "/root/questionnaireForm"
+﻿@page "/root/createOrEditQuestionnaire"
 
 @using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Blazor.Models
@@ -13,23 +13,19 @@
         <TextInputGroup @bind-ValueInput=formQuestion.DisplayName Label=@DisplayNameLabel />
         <TextInputGroup @bind-ValueInput=formQuestion.JsonName Label=@JsonNameLabel />
         <TextInputGroup @bind-ValueInput=formQuestion.DefaultValue Label=@DefaultValueLabel />
-        <EnumerationGroup @bind-ValueInput=formQuestion.QuestionType Enumeration="QuestionType" Label=@QuestionTypeLabel />
         <button class="btn btn-primary">Добавить вопрос</button>
     </EditForm>
 
-    @foreach (var question in formQuestionnaire.Questions)
+    @foreach (var pair in formQuestionnaire.QuestionAnswerPairs)
     {
-        <EditForm Model=question class="m-4">
-            <TextInputGroup @bind-ValueInput=question.DisplayName Label=@DisplayNameLabel />
-            <TextInputGroup @bind-ValueInput=question.JsonName Label=@JsonNameLabel />
-            <TextInputGroup @bind-ValueInput=question.DefaultValue Label=@DefaultValueLabel />
-            <EnumerationGroup @bind-ValueInput=question.QuestionType Enumeration="QuestionType" Label=@QuestionTypeLabel />
+        <EditForm Model=pair.Key class="m-4">
+            <TextInputGroup @bind-ValueInput=pair.Key.DisplayName Label=@DisplayNameLabel />
+            <TextInputGroup @bind-ValueInput=pair.Key.JsonName Label=@JsonNameLabel />
+            <TextInputGroup @bind-ValueInput=pair.Key.DefaultValue Label=@DefaultValueLabel />
         </EditForm>
     }
     <button class="btn btn-success">Создать опросник</button>
 </EditForm>
-
-<TextInputGroup Label="23"></TextInputGroup>
 
 @code {
     private QuestionnaireModel formQuestionnaire = new();
@@ -40,20 +36,15 @@
     private const string DefaultValueLabel = "Значение по умолчанию";
     private const string QuestionTypeLabel = "Тип вопроса";
 
-    protected override void OnInitialized()
-    {
-    }
-
     private void AddQuestion()
     {
         TextQuestion newQuestion = new()
-            {
-                DisplayName = formQuestion.DisplayName,
-                JsonName = formQuestion.JsonName,
-                QuestionType = formQuestion.QuestionType,
-            };
+        {
+            DisplayName = formQuestion.DisplayName,
+            JsonName = formQuestion.JsonName,
+        };
 
-        formQuestionnaire.Questions.Add(newQuestion);
+        formQuestionnaire.QuestionAnswerPairs.Add(newQuestion, new Answer(newQuestion.Id));
         StateHasChanged();
     }
 

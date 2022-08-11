@@ -1,6 +1,4 @@
-﻿using Questionnaire.Blazor.Interfaces;
-
-namespace Questionnaire.Blazor.Models.Questions
+﻿namespace Questionnaire.Blazor.Models.Questions
 {
     public class TextQuestion : QuestionBase
     {

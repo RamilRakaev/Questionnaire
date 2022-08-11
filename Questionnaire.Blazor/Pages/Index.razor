@@ -1,4 +1,5 @@
-﻿@page "/"
+﻿
+
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Blazor.Trash
@@ -9,7 +10,7 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
-@comp.Draw()
+
 <button @onclick=Click>Нажать</button>
 @code{
     private Component comp;

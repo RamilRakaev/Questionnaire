@@ -1,5 +1,5 @@
 ﻿@using Questionnaire.Blazor.Models
-@using Questionnaire.Blazor.QuestionTypes
+@using Questionnaire.Blazor.Trash
 
 @code{
 
@@ -41,17 +41,17 @@
     [Parameter]
     public EventCallback<string> ValueInputChanged { get; set; }
 
-    public RenderFragment Draw()
-    {
-        return new RenderFragment(builder =>
-        {
-            builder.OpenComponent<TextInputGroup>(0);
-            builder.AddAttribute(1, "ValueInput", Text);
-            builder.AddComponentReferenceCapture(3, inst => { textInputGroup = (TextInputGroup)inst; });
-            builder.AddAttribute(4, "onchange", EventCallback.Factory.CreateBinder<string?>(this, __value => Text = __value, Text));
-            builder.CloseComponent();
-        });
-    }
+    //public RenderFragment Draw()
+    //{
+    //    return new RenderFragment(builder =>
+    //    {
+    //        builder.OpenComponent<TextInputGroup>(0);
+    //        builder.AddAttribute(1, "ValueInput", Text);
+    //        builder.AddComponentReferenceCapture(3, inst => { textInputGroup = (TextInputGroup)inst; });
+    //        builder.AddAttribute(4, "onchange", EventCallback.Factory.CreateBinder<string?>(this, __value => Text = __value, Text));
+    //        builder.CloseComponent();
+    //    });
+    //}
 
     public void Method()
     {

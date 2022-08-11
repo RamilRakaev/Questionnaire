@@ -8,6 +8,6 @@ namespace Questionnaire.Blazor.Models
         public string? JsonName { get; set; }
         public string? DisplayName { get; set; }
 
-        public List<TextQuestion> Questions { get; set; } = new();
+        public Dictionary<QuestionBase, Answer> QuestionAnswerPairs { get; set; } = new();
     }
 }

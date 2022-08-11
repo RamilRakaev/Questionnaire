@@ -1,7 +1,7 @@
 ﻿
 <div class="form-group">
     <label>@Label</label>
-    <input type=@InputType value=@Value class="form-control col-4" @oninput=SetValue />
+    <input type=@InputType value=@DefaultValue class=@CssClass @attributes=Attributes @oninput=SetValue />
 </div>
 
 @code {
@@ -9,20 +9,35 @@
     public string Value { get; set; }
 
     [Parameter]
-    public string Label { get; set; }
-
-    [Parameter]
     public string InputType { get; set; }
 
     [Parameter]
-    public EventCallback<string> ValueInputChanged { get; set; }
+    public string Label { get; set; }
+
+    [Parameter]
+    public string DefaultValue { get; set; }
+
+    [Parameter]
+    public Dictionary<string, object> Attributes { get; set; } = new();
+
+    [Parameter]
+    public string CssClass { get; set; } = "form-control col-4";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Value = DefaultValue;
+        await ValueChanged.InvokeAsync(DefaultValue);
+    }
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
 
     private async Task SetValue(ChangeEventArgs eventArgs)
     {
-        if (Value == eventArgs.Value.ToString())
+        if (Value != eventArgs.Value.ToString())
         {
             Value = eventArgs.Value.ToString();
-            await ValueInputChanged.InvokeAsync(Value);
+            await ValueChanged.InvokeAsync(Value);
         }
     }
 }

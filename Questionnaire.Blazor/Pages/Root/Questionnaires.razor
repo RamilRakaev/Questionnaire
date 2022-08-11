@@ -16,6 +16,7 @@
         {
             <tr>
                 <td>@questionnaire.DisplayName</td>
+                <td>@questionnaire.DisplayName</td>
                 <td>
                     <button class="btn btn-primary m-3">Перейти</button>
                     <button class="btn btn-danger m-3">Удалить</button>
@@ -31,16 +32,27 @@
         {
             DisplayName = "DisplayName",
             JsonName = "m",
-            Questions = new()
+            QuestionAnswerPairs = new()
             {
-                new()
                 {
-                    Id = 1,
-                    DefaultValue = "DefaultValue",
-                    DisplayName = "DisplayName",
-                    JsonName = "JsonName",
-                    QuestionType = QuestionTypes.Text,
-                }
+                    new TextQuestion()
+                    {
+                        Id = 1,
+                        DefaultValue = "DefaultValue",
+                        DisplayName = "DisplayName",
+                        JsonName = "JsonName",
+                    },
+                    new Answer()
+                },
+                {
+                    new EnumerationQuestion()
+                    {
+                        Id = 2,
+                        DisplayName = "Вопрос с перечислением",
+                        JsonName = "Вопрос с перечислением",
+                    },
+                    new Answer()
+                },
             },
         }
     };

@@ -14,9 +14,11 @@
     case QuestionTypes.Datetime:
         @DatetimeQuestionDisplay()
         break;
+    case QuestionTypes.Bool:
+        @BoolQuestionDisplay()
+        break;
 }
 
-<button @onclick=Push>Нажми</button>
 @code {
     [Parameter]
     public QuestionBase Question { get; set; }
@@ -24,11 +26,19 @@
     [Parameter]
     public Answer Answer { get; set; }
 
+    protected override void OnInitialized()
+    {
+        Answer.Value = Question.DefaultValue;
+    }
+
     public RenderFragment TextQuestionDisplay()
     {
         return __builder =>
         {
-            <QuestionComponent @bind-ValueInput=@Answer.Value InputType=@QuestionTypes.Text Label=@Question.DisplayName />
+            <QuestionComponent
+                @bind-Value=@Answer.Value
+                InputType=@QuestionTypes.Text
+                Label=@Question.DisplayName />
         };
     }
 
@@ -38,7 +48,10 @@
 
         return __builder =>
         {
-            <SelectGroup AllowedValues=@currentQuestion.AllowedValues ValueInput=@Answer.Value Label=@currentQuestion.DisplayName />
+            <SelectGroup
+                @bind-ValueInput=Answer.Value
+                AllowedValues=@currentQuestion.AllowedValues
+                Label=@currentQuestion.DisplayName />
         };
     }
 
@@ -48,7 +61,31 @@
 
         return __builder =>
         {
-            <QuestionComponent @bind-Value=@Answer.Value InputType=@QuestionTypes.Datetime Label=@Question.DisplayName />
+            <QuestionComponent
+                @bind-Value=@Answer.Value
+                InputType=@QuestionTypes.Datetime
+                Label=@Question.DisplayName />
+        };
+    }
+
+    private RenderFragment BoolQuestionDisplay()
+    {
+        var currentQuestion = Question as BoolQuestion;
+
+        Dictionary<string, object> attributes = new()
+        {
+            {"checked", currentQuestion.DefaultValue },
+        };
+
+        return __builder =>
+        {
+         
+            <QuestionComponent
+                @bind-Value=@Answer.Value
+                InputType=@QuestionTypes.Bool
+                Label=@Question.DisplayName
+                Attributes=@attributes
+                CssClass="" />
         };
     }
 
