@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Questionnaire.Blazor", "Que
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Questionnaire.Domain", "Questionnaire.Domain\Questionnaire.Domain.csproj", "{1873F828-849C-4AA2-8316-C7F37B6F62A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Questionnaire.Infrastructure", "Questionnaire.Infrastructure\Questionnaire.Infrastructure.csproj", "{77CEC28A-812C-4375-B71A-312498F9A0FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Questionnaire.Infrastructure", "Questionnaire.Infrastructure\Questionnaire.Infrastructure.csproj", "{77CEC28A-812C-4375-B71A-312498F9A0FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,42 @@
+﻿@using Questionnaire.Blazor.Models.Questions
+
+<EditForm Model=@CurrentQuestion OnSubmit=CreateQuestion>
+    <SelectGroup @bind-ValueInput=currentType AllowedOptions=@types Label="Выберите тип вопроса" />
+    
+    @switch (currentType)
+    {
+        case QuestionTypes.Enumeration:
+            <CreateEnumerationQuestion CurrentQuestion=@CurrentQuestion />
+            break;
+        default:
+            <TextInputGroup @bind-ValueInput=CurrentQuestion.DisplayName Label="Отображаемое имя вопроса" />
+            break;
+    }
+    <button class="btn btn-success">Создать</button>
+</EditForm>
+
+@code {
+    private Dictionary<string, string> types;
+
+    private string currentType;
+
+    [Parameter]
+    public QuestionBase CurrentQuestion { get; set; }
+
+    protected override void OnInitialized()
+    {
+        types = typeof(QuestionTypes)
+            .GetFields()
+            .Select(field => new
+            {
+                Name = field.Name, Value = field.GetValue(field)
+            })
+            .ToDictionary(field => field.Name, field => field.Value.ToString());
+        currentType = types.FirstOrDefault().Value;
+    }
+
+    private void CreateQuestion()
+    {
+        
+    }
+}

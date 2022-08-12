@@ -36,6 +36,19 @@
     private const string DefaultValueLabel = "Значение по умолчанию";
     private const string QuestionTypeLabel = "Тип вопроса";
 
+    private Dictionary<string, object> constants;
+
+    protected override void OnInitialized()
+    {
+        constants = typeof(QuestionTypes)
+            .GetFields()
+            .Select(field => new
+            {
+                Name = field.Name, Value = field.GetValue(field)
+            })
+            .ToDictionary(field => field.Name, field => field.Value);
+    }
+
     private void AddQuestion()
     {
         TextQuestion newQuestion = new()

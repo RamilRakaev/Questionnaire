@@ -5,6 +5,7 @@
         public const string Text = "text";
         public const string Datetime = "datetime-local";
         public const string Enumeration = "enumeration";
+        public const string EnumerationElement = "enumeration-element";
         public const string Bool = "checkbox";
     }
 }

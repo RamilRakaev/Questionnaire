@@ -1,0 +1,30 @@
+﻿@using Questionnaire.Blazor.Models.Questions
+
+<TextInputGroup @bind-ValueInput=CurrentQuestion.DisplayName Label="Вопрос" />
+<TextInputGroup @bind-ValueInput=CurrentQuestion.JsonName Label="Вопрос отображаемый в json" />
+<h4>Допустимые значения</h4>
+<button class="btn btn-primary" @onclick=AddValue>Добавить</button>
+
+@foreach (var value in CurrentQuestion.SubQuestions)
+{
+    <TextInputGroup @bind-ValueInput=value.DisplayName />
+}
+
+@code {
+    [Parameter]
+    public QuestionBase CurrentQuestion { get; set; }
+
+    protected override void OnInitialized()
+    {
+        CurrentQuestion.SubQuestions = new();
+    }
+
+    private void AddValue()
+    { 
+        var newQuestion = new QuestionBase()
+        {
+            QuestionType = QuestionTypes.EnumerationElement,
+        };
+        CurrentQuestion.SubQuestions.Add(newQuestion);
+    }
+}

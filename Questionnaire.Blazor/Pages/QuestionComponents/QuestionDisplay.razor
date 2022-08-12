@@ -46,11 +46,14 @@
     {
         var currentQuestion = Question as EnumerationQuestion;
 
+        var valuesDictionary = currentQuestion.AllowedValues
+        .ToDictionary(value => value, value => value);
+
         return __builder =>
         {
             <SelectGroup
                 @bind-ValueInput=Answer.Value
-                AllowedValues=@currentQuestion.AllowedValues
+                AllowedOptions=@valuesDictionary
                 Label=@currentQuestion.DisplayName />
         };
     }
@@ -79,7 +82,6 @@
 
         return __builder =>
         {
-         
             <QuestionComponent
                 @bind-Value=@Answer.Value
                 InputType=@QuestionTypes.Bool
