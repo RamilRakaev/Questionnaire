@@ -18,7 +18,7 @@
                 <td>@questionnaire.DisplayName</td>
                 <td>@questionnaire.DisplayName</td>
                 <td>
-                    <button class="btn btn-primary m-3">Перейти</button>
+                    <a class="btn btn-primary m-3" href="@NavigationLinks.ConcreteQuestionnaire">Перейти</a>
                     <button class="btn btn-danger m-3">Удалить</button>
                 </td>
             </tr>
@@ -35,17 +35,16 @@
             QuestionAnswerPairs = new()
             {
                 {
-                    new TextQuestion()
+                    new QuestionBase()
                     {
                         Id = 1,
-                        DefaultValue = "DefaultValue",
                         DisplayName = "DisplayName",
                         JsonName = "JsonName",
                     },
                     new Answer()
                 },
                 {
-                    new EnumerationQuestion()
+                    new QuestionBase()
                     {
                         Id = 2,
                         DisplayName = "Вопрос с перечислением",

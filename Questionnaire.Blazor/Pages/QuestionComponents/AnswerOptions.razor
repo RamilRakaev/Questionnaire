@@ -1,0 +1,25 @@
+﻿<ol>
+    @foreach (var option in Options)
+    {
+        <li>@option</li>
+    }
+</ol>
+
+<TextInputGroup @bind-ValueInput=currentOption />
+
+<div class="form-group">
+    <button @onclick=AddOption class="btn btn-info">Добавить вариант</button>
+</div>
+
+@code {
+    [Parameter]
+    public List<string> Options { get; set; }
+
+    private string currentOption = "";
+
+    private void AddOption()
+    {
+        Options.Add(currentOption);
+        currentOption = "";
+    }
+}

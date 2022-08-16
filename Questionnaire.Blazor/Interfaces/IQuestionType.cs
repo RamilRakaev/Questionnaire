@@ -7,7 +7,7 @@ namespace Questionnaire.Blazor.Interfaces
 {
     public abstract class IQuestionType : ComponentBase
     {
-        public TextQuestion Question { get; set; }
+        public QuestionBase Question { get; set; }
         public Answer Answer { get; set; }
 
         public abstract RenderFragment Draw();

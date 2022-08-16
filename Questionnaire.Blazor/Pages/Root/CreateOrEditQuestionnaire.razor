@@ -1,68 +1,62 @@
-﻿@page "/root/createOrEditQuestionnaire"
+﻿@page "/root/createOrEditQuestionnaire/"
 
 @using Questionnaire.Blazor.Models.Questions
-@using Questionnaire.Blazor.Models
 
-<h3>Создать опросник</h3>
-<EditForm OnSubmit=CreateQuestionnaire Model=formQuestionnaire Context="Questionnaire">
-    <TextInputGroup @bind-ValueInput=formQuestionnaire.DisplayName Label=@DisplayNameLabel />
-    <TextInputGroup @bind-ValueInput=formQuestionnaire.JsonName Label=@JsonNameLabel />
-
-    <EditForm OnSubmit=AddQuestion Model=formQuestion Context="Question" class="m-4">
-        <h4>Добавить вопрос</h4>
-        <TextInputGroup @bind-ValueInput=formQuestion.DisplayName Label=@DisplayNameLabel />
-        <TextInputGroup @bind-ValueInput=formQuestion.JsonName Label=@JsonNameLabel />
-        <TextInputGroup @bind-ValueInput=formQuestion.DefaultValue Label=@DefaultValueLabel />
-        <button class="btn btn-primary">Добавить вопрос</button>
-    </EditForm>
-
-    @foreach (var pair in formQuestionnaire.QuestionAnswerPairs)
-    {
-        <EditForm Model=pair.Key class="m-4">
-            <TextInputGroup @bind-ValueInput=pair.Key.DisplayName Label=@DisplayNameLabel />
-            <TextInputGroup @bind-ValueInput=pair.Key.JsonName Label=@JsonNameLabel />
-            <TextInputGroup @bind-ValueInput=pair.Key.DefaultValue Label=@DefaultValueLabel />
-        </EditForm>
-    }
-    <button class="btn btn-success">Создать опросник</button>
-</EditForm>
+<TextInputGroup @bind-ValueInput=label />
+<div class="form-group">
+    <label class="form-check-label">Ввести свои варианты ответа</label>
+    <input type="checkbox" @onclick=CheckAnswerOptions class="ml-2 form-check-label"/>
+</div>
+@if (addAnswerOptions)
+{
+    <AnswerOptions Options=@options />
+    <button class="btn btn-success" @onclick=CreateEnumerationQuestion>Создать</button>
+}
+else
+{
+    <SelectGroup @bind-ValueInput=type AllowedOptions=@types Label="Тип вопроса" />
+    <button class="btn btn-success" @onclick=CreateQuestion>Создать</button>
+}
 
 @code {
-    private QuestionnaireModel formQuestionnaire = new();
-    private TextQuestion formQuestion = new();
+    private bool addAnswerOptions;
+    private string label = "";
+    private string type;
 
-    private const string DisplayNameLabel = "Отображаемое имя вопроса";
-    private const string JsonNameLabel = "Имя вопроса в json";
-    private const string DefaultValueLabel = "Значение по умолчанию";
-    private const string QuestionTypeLabel = "Тип вопроса";
+    private List<string> options;
 
-    private Dictionary<string, object> constants;
+    private Dictionary<string, string> types;
+
+    [Parameter]
+    public QuestionBase CurrentQuestion { get; set; }
 
     protected override void OnInitialized()
     {
-        constants = typeof(QuestionTypes)
-            .GetFields()
-            .Select(field => new
-            {
-                Name = field.Name, Value = field.GetValue(field)
-            })
-            .ToDictionary(field => field.Name, field => field.Value);
+        types = new()
+        {
+            { "Текст", "text" },
+            { "Дата время", "datetime-local" },
+            { "Номер", "number" },
+            { "Перечисление", "number" },
+            { "Чекбокс", "checkbox" },
+        };
+        type = types.FirstOrDefault().Value;
+        options = new();
     }
 
-    private void AddQuestion()
+    private void CheckAnswerOptions()
     {
-        TextQuestion newQuestion = new()
-        {
-            DisplayName = formQuestion.DisplayName,
-            JsonName = formQuestion.JsonName,
-        };
-
-        formQuestionnaire.QuestionAnswerPairs.Add(newQuestion, new Answer(newQuestion.Id));
+        addAnswerOptions = !addAnswerOptions;
         StateHasChanged();
     }
 
-    private void CreateQuestionnaire()
+    private void CreateEnumerationQuestion()
     {
+        
+    }
 
+    private void CreateQuestion()
+    {
+        CurrentQuestion = new();
     }
 }

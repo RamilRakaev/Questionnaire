@@ -1,42 +1,63 @@
-﻿@using Questionnaire.Blazor.Models.Questions
+﻿
 
-<EditForm Model=@CurrentQuestion OnSubmit=CreateQuestion>
-    <SelectGroup @bind-ValueInput=currentType AllowedOptions=@types Label="Выберите тип вопроса" />
-    
-    @switch (currentType)
-    {
-        case QuestionTypes.Enumeration:
-            <CreateEnumerationQuestion CurrentQuestion=@CurrentQuestion />
-            break;
-        default:
-            <TextInputGroup @bind-ValueInput=CurrentQuestion.DisplayName Label="Отображаемое имя вопроса" />
-            break;
-    }
-    <button class="btn btn-success">Создать</button>
-</EditForm>
+@using Questionnaire.Blazor.Models.Questions
+
+
+<TextInputGroup @bind-ValueInput=label />
+<div class="form-group">
+    <label class="form-check-label">Ввести свои варианты ответа</label>
+    <input type="checkbox" @onclick=CheckAnswerOptions class="ml-2 form-check-label"/>
+</div>
+@if (addAnswerOptions)
+{
+    <AnswerOptions Options=@options />
+    <button class="btn btn-success" @onclick=CreateEnumerationQuestion>Создать</button>
+}
+else
+{
+    <SelectGroup @bind-ValueInput=type AllowedOptions=@types Label="Тип вопроса" />
+    <button class="btn btn-success" @onclick=CreateQuestion>Создать</button>
+}
 
 @code {
-    private Dictionary<string, string> types;
+    private bool addAnswerOptions;
+    private string label = "";
+    private string type;
 
-    private string currentType;
+    private List<string> options;
+
+    private Dictionary<string, string> types;
 
     [Parameter]
     public QuestionBase CurrentQuestion { get; set; }
 
     protected override void OnInitialized()
     {
-        types = typeof(QuestionTypes)
-            .GetFields()
-            .Select(field => new
-            {
-                Name = field.Name, Value = field.GetValue(field)
-            })
-            .ToDictionary(field => field.Name, field => field.Value.ToString());
-        currentType = types.FirstOrDefault().Value;
+        types = new()
+        {
+            { "Текст", "text" },
+            { "Дата время", "datetime-local" },
+            { "Номер", "number" },
+            { "Перечисление", "number" },
+            { "Чекбокс", "checkbox" },
+        };
+        type = types.FirstOrDefault().Value;
+        options = new();
+    }
+
+    private void CheckAnswerOptions()
+    {
+        addAnswerOptions = !addAnswerOptions;
+        StateHasChanged();
+    }
+
+    private void CreateEnumerationQuestion()
+    {
+        
     }
 
     private void CreateQuestion()
     {
-        
+        CurrentQuestion = new();
     }
 }

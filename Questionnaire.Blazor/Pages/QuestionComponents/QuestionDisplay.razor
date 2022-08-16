@@ -1,23 +1,32 @@
 ﻿@using Questionnaire.Blazor.Interfaces
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Blazor.Models.Questions
+@using Questionnaire.Blazor.Models.Questions.Tags
 
-<h3>QuestionDisplay</h3>
-@switch (Question.QuestionType)
-{
-    case QuestionTypes.Text:
-        @TextQuestionDisplay()
-        break;
-    case QuestionTypes.Enumeration:
-        @EnumerationQuestionDisplay()
-        break;
-    case QuestionTypes.Datetime:
-        @DatetimeQuestionDisplay()
-        break;
-    case QuestionTypes.Bool:
-        @BoolQuestionDisplay()
-        break;
-}
+<div class="form-group col-6">
+    @foreach (var tag in Question.HtmlTags)
+    {
+        @switch (tag.TagName)
+        {
+            case TagName.Label:
+            <label>@tag.Value</label>
+                break;
+
+            case TagName.Input:
+            <input @attributes=tag.Attrubutes @bind-value=Answer.Value />
+                break;
+
+            case TagName.Select:
+            <select @attributes=tag.Attrubutes @bind=Answer.Value>
+                @foreach (var option in tag.ChildTags)
+                {
+                    <option @attributes=option.Attrubutes>@option.Value</option> 
+                }
+            </select>
+                break;
+        }
+    }
+</div>
 
 @code {
     [Parameter]
@@ -25,91 +34,4 @@
 
     [Parameter]
     public Answer Answer { get; set; }
-
-    protected override void OnInitialized()
-    {
-        Answer.Value = Question.DefaultValue;
-    }
-
-    public RenderFragment TextQuestionDisplay()
-    {
-        return __builder =>
-        {
-            <QuestionComponent
-                @bind-Value=@Answer.Value
-                InputType=@QuestionTypes.Text
-                Label=@Question.DisplayName />
-        };
-    }
-
-    public RenderFragment EnumerationQuestionDisplay()
-    {
-        var currentQuestion = Question as EnumerationQuestion;
-
-        var valuesDictionary = currentQuestion.AllowedValues
-        .ToDictionary(value => value, value => value);
-
-        return __builder =>
-        {
-            <SelectGroup
-                @bind-ValueInput=Answer.Value
-                AllowedOptions=@valuesDictionary
-                Label=@currentQuestion.DisplayName />
-        };
-    }
-
-    private RenderFragment DatetimeQuestionDisplay()
-    {
-        var currentQuestion = Question as DateTimeQuestion;
-
-        return __builder =>
-        {
-            <QuestionComponent
-                @bind-Value=@Answer.Value
-                InputType=@QuestionTypes.Datetime
-                Label=@Question.DisplayName />
-        };
-    }
-
-    private RenderFragment BoolQuestionDisplay()
-    {
-        var currentQuestion = Question as BoolQuestion;
-
-        Dictionary<string, object> attributes = new()
-        {
-            {"checked", currentQuestion.DefaultValue },
-        };
-
-        return __builder =>
-        {
-            <QuestionComponent
-                @bind-Value=@Answer.Value
-                InputType=@QuestionTypes.Bool
-                Label=@Question.DisplayName
-                Attributes=@attributes
-                CssClass="" />
-        };
-    }
-
-    //public RenderFragment TextQuestion3Display()
-    //{
-    //    var render = __builder =>
-    //    {
-    //        <TextQuestion3 Label=@Question.DisplayName @bind-ValueInput="@Answer.Value" />
-    //    };
-
-    //    return render;
-    //}
-    //public RenderFragment EnumerationQuestionDisplay()
-    //{
-    //    return __builder =>
-    //    {
-    //        <EnumerationGroup Label=@Question.DisplayName @bind-ValueInput="@Answer.Value" />
-    //    };
-    //}
-
-    private void Push()
-    {
-
-    }
 }

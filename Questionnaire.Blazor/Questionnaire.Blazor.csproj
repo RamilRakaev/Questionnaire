@@ -8,8 +8,4 @@
     <ProjectReference Include="..\Questionnaire.Domain\Questionnaire.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\QuestionComponents\Create\" />
-  </ItemGroup>
-
 </Project>

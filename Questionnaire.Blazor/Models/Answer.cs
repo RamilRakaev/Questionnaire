@@ -12,6 +12,11 @@
             QuestionId = questionId;
         }
 
+        public Answer(string мalue)
+        {
+            Value = мalue;
+        }
+
         public int Id { get; set; }
 
         public int QuestionId { get; set; }
