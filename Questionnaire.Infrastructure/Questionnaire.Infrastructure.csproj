@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,10 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\Requests\" />
-    <Folder Include="Commands\Handlers\" />
-    <Folder Include="Queries\Handlers\" />
-    <Folder Include="Queries\Requests\" />
+    <Folder Include="Commands\Handlers\UniversalHandlers\" />
+    <Folder Include="Commands\Requests\UniversalCommands\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Questionnaire.Infrastructure.Database\Questionnaire.Infrastructure.Database.csproj" />
   </ItemGroup>
 
 </Project>

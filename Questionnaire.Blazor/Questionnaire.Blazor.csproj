@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Questionnaire.Domain\Questionnaire.Domain.csproj" />
+    <ProjectReference Include="..\Questionnaire.Infrastructure\Questionnaire.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

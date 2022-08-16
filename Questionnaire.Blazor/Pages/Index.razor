@@ -27,7 +27,7 @@ Welcome to your new app.
         Question = new();
         Question.DisplayName = "name";
         Answer = new();
-        Answer.Value = "popka";
+        Answer.Name = "popka";
         //comp.Question = question = new();
         //comp.Answer = answer = new();
     }
@@ -36,7 +36,7 @@ Welcome to your new app.
     {
         return __builder =>
         {
-            <TextInputGroup @bind-ValueInput=Answer.Value Label=@Question.DisplayName />
+            <TextInputGroup @bind-ValueInput=Answer.Name Label=@Question.DisplayName />
         };
     }
 

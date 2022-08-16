@@ -13,11 +13,11 @@
                 break;
 
             case TagName.Input:
-            <input @attributes=tag.Attrubutes @bind-value=Answer.Value />
+            <input @attributes=tag.Attrubutes @bind-value=Answer.Name />
                 break;
 
             case TagName.Select:
-            <select @attributes=tag.Attrubutes @bind=Answer.Value>
+            <select @attributes=tag.Attrubutes @bind=Answer.Name>
                 @foreach (var option in tag.ChildTags)
                 {
                     <option @attributes=option.Attrubutes>@option.Value</option> 

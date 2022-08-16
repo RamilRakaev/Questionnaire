@@ -14,13 +14,13 @@
 
         public Answer(string мalue)
         {
-            Value = мalue;
+            Name = мalue;
         }
 
         public int Id { get; set; }
 
         public int QuestionId { get; set; }
 
-        public string Value { get; set; }
+        public string Name { get; set; }
     }
 }
