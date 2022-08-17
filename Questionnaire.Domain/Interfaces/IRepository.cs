@@ -4,7 +4,7 @@ namespace Questionnaire.Domain.Interfaces
 {
     public interface IRepository<Entity> where Entity : BaseEntity
     {
-        public ValueTask<Entity?> GetAsync(int id, CancellationToken cancellationToken);
+        public ValueTask<Entity> GetAsync(int id, CancellationToken cancellationToken);
         
         public IQueryable<Entity> GetAllAsNoTracking();
         public IQueryable<Entity> GetAllAsync();

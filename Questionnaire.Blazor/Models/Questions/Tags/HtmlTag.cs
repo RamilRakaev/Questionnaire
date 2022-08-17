@@ -11,6 +11,5 @@ namespace Questionnaire.Blazor.Models.Questions.Tags
         public HtmlTag[] ChildTags { get; set; }
 
         public string Value { get; set; }
-        public string JsonValue { get; set; }
     }
 }

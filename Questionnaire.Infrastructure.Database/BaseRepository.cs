@@ -13,37 +13,32 @@ namespace Questionnaire.Infrastructure.Database
             _context = context;
         }
 
-        public ValueTask<Entity?> GetAsync(int id, CancellationToken cancellationToken)
-        {
-            return _context.Set<Entity>().FindAsync(id, cancellationToken);
+        public async ValueTask<Entity> GetAsync(int id, CancellationToken cancellationToken) {
+
+            var entity = await _context.Set<Entity>().FindAsync(id, cancellationToken);
+            return entity ?? throw new NullReferenceException("Entity not found in DB");
         }
 
-        public IQueryable<Entity> GetAllAsync()
-        {
-            return _context.Set<Entity>().AsNoTracking();
-        }
+        public IQueryable<Entity> GetAllAsync() => _context.Set<Entity>().AsNoTracking();
 
-        public IQueryable<Entity> GetAllAsNoTracking()
-        {
-            return _context.Set<Entity>().AsNoTracking();
-        }
+        public IQueryable<Entity> GetAllAsNoTracking() => _context.Set<Entity>().AsNoTracking();
 
         public async Task AddAsync(Entity entity, CancellationToken cancellationToken)
         {
             await _context.Set<Entity>().AddAsync(entity, cancellationToken);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task DeleteAsync(Entity entity, CancellationToken cancellationToken)
         {
             _context.Set<Entity>().Remove(entity);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task UpdateAsync(Entity entity, CancellationToken cancellationToken)
         {
             _context.Set<Entity>().Update(entity);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -23,28 +23,28 @@
         QuestionAnswerPairs = new()
         {
             {
-                new QuestionBase("Введите цифру", "number")
+                new QuestionBase("Введите цифру", "", "number")
                 {
                     Id = 1,
                 },
                 new Answer("2")
             },
             {
-                new QuestionBase("Введите дату", "datetime-local")
+                new QuestionBase("Введите дату", "", "datetime-local")
                 {
                     Id = 1,
                 },
                 new Answer(DateTime.Now.ToString("s"))
             },
             {
-                new QuestionBase("Введите что-нибудь", "text")
+                new QuestionBase("Введите что-нибудь", "", "text")
                 {
                     Id = 1,
                 },
                 new Answer("text")
             },
             {
-                new QuestionBase("Выбери, что сделать", new string[] { "Пукнуть", "Пописать" })
+                new QuestionBase("Выбери, что сделать", "", new string[] { "Пукнуть", "Пописать" })
                 {
                     Id = 2,
                 },

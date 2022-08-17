@@ -1,15 +1,17 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Questionnaire.Blazor.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Questionnaire.Domain.Entities;
+using Questionnaire.Domain.Interfaces;
+using Questionnaire.Infrastructure;
+using Questionnaire.Infrastructure.Commands.Handlers.UniversalHandlers;
+using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands;
+using Questionnaire.Infrastructure.Database;
 
 namespace Questionnaire.Blazor
 {
@@ -29,7 +31,20 @@ namespace Questionnaire.Blazor
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+
+            services.AddDbContext<Context>(o => o.UseNpgsql(Configuration.GetConnectionString("DefaultDbConnection"),
+                o => o.MigrationsAssembly(typeof(Context).Assembly.FullName)));
+
+            services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
+
+            services.AddMediatR(CQRSAssemblyInfo.Assembly);
+            //services.ConfigureEntitiesQueryHandlers<BaseEntity>(typeof(GetEntitiesQuery<>), typeof(GetEntitiesHandler<>));
+            //services.ConfigureEntityQueryHandlers<BaseEntity>(typeof(GetEntityQuery<>), typeof(GetEntityHandler<>));
+
+            //services.ConfigureEntityCommandHandlers<BaseEntity>(typeof(CreateOrChangeEntityCommand<>), typeof(CreateOrChangeEntityHandler<>));
+            services.ConfigureEntityCommandHandlers<BaseEntity>(typeof(RemoveEntityCommand<>), typeof(RemoveEntityHandler<>));
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

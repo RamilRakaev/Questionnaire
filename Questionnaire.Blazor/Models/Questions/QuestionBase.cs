@@ -6,14 +6,17 @@ namespace Questionnaire.Blazor.Models.Questions
 {
     public class QuestionBase
     {
-        public QuestionBase(string label, string questionType, string cssClasses = "form-control")
+        public QuestionBase(string displayName, string jsonName, string questionType, string cssClasses = "form-control")
         {
+            DisplayName = displayName;
+            JsonName = jsonName;
+
             HtmlTags = new HtmlTag[]
             {
                 new()
                 {
                     TagName = TagName.Label,
-                    Value = label,
+                    Value = DisplayName,
                 },
                 new()
                 {
@@ -27,14 +30,17 @@ namespace Questionnaire.Blazor.Models.Questions
             };
         }
 
-        public QuestionBase(string label, string[] options, string cssClasses = "custom-select")
+        public QuestionBase(string displayName, string jsonName, string[] options, string cssClasses = "custom-select")
         {
+            DisplayName = displayName;
+            JsonName = jsonName;
+
             HtmlTags = new HtmlTag[]
             {
                 new()
                 {
                     TagName = TagName.Label,
-                    Value = label,
+                    Value = DisplayName,
                 },
                 new()
                 {
