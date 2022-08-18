@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace Questionnaire.Blazor.Models.Questions
 {
-    public class QuestionBase
+    public class QuestionModel
     {
-        public QuestionBase(string displayName, string jsonName, string questionType, string cssClasses = "form-control")
+        public QuestionModel(string displayName, string jsonName, string questionType, string cssClasses = "form-control")
         {
             DisplayName = displayName;
             JsonName = jsonName;
@@ -30,7 +30,7 @@ namespace Questionnaire.Blazor.Models.Questions
             };
         }
 
-        public QuestionBase(string displayName, string jsonName, string[] options, string cssClasses = "custom-select")
+        public QuestionModel(string displayName, string jsonName, string[] options, string cssClasses = "custom-select")
         {
             DisplayName = displayName;
             JsonName = jsonName;
@@ -63,7 +63,7 @@ namespace Questionnaire.Blazor.Models.Questions
             };
         }
 
-        public QuestionBase()
+        public QuestionModel()
         {
 
         }
@@ -75,6 +75,6 @@ namespace Questionnaire.Blazor.Models.Questions
         public string JsonName { get; set; }
         public string DisplayName { get; set; }
 
-        public List<QuestionBase> SubQuestions { get; set; }
+        public List<QuestionModel> SubQuestions { get; set; }
     }
 }

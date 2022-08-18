@@ -13,6 +13,7 @@ using Questionnaire.Infrastructure;
 using Questionnaire.Infrastructure.Commands.Handlers.UniversalHandlers;
 using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands;
 using Questionnaire.Infrastructure.Database;
+using AutoMapper;
 
 namespace Questionnaire.Blazor
 {
@@ -29,8 +30,6 @@ namespace Questionnaire.Blazor
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            PropertyEntity ent = new() { DisplayName = "name", Type = QuestionType.Enumeration, Options = new string[] { "11", "22" } };
-            TagsCreator.CreateTags(ent);
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
@@ -41,6 +40,8 @@ namespace Questionnaire.Blazor
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
 
             services.AddMediatR(CQRSAssemblyInfo.Assembly);
+
+            services.AddMapper();
             //services.ConfigureEntitiesQueryHandlers<BaseEntity>(typeof(GetEntitiesQuery<>), typeof(GetEntitiesHandler<>));
             //services.ConfigureEntityQueryHandlers<BaseEntity>(typeof(GetEntityQuery<>), typeof(GetEntityHandler<>));
 

@@ -32,27 +32,8 @@
         {
             DisplayName = "DisplayName",
             JsonName = "m",
-            QuestionAnswerPairs = new()
-            {
-                {
-                    new QuestionBase()
-                    {
-                        Id = 1,
-                        DisplayName = "DisplayName",
-                        JsonName = "JsonName",
-                    },
-                    new Answer()
-                },
-                {
-                    new QuestionBase()
-                    {
-                        Id = 2,
-                        DisplayName = "Вопрос с перечислением",
-                        JsonName = "Вопрос с перечислением",
-                    },
-                    new Answer()
-                },
-            },
         }
     };
+
+    private Dictionary<QuestionModel, AnswerModel[]> questionAnswerPairs { get; set; } = new();
 }
