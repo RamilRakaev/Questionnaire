@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Questionnaire.Blazor.Data;
+using Questionnaire.Blazor.Models.Questions.Tags;
 using Questionnaire.Domain.Entities;
 using Questionnaire.Domain.Interfaces;
 using Questionnaire.Infrastructure;
@@ -28,6 +29,8 @@ namespace Questionnaire.Blazor
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            PropertyEntity ent = new() { DisplayName = "name", Type = QuestionType.Enumeration, Options = new string[] { "11", "22" } };
+            TagsCreator.CreateTags(ent);
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();

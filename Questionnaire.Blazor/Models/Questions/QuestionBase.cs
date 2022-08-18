@@ -49,7 +49,8 @@ namespace Questionnaire.Blazor.Models.Questions
                     {
                         { "class", cssClasses },
                     },
-                    ChildTags = options.Select(option => new HtmlTag()
+                    ChildTags = options
+                    .Select(option => new HtmlTag()
                     {
                         Value = option,
                         Attrubutes = new()

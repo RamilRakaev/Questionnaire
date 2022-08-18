@@ -10,6 +10,6 @@ namespace Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
             Entity = entity;
         }
 
-        public T Entity { get; set; }
+        public T Entity { get; private set; }
     }
 }

@@ -10,6 +10,6 @@ namespace Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
             Id = id;
         }
 
-        public int Id { get; set; }
+        public int Id { get; private set; }
     }
 }
