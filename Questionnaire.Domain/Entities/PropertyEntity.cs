@@ -10,6 +10,6 @@
 
         public QuestionType Type { get; set; }
 
-        public string[] Options { get; set; }
+        public List<string> Options { get; set; }
     }
 }

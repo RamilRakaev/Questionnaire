@@ -1,62 +1,116 @@
 ﻿@page "/root/createOrEditQuestionnaire/"
+@page "/"
 
+@using AutoMapper
+@using MediatR
+@using Questionnaire.Blazor.Models
 @using Questionnaire.Blazor.Models.Questions
+@using Questionnaire.Domain.Entities
+@using Questionnaire.Infrastructure.Commands.Requests.Questionnaires
+@using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
+@using AutoMapper.QueryableExtensions
 
-<TextInputGroup @bind-ValueInput=label />
-<div class="form-group">
-    <label class="form-check-label">Ввести свои варианты ответа</label>
-    <input type="checkbox" @onclick=CheckAnswerOptions class="ml-2 form-check-label"/>
-</div>
-@if (addAnswerOptions)
-{
-    <AnswerOptions Options=@options />
-    <button class="btn btn-success" @onclick=CreateEnumerationQuestion>Создать</button>
-}
-else
-{
-    <SelectGroup @bind-ValueInput=type AllowedOptions=@types Label="Тип вопроса" />
-    <button class="btn btn-success" @onclick=CreateQuestion>Создать</button>
-}
+<EditForm Model=questionnaire OnValidSubmit=CreateQuestionnaire>
+    <div class="form-group">
+        <label>Отображаемое имя опросника</label>
+        <InputText @bind-Value=questionnaire.DisplayName class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Имя опросника в json</label>
+        <InputText @bind-Value=questionnaire.JsonName class="form-control" />
+    </div>
+    <ul>
+        @foreach (var question in questions)
+        {
+            <li>@question.DisplayName @question.JsonName @question.QuestionType</li>
+        }
+    </ul>
+    <button class="btn btn-success">Создать опросник</button>
+</EditForm>
+<EditForm Model=currentQuestion OnValidSubmit=CreateEnumerationQuestion>
+    <div class="form-group">
+        <label>Отображаемое имя вопроса</label>
+        <InputText @bind-Value=currentQuestion.DisplayName class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Имя вопроса в json</label>
+        <InputText @bind-Value=currentQuestion.JsonName class="form-control" />
+    </div>
+    <div class="form-group">
+        <label class="form-check-label">Ввести свои варианты ответа</label>
+        <InputCheckbox @bind-Value=addAnswerOptions class="ml-2 form-check-label" />
+    </div>
+    <div class="form-group">
+        <label>Тип вопроса</label>
+        <InputSelect @bind-Value=currentQuestion.QuestionType class="custom-select">
+            <option value="Text" selected>Текст</option>
+            <option value="Boolean">Чекбокс</option>
+            <option value="Number">Номер</option>
+            <option value="DateTime">Дата время</option>
+            <option value="Enumeration">Перечисление</option>
+        </InputSelect>
+    </div>
 
+    <button class="btn btn-success" @onclick=CreateQuestion>Создать вопрос</button>
+    @if (addAnswerOptions)
+    {
+        <AnswerOptions Options=@options />
+        <button class="btn btn-success">Создать</button>
+    }
+</EditForm>
 @code {
     private bool addAnswerOptions;
-    private string label = "";
-    private string type;
 
     private List<string> options;
 
-    private Dictionary<string, string> types;
+    private QuestionnaireModel questionnaire = new();
+    private List<QuestionModel> questions = new();
 
-    [Parameter]
-    public QuestionModel CurrentQuestion { get; set; }
+    private QuestionModel currentQuestion;
+
+    [Inject]
+    private IMapper Mapper { get; set; }
+
+    [Inject]
+    private IMediator Mediator { get; set; }
 
     protected override void OnInitialized()
     {
-        types = new()
-        {
-            { "Текст", "text" },
-            { "Дата время", "datetime-local" },
-            { "Номер", "number" },
-            { "Перечисление", "number" },
-            { "Чекбокс", "checkbox" },
-        };
-        type = types.FirstOrDefault().Value;
-        options = new();
-    }
 
-    private void CheckAnswerOptions()
-    {
-        addAnswerOptions = !addAnswerOptions;
-        StateHasChanged();
+        options = new();
+        questionnaire = new()
+        {
+            DisplayName = "",
+            JsonName = "",
+        };
+
+        currentQuestion = new()
+        {
+            DisplayName = "",
+            JsonName = "",
+            QuestionType = "Text",
+        };
     }
 
     private void CreateEnumerationQuestion()
     {
-        
     }
 
     private void CreateQuestion()
     {
-        CurrentQuestion = new();
+        questions.Add(currentQuestion);
+        currentQuestion = new()
+        {
+            DisplayName = "",
+            JsonName = "",
+        };
+    }
+
+    private async Task CreateQuestionnaire()
+    {
+        var questionnaireEntity = Mapper.Map<QuestionnaireEntity>(questionnaire);
+        var questionEntities = Mapper.Map<PropertyEntity[]>(questions);
+
+        await Mediator.Send(new CreateQuestionnaireCommand(questionnaireEntity, questionEntities));
     }
 }

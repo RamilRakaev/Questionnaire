@@ -5,10 +5,10 @@
         public string DisplayName { get; set; }
         public string JsonName { get; set; }
 
-        public PropertyEntity[] Properties { get; set; }
+        public List<PropertyEntity> Properties { get; set; }
 
-        public string[] Options { get; set; }
+        public List<string> Options { get; set; }
 
-        public AnswerEntity[] Answers { get; set; }
+        public List<AnswerEntity> Answers { get; set; }
     }
 }

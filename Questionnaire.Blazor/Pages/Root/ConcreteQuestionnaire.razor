@@ -1,69 +1,65 @@
 ﻿@page "/root/concreteQuestionnaire"
-@page "/"
 
 @using AutoMapper
+@using MediatR
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Blazor.Models.Questions.Tags
+@using Questionnaire.Domain.Entities
+@using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 
 <h3>ConcreteQuestionnaire</h3>
 <EditForm Model=@Questionnaire OnSubmit=Send>
-    @foreach (var pair in questionAnswerPairs)
+    @foreach (var question in questions)
     {
-        <QuestionDisplay Question=pair.Key Answer=pair.Value />
+        <QuestionDisplay Question=question Answers=question.Answers />
     }
     <button class="btn btn-success">Отправить</button>
 </EditForm>
 
 @code {
     [Inject]
-    public IMapper Mapper { get; set; }
+    private IMapper Mapper { get; set; }
 
-    private QuestionModel[] questions;
-    private AnswerModel[] answers;
-    private Dictionary<QuestionModel, AnswerModel[]> questionAnswerPairs { get; set; }
-    //= new()
-    //{
-    //    {
-    //        new QuestionModel("Введите цифру", "", "number")
-    //        {
-    //            Id = 1,
-    //        },
-    //        new AnswerModel("2")
-    //    },
-    //    {
-    //        new QuestionModel("Введите дату", "", "datetime-local")
-    //        {
-    //            Id = 1,
-    //        },
-    //        new AnswerModel()
-    //    },
-    //    {
-    //        new QuestionModel("Введите что-нибудь", "", "text")
-    //        {
-    //            Id = 1,
-    //        },
-    //        new AnswerModel("text")
-    //    },
-    //    {
-    //        new QuestionModel("Выбери, что сделать", "", new string[] { "Пукнуть", "Пописать" })
-    //        {
-    //            Id = 2,
-    //        },
-    //        new AnswerModel[] { new() }
-    //    },
-    //};
+    [Inject]
+    private IMediator mediator { get; set; }
 
+    private QuestionModel[] questions = new QuestionModel[]
+    {
+        //new()
+        //{
+        //    DisplayName = "name",
+        //    JsonName = "name",
+        //    QuestionType = "Number",
+        //    QuestionnaireId = 1,
+        //}
+    };
+
+    private AnswerModel[] answers = new AnswerModel[]
+    {
+        //new()
+        //{
+        //    Name = "3",
+        //    QuestionnaireId = 1,
+        //}
+    };
 
     [Parameter]
     public QuestionnaireModel Questionnaire { get; set; } = new()
     {
-        DisplayName = "DisplayName",
-        JsonName = "m",
+        //DisplayName = "DisplayName",
+        //JsonName = "m",
     };
 
     protected override Task OnInitializedAsync()
     {
+        var properties = mediator.Send(new GetEntitiesQuery<PropertyEntity>());
+        foreach (var question in questions)
+        {
+            question.Answers = answers
+                .Where(answer => answer.QuestionnaireId == question.QuestionnaireId)
+                .ToArray();
+        }
 
         return base.OnInitializedAsync();
     }

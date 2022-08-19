@@ -29,6 +29,12 @@ namespace Questionnaire.Infrastructure.Database
             await _context.SaveChangesAsync(cancellationToken);
         }
 
+        public async Task AddRangeAsync(IEnumerable<Entity> entities, CancellationToken cancellationToken)
+        {
+            await _context.Set<Entity>().AddRangeAsync(entities, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
         public async Task DeleteAsync(Entity entity, CancellationToken cancellationToken)
         {
             _context.Set<Entity>().Remove(entity);

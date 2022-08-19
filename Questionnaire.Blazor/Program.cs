@@ -21,6 +21,10 @@ namespace Questionnaire.Blazor
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureAppConfiguration(builder =>
+                {
+                    builder.AddJsonFile("appsettings.User.json", true);
                 });
     }
 }

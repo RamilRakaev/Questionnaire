@@ -14,6 +14,8 @@ using Questionnaire.Infrastructure.Commands.Handlers.UniversalHandlers;
 using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands;
 using Questionnaire.Infrastructure.Database;
 using AutoMapper;
+using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries;
+using Questionnaire.Infrastructure.Queries.Handlers.UniversalHandlers;
 
 namespace Questionnaire.Blazor
 {
@@ -34,7 +36,7 @@ namespace Questionnaire.Blazor
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
 
-            services.AddDbContext<Context>(o => o.UseNpgsql(Configuration.GetConnectionString("DefaultDbConnection"),
+            services.AddDbContext<Context>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultDbConnection"),
                 o => o.MigrationsAssembly(typeof(Context).Assembly.FullName)));
 
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
@@ -42,10 +44,10 @@ namespace Questionnaire.Blazor
             services.AddMediatR(CQRSAssemblyInfo.Assembly);
 
             services.AddMapper();
-            //services.ConfigureEntitiesQueryHandlers<BaseEntity>(typeof(GetEntitiesQuery<>), typeof(GetEntitiesHandler<>));
-            //services.ConfigureEntityQueryHandlers<BaseEntity>(typeof(GetEntityQuery<>), typeof(GetEntityHandler<>));
+            services.ConfigureEntitiesQueryHandlers<BaseEntity>(typeof(GetEntitiesQuery<>), typeof(GetEntitiesHandler<>));
+            services.ConfigureEntityQueryHandlers<BaseEntity>(typeof(GetEntityQuery<>), typeof(GetEntityHandler<>));
 
-            //services.ConfigureEntityCommandHandlers<BaseEntity>(typeof(CreateOrChangeEntityCommand<>), typeof(CreateOrChangeEntityHandler<>));
+            services.ConfigureEntityCommandHandlers<BaseEntity>(typeof(CreateOrChangeEntityCommand<>), typeof(CreateOrChangeEntityHandler<>));
             services.ConfigureEntityCommandHandlers<BaseEntity>(typeof(RemoveEntityCommand<>), typeof(RemoveEntityHandler<>));
         }
 

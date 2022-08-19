@@ -11,6 +11,8 @@ namespace Questionnaire.Domain.Interfaces
 
         public Task AddAsync(Entity entity, CancellationToken cancellationToken);
 
+        public Task AddRangeAsync(IEnumerable<Entity> entities, CancellationToken cancellationToken);
+
         public Task UpdateAsync(Entity entity, CancellationToken cancellationToken);
 
         public Task DeleteAsync(Entity entity, CancellationToken cancellationToken);

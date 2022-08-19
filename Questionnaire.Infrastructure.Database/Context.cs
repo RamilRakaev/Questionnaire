@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Questionnaire.Domain.Entities.Identity;
 using Questionnaire.Infrastructure.Database.Configuration;
 
 namespace Questionnaire.Infrastructure.Database
 {
-    public class Context : DbContext
+    public class Context : IdentityDbContext<ApplicationUser, ApplicationRole, int>
     {
         public Context(DbContextOptions<Context> options) : base(options)
         {
@@ -11,8 +13,7 @@ namespace Questionnaire.Infrastructure.Database
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration(new AnswerConfiguration());
-            builder.ApplyConfiguration(new PropertyConfiguration());
+            builder.ApplyConfigurationsFromAssembly(GetType().Assembly);
             base.OnModelCreating(builder);
         }
     }

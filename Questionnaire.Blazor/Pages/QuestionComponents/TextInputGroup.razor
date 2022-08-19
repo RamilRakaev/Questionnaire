@@ -1,5 +1,4 @@
-﻿
-<div class="form-group">
+﻿<div class="form-group col-4">
     <label>@Label</label>
     <input type="text" value=@ValueInput class="form-control col-4" @oninput=SetValue />
 </div>
@@ -9,7 +8,7 @@
     public string Label { get; set; }
 
     [Parameter]
-    public string ValueInput { get; set; } = "";
+    public string ValueInput { get; set; }
 
     [Parameter]
     public EventCallback<string> ValueInputChanged { get; set; }
