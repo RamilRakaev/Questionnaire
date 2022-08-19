@@ -27,7 +27,7 @@
     </ul>
     <button class="btn btn-success">Создать опросник</button>
 </EditForm>
-<EditForm Model=currentQuestion OnValidSubmit=CreateEnumerationQuestion>
+<EditForm Model=currentQuestion OnValidSubmit=CreateQuestion>
     <div class="form-group">
         <label>Отображаемое имя вопроса</label>
         <InputText @bind-Value=currentQuestion.DisplayName class="form-control" />
@@ -37,30 +37,27 @@
         <InputText @bind-Value=currentQuestion.JsonName class="form-control" />
     </div>
     <div class="form-group">
-        <label class="form-check-label">Ввести свои варианты ответа</label>
-        <InputCheckbox @bind-Value=addAnswerOptions class="ml-2 form-check-label" />
-    </div>
-    <div class="form-group">
         <label>Тип вопроса</label>
-        <InputSelect @bind-Value=currentQuestion.QuestionType class="custom-select">
+        <InputSelect @bind-Value=currentQuestion.QuestionType class="custom-select" disabled=@addAnswerOptions>
             <option value="Text" selected>Текст</option>
             <option value="Boolean">Чекбокс</option>
             <option value="Number">Номер</option>
             <option value="DateTime">Дата время</option>
-            <option value="Enumeration">Перечисление</option>
+            <option value="Enumeration" selected=@addAnswerOptions>Перечисление</option>
         </InputSelect>
     </div>
-
-    <button class="btn btn-success" @onclick=CreateQuestion>Создать вопрос</button>
+    <div class="form-group">
+        <label class="form-check-label">Ввести свои варианты ответа</label>
+        <InputCheckbox @bind-Value=addAnswerOptions class="ml-2 form-check-label" @onclick=SwitchToEnumeration />
+    </div>
     @if (addAnswerOptions)
     {
         <AnswerOptions Options=@options />
-        <button class="btn btn-success">Создать</button>
     }
+    <button class="btn btn-success">Создать</button>
 </EditForm>
 @code {
     private bool addAnswerOptions;
-
     private List<string> options;
 
     private QuestionnaireModel questionnaire = new();
@@ -76,7 +73,6 @@
 
     protected override void OnInitialized()
     {
-
         options = new();
         questionnaire = new()
         {
@@ -92,12 +88,14 @@
         };
     }
 
-    private void CreateEnumerationQuestion()
+    private void SwitchToEnumeration()
     {
+        currentQuestion.QuestionType = "Enumeration";
     }
 
     private void CreateQuestion()
     {
+        currentQuestion.Options = options;
         questions.Add(currentQuestion);
         currentQuestion = new()
         {
@@ -112,5 +110,11 @@
         var questionEntities = Mapper.Map<PropertyEntity[]>(questions);
 
         await Mediator.Send(new CreateQuestionnaireCommand(questionnaireEntity, questionEntities));
+
+        questionnaire = new()
+        {
+            DisplayName = "",
+            JsonName = "",
+        };
     }
 }
