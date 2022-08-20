@@ -16,7 +16,13 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.UniversalHandlers
 
         public async Task<Unit> Handle(RemoveEntityCommand<T> request, CancellationToken cancellationToken)
         {
-            await _entityRepostory.DeleteAsync(request.Entity, cancellationToken);
+            var entity = await _entityRepostory.GetAsync(request.EntityId, cancellationToken);
+            if (entity == null)
+            {
+                throw new NullReferenceException("Entity was not found in the database");
+            }
+            await _entityRepostory.RemoveAsync(entity, cancellationToken);
+
             return Unit.Value;
         }
     }

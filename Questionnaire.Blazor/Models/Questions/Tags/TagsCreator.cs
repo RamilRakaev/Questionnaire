@@ -15,7 +15,7 @@ namespace Questionnaire.Blazor.Models.Questions.Tags
             object obj;
             if (propertyEntity.Type == QuestionType.Enumeration)
             {
-                var constructor = factoryType.GetConstructor(new Type[] { typeof(string), typeof(string[]) });
+                var constructor = factoryType.GetConstructor(new Type[] { typeof(string), propertyEntity.Options.GetType() });
                 obj = constructor.Invoke(new object[] { propertyEntity.DisplayName, propertyEntity.Options });
             }
             else

@@ -12,7 +12,5 @@ namespace Questionnaire.Blazor.Models
 
         public AnswerModel[] Answers { get; set; }
         public QuestionModel Properties { get; set; }
-
-        public Dictionary<QuestionModel, AnswerModel[]> QuestionAnswerPairs { get; set; }
     }
 }

@@ -32,14 +32,6 @@ Welcome to your new app.
         //comp.Answer = answer = new();
     }
 
-    public RenderFragment Draw()
-    {
-        return __builder =>
-        {
-            <TextInputGroup @bind-ValueInput=Answer.Name Label=@Question.DisplayName />
-        };
-    }
-
     private void Click()
     {
         

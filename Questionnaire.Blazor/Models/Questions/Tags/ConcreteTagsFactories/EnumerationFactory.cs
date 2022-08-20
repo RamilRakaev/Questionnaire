@@ -1,12 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
 {
     public class EnumerationFactory : AbstractTagsFactory
     {
-        private readonly string[] _options;
+        private readonly IEnumerable<string> _options;
 
-        public EnumerationFactory(string displayName, string[] options) : base(displayName)
+        public EnumerationFactory(string displayName, IEnumerable<string> options) : base(displayName)
         {
             _cssClass = "custom-select";
             _options = options;

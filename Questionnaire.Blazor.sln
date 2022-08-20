@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Questionnaire.Domain", "Que
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Questionnaire.Infrastructure", "Questionnaire.Infrastructure\Questionnaire.Infrastructure.csproj", "{77CEC28A-812C-4375-B71A-312498F9A0FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Questionnaire.Infrastructure.Database", "Questionnaire.Infrastructure.Database\Questionnaire.Infrastructure.Database.csproj", "{8CB5E7EA-7197-4CF2-AA46-FBE323334EC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Questionnaire.Infrastructure.Database", "Questionnaire.Infrastructure.Database\Questionnaire.Infrastructure.Database.csproj", "{8CB5E7EA-7197-4CF2-AA46-FBE323334EC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

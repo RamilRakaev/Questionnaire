@@ -19,13 +19,13 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Questionnaires
         public async Task<Unit> Handle(CreateQuestionnaireCommand request, CancellationToken cancellationToken)
         {
             await _questionnaireRepository.AddAsync(request.Questionnaire, cancellationToken);
+            
             var properties = request.Properties
                 .Select(property =>
                 {
                     property.QuestionnaireId = request.Questionnaire.Id;
                     return property;
                 }); 
-            
             await _questionRepository.AddRangeAsync(properties, cancellationToken);
 
             return Unit.Value;

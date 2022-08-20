@@ -5,11 +5,11 @@ namespace Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
 {
     public class RemoveEntityCommand<T> : IRequest where T : BaseEntity
     {
-        public RemoveEntityCommand(T entity)
+        public RemoveEntityCommand(int entityId)
         {
-            Entity = entity;
+            EntityId = entityId;
         }
 
-        public T Entity { get; private set; }
+        public int EntityId { get; private set; }
     }
 }

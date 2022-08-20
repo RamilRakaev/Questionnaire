@@ -13,9 +13,9 @@ namespace Questionnaire.Infrastructure.Database
             _context = context;
         }
 
-        public async ValueTask<Entity> GetAsync(int id, CancellationToken cancellationToken) {
-
-            var entity = await _context.Set<Entity>().FindAsync(id, cancellationToken);
+        public async Task<Entity> GetAsync(int id, CancellationToken cancellationToken)
+        {
+            var entity = await _context.Set<Entity>().FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
             return entity ?? throw new NullReferenceException("Entity not found in DB");
         }
 
@@ -35,9 +35,15 @@ namespace Questionnaire.Infrastructure.Database
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task DeleteAsync(Entity entity, CancellationToken cancellationToken)
+        public async Task RemoveAsync(Entity entity, CancellationToken cancellationToken)
         {
             _context.Set<Entity>().Remove(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task RemoveRangeAsync(IEnumerable<Entity> entities, CancellationToken cancellationToken)
+        {
+            _context.Set<Entity>().RemoveRange(entities);
             await _context.SaveChangesAsync(cancellationToken);
         }
 

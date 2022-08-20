@@ -4,7 +4,7 @@ namespace Questionnaire.Domain.Interfaces
 {
     public interface IRepository<Entity> where Entity : BaseEntity
     {
-        public ValueTask<Entity> GetAsync(int id, CancellationToken cancellationToken);
+        public Task<Entity> GetAsync(int id, CancellationToken cancellationToken);
         
         public IQueryable<Entity> GetAllAsNoTracking();
         public IQueryable<Entity> GetAllAsync();
@@ -15,6 +15,8 @@ namespace Questionnaire.Domain.Interfaces
 
         public Task UpdateAsync(Entity entity, CancellationToken cancellationToken);
 
-        public Task DeleteAsync(Entity entity, CancellationToken cancellationToken);
+        public Task RemoveRangeAsync(IEnumerable<Entity> entities, CancellationToken cancellationToken);
+
+        public Task RemoveAsync(Entity entity, CancellationToken cancellationToken);
     }
 }

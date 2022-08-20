@@ -6,7 +6,10 @@
     }
 </ol>
 
-<TextInputGroup @bind-ValueInput=currentOption />
+<div class="form-group">
+    <label>Вариант ответа</label>
+    <InputText @bind-Value=currentOption class="form-control" />
+</div>
 
 <div class="form-group">
     <button type="button" @onclick=AddOption class="btn btn-info">Добавить вариант</button>

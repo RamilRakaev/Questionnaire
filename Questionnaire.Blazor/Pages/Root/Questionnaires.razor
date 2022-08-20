@@ -1,13 +1,20 @@
 ﻿@page "/root/"
 
+@using AutoMapper
+@using MediatR
 @using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Blazor.Models
+@using Questionnaire.Domain.Entities
+@using Questionnaire.Infrastructure.Commands.Requests.Questionnaires
+@using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
+@using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 
 <h3>Опросники</h3>
 <table>
     <thead>
         <tr>
-            <th>Наименование</th>
+            <th>Имя опроса</th>
+            <th>Имя опроса в json</th>
             <th>Действия</th>
         </tr>
     </thead>
@@ -16,10 +23,10 @@
         {
             <tr>
                 <td>@questionnaire.DisplayName</td>
-                <td>@questionnaire.DisplayName</td>
+                <td>@questionnaire.JsonName</td>
                 <td>
-                    <a class="btn btn-primary m-3" href="@NavigationLinks.ConcreteQuestionnaire">Перейти</a>
-                    <button class="btn btn-danger m-3">Удалить</button>
+                    <a class="btn btn-primary m-3" href="@NavigationLinks.ConcreteQuestionnaire/@questionnaire.Id">Перейти</a>
+                    <button class="btn btn-danger m-3" @onclick="() => Remove(questionnaire.Id)">Удалить</button>
                 </td>
             </tr>
         }
@@ -27,14 +34,28 @@
 </table>
 
 @code {
-    private QuestionnaireModel[] questionnaires =
-    {
-        new()
-        {
-            DisplayName = "DisplayName",
-            JsonName = "m",
-        }
-    };
+    private QuestionnaireModel[] questionnaires;
 
-    private Dictionary<QuestionModel, AnswerModel[]> questionAnswerPairs { get; set; } = new();
+    [Inject]
+    private IMediator Mediator { get; set; }
+
+    [Inject]
+    private IMapper Mapper { get; set; }
+
+    protected override async  Task OnInitializedAsync()
+    {
+        await UploadQuestionnaires();
+    }
+
+    private async Task Remove(int questionnaireId)
+    {
+        await Mediator.Send(new RemoveQuestionnaireCommand(questionnaireId));
+        await UploadQuestionnaires();
+    }
+
+    private async Task UploadQuestionnaires()
+    {
+        var questionnaireEntities = await Mediator.Send(new GetEntitiesQuery<QuestionnaireEntity>());
+        questionnaires = Mapper.Map<QuestionnaireModel[]>(questionnaireEntities);
+    }
 }

@@ -1,71 +1,160 @@
-﻿@page "/root/concreteQuestionnaire"
-
+﻿@page "/root/concreteQuestionnaire/{questionnaireId:int}"
+@page "/"
 @using AutoMapper
 @using MediatR
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Blazor.Models.Questions.Tags
 @using Questionnaire.Domain.Entities
+@using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 
-<h3>ConcreteQuestionnaire</h3>
-<EditForm Model=@Questionnaire OnSubmit=Send>
-    @foreach (var question in questions)
-    {
-        <QuestionDisplay Question=question Answers=question.Answers />
-    }
-    <button class="btn btn-success">Отправить</button>
+<EditForm Model=@questionnaire OnSubmit=ChangeQuestionnaire>
+    <div class="form-group">
+        <label>Имя опроса</label>
+        <InputText @bind-Value=questionnaire.DisplayName class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Имя опроса в json</label>
+        <InputText @bind-Value=questionnaire.JsonName class="form-control" />
+    </div>
+
+    <button class="btn btn-warning">Изменить опросник</button>
 </EditForm>
 
+<EditForm Model=currentQuestion OnValidSubmit=CreateQuestion>
+    <div class="form-group">
+        <label>Отображаемое имя вопроса</label>
+        <InputText @bind-Value=currentQuestion.DisplayName class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Имя вопроса в json</label>
+        <InputText @bind-Value=currentQuestion.JsonName class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Тип вопроса</label>
+        <InputSelect @bind-Value=currentQuestion.QuestionType class="custom-select" disabled=@addAnswerOptions>
+            <option value="Text" selected>Текст</option>
+            <option value="Boolean">Чекбокс</option>
+            <option value="Number">Номер</option>
+            <option value="DateTime">Дата время</option>
+            <option value="Enumeration" selected=@addAnswerOptions>Перечисление</option>
+        </InputSelect>
+    </div>
+    <div class="form-group">
+        <label class="form-check-label">Ввести свои варианты ответа</label>
+        <InputCheckbox @bind-Value=addAnswerOptions class="ml-2 form-check-label" @onclick=SwitchToEnumeration />
+    </div>
+    @if (addAnswerOptions)
+    {
+        <AnswerOptions Options=@options />
+    }
+    <button class="btn btn-success">Создать</button>
+</EditForm>
+
+<table>
+    <thead>
+        <tr>
+            <th>Имя вопроса</th>
+            <th>Имя вопроса в json</th>
+            <th>Тип вопроса</th>
+            <th>Варианты ответа</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var question in questions)
+        {
+            <tr>
+                <td><input type="text" @bind-value=@question.DisplayName class="form-control"/></td>
+                <td><input type="text" @bind-value=@question.JsonName class="form-control"/></td>
+                <td>@question.QuestionType</td>
+                <td>
+                    @if (question.Options != null)
+                    {
+                        <p>@(string.Join(", ", question.Options))</p>
+                    }
+                </td>
+                <td>
+                    <button class="btn btn-warning" @onclick="() => ChangeQuestion(question)">Изменить</button>
+                    <button class="btn btn-danger" @onclick="() => RemoveQuestion(question.Id)">Удалить</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 @code {
+    private bool addAnswerOptions;
+    private QuestionModel currentQuestion = new();
+    private List<string> options = new();
+
+    public QuestionnaireModel questionnaire { get; set; } = new();
+
+    private QuestionModel[] questions = Array.Empty<QuestionModel>();
+
     [Inject]
     private IMapper Mapper { get; set; }
 
     [Inject]
-    private IMediator mediator { get; set; }
-
-    private QuestionModel[] questions = new QuestionModel[]
-    {
-        //new()
-        //{
-        //    DisplayName = "name",
-        //    JsonName = "name",
-        //    QuestionType = "Number",
-        //    QuestionnaireId = 1,
-        //}
-    };
-
-    private AnswerModel[] answers = new AnswerModel[]
-    {
-        //new()
-        //{
-        //    Name = "3",
-        //    QuestionnaireId = 1,
-        //}
-    };
+    private IMediator Mediator { get; set; }
 
     [Parameter]
-    public QuestionnaireModel Questionnaire { get; set; } = new()
-    {
-        //DisplayName = "DisplayName",
-        //JsonName = "m",
-    };
+    public int QuestionnaireId { get; set; }
 
-    protected override Task OnInitializedAsync()
+    protected async override Task OnInitializedAsync()
     {
-        var properties = mediator.Send(new GetEntitiesQuery<PropertyEntity>());
-        foreach (var question in questions)
-        {
-            question.Answers = answers
-                .Where(answer => answer.QuestionnaireId == question.QuestionnaireId)
-                .ToArray();
-        }
-
-        return base.OnInitializedAsync();
+        await UploadQuestionnaires();
     }
 
-    private void Send()
+    private void SwitchToEnumeration()
     {
-        NavigationManager.NavigateTo(NavigationLinks.Questionnaires);
+        currentQuestion.QuestionType = "Enumeration";
+    }
+
+    private async Task ChangeQuestionnaire()
+    {
+        var questionnaireEntity = Mapper.Map<QuestionnaireEntity>(questionnaire);
+        await Mediator.Send(new CreateOrChangeEntityCommand<QuestionnaireEntity>(questionnaireEntity));
+    }
+
+    private async Task CreateQuestion()
+    {
+        currentQuestion.Options = options;
+        currentQuestion = new()
+        {
+            DisplayName = "",
+            JsonName = "",
+        };
+
+        var questionEntity = Mapper.Map<PropertyEntity>(currentQuestion);
+        AnswerEntity answer = new AnswerEntity()
+        {
+            Name = "22222"
+        };
+        await Mediator.Send(new CreateOrChangeEntityCommand<AnswerEntity>(answer));
+
+        await UploadQuestionnaires();
+    }
+
+    private async Task ChangeQuestion(QuestionModel question)
+    {
+        var questionEntity = Mapper.Map<PropertyEntity>(question);
+        await Mediator.Send(new CreateOrChangeEntityCommand<PropertyEntity>(questionEntity));
+    }
+
+    private async Task RemoveQuestion(int questionnaireId)
+    {
+        await Mediator.Send(new RemoveEntityCommand<PropertyEntity>(questionnaireId));
+        await UploadQuestionnaires();
+    }
+
+    private async Task UploadQuestionnaires()
+    {
+        var questionnaireEntity = await Mediator.Send(new GetEntityQuery<QuestionnaireEntity>(1));
+        questionnaire = Mapper.Map<QuestionnaireModel>(questionnaireEntity);
+
+        var properties = await Mediator.Send(new GetEntitiesQuery<PropertyEntity>(property => property.QuestionnaireId == 1));
+        questions = Mapper.Map<QuestionModel[]>(properties);
     }
 }

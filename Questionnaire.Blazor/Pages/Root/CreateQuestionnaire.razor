@@ -1,5 +1,4 @@
-﻿@page "/root/createOrEditQuestionnaire/"
-@page "/"
+﻿@page "/root/createQuestionnaire/"
 
 @using AutoMapper
 @using MediatR
@@ -10,7 +9,7 @@
 @using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
 @using AutoMapper.QueryableExtensions
 
-<EditForm Model=questionnaire OnValidSubmit=CreateQuestionnaire>
+<EditForm Model=questionnaire OnValidSubmit=Create>
     <div class="form-group">
         <label>Отображаемое имя опросника</label>
         <InputText @bind-Value=questionnaire.DisplayName class="form-control" />
@@ -27,6 +26,7 @@
     </ul>
     <button class="btn btn-success">Создать опросник</button>
 </EditForm>
+
 <EditForm Model=currentQuestion OnValidSubmit=CreateQuestion>
     <div class="form-group">
         <label>Отображаемое имя вопроса</label>
@@ -104,7 +104,7 @@
         };
     }
 
-    private async Task CreateQuestionnaire()
+    private async Task Create()
     {
         var questionnaireEntity = Mapper.Map<QuestionnaireEntity>(questionnaire);
         var questionEntities = Mapper.Map<PropertyEntity[]>(questions);
