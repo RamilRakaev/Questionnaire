@@ -48,13 +48,13 @@
     </div>
     @if (addAnswerOptions)
     {
-        <AnswerOptions Options=@options />
+        <AnswerOptions Options=@currentQuestion.Options />
     }
     <button class="btn btn-success">Создать</button>
 </EditForm>
 
-<table>
-    <thead>
+<table class="table">
+    <thead class="thead-light">
         <tr>
             <th>Имя вопроса</th>
             <th>Имя вопроса в json</th>
@@ -73,7 +73,7 @@
                 <td>
                     @if (question.Options != null)
                     {
-                        <p>@(string.Join(", ", question.Options))</p>
+                        <p>@(string.Join(" ", question.Options))</p>
                     }
                 </td>
                 <td>
@@ -87,7 +87,6 @@
 @code {
     private bool addAnswerOptions;
     private QuestionModel currentQuestion = new();
-    private List<string> options = new();
 
     public QuestionnaireModel questionnaire { get; set; } = new();
 
@@ -120,19 +119,10 @@
 
     private async Task CreateQuestion()
     {
-        currentQuestion.Options = options;
-        currentQuestion = new()
-        {
-            DisplayName = "",
-            JsonName = "",
-        };
+        currentQuestion.QuestionnaireId = QuestionnaireId;
 
         var questionEntity = Mapper.Map<PropertyEntity>(currentQuestion);
-        AnswerEntity answer = new AnswerEntity()
-        {
-            Name = "22222"
-        };
-        await Mediator.Send(new CreateOrChangeEntityCommand<AnswerEntity>(answer));
+        await Mediator.Send(new CreateOrChangeEntityCommand<PropertyEntity>(questionEntity));
 
         await UploadQuestionnaires();
     }
@@ -151,10 +141,16 @@
 
     private async Task UploadQuestionnaires()
     {
-        var questionnaireEntity = await Mediator.Send(new GetEntityQuery<QuestionnaireEntity>(1));
+        QuestionnaireId = 1;
+        currentQuestion = new()
+        {
+            Options = new(),
+        };
+
+        var questionnaireEntity = await Mediator.Send(new GetEntityQuery<QuestionnaireEntity>(QuestionnaireId));
         questionnaire = Mapper.Map<QuestionnaireModel>(questionnaireEntity);
 
-        var properties = await Mediator.Send(new GetEntitiesQuery<PropertyEntity>(property => property.QuestionnaireId == 1));
+        var properties = await Mediator.Send(new GetEntitiesQuery<PropertyEntity>(property => property.QuestionnaireId == QuestionnaireId));
         questions = Mapper.Map<QuestionModel[]>(properties);
     }
 }

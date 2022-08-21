@@ -47,6 +47,8 @@ namespace Questionnaire.Blazor
             services.ConfigureEntitiesQueryHandlers<BaseEntity>(typeof(GetEntitiesQuery<>), typeof(GetEntitiesHandler<>));
             services.ConfigureEntityQueryHandlers<BaseEntity>(typeof(GetEntityQuery<>), typeof(GetEntityHandler<>));
 
+            services.AddTransient<IRequestHandler<CreateOrChangeEntityCommand<AnswerEntity>, Unit>, CreateOrChangeEntityHandler<AnswerEntity>>();
+            
             services.ConfigureEntityCommandHandlers<BaseEntity>(typeof(CreateOrChangeEntityCommand<>), typeof(CreateOrChangeEntityHandler<>));
             services.ConfigureEntityCommandHandlers<BaseEntity>(typeof(RemoveEntityCommand<>), typeof(RemoveEntityHandler<>));
         }

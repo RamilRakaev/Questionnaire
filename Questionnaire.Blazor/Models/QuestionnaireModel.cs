@@ -10,7 +10,9 @@ namespace Questionnaire.Blazor.Models
         public string DisplayName { get; set; }
         public string JsonName { get; set; }
 
-        public AnswerModel[] Answers { get; set; }
-        public QuestionModel Properties { get; set; }
+        public List<string> Options { get; set; }
+
+        public List<QuestionModel> Properties { get; set; }
+        public List<AnswerModel> Answers { get; set; }
     }
 }

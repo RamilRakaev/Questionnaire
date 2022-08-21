@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Questionnaire.Domain.Entities;
 using Questionnaire.Domain.Interfaces;
 using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands;
@@ -16,7 +17,8 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.UniversalHandlers
 
         public async Task<Unit> Handle(CreateOrChangeEntityCommand<T> request, CancellationToken cancellationToken)
         {
-            var entity = await _entityRepository.GetAsync(request.Entity.Id, cancellationToken);
+            var entity = await _entityRepository.GetAllAsNoTracking()
+                .FirstOrDefaultAsync(entity => entity.Id == request.Entity.Id, cancellationToken);
 
             if (entity == null)
             {

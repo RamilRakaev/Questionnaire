@@ -72,7 +72,7 @@ namespace Questionnaire.Blazor
             foreach (var entityType in types)
             {
                 var currentCommandType = commandType.MakeGenericType(entityType);
-                var iRequestHandlerType = typeof(IRequestHandler<>).MakeGenericType(currentCommandType);
+                var iRequestHandlerType = typeof(IRequestHandler<,>).MakeGenericType(currentCommandType, typeof(Unit));
                 var currentHandlerType = handlerType.MakeGenericType(entityType);
 
                 services.AddTransient(iRequestHandlerType, currentHandlerType);

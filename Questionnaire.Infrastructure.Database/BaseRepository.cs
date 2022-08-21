@@ -51,6 +51,7 @@ namespace Questionnaire.Infrastructure.Database
         {
             _context.Set<Entity>().Update(entity);
             await _context.SaveChangesAsync(cancellationToken);
+            _context.ChangeTracker.Clear();
         }
     }
 }
