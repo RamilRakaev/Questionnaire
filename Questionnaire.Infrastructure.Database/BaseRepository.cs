@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Questionnaire.Domain.Entities;
 using Questionnaire.Domain.Interfaces;
 
@@ -49,9 +50,9 @@ namespace Questionnaire.Infrastructure.Database
 
         public async Task UpdateAsync(Entity entity, CancellationToken cancellationToken)
         {
-            _context.Set<Entity>().Update(entity);
+            _context.Update(entity);
+            _context.Entry(entity).State = EntityState.Detached;
             await _context.SaveChangesAsync(cancellationToken);
-            _context.ChangeTracker.Clear();
         }
     }
 }

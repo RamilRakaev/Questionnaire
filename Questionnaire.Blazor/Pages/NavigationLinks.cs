@@ -7,5 +7,9 @@
         public const string ConcreteQuestionnaire = "/root/concreteQuestionnaire";
         public const string Questionnaires = "/root/";
         #endregion
+
+        #region
+        public const string PassingTheQuestionnaire = "/interviewee/passingTheQuestionnaire/";
+        #endregion
     }
 }

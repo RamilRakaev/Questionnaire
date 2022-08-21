@@ -88,18 +88,18 @@
     private bool addAnswerOptions;
     private QuestionModel currentQuestion = new();
 
-    public QuestionnaireModel questionnaire { get; set; } = new();
+    private QuestionnaireModel questionnaire { get; set; } = new();
 
     private QuestionModel[] questions = Array.Empty<QuestionModel>();
+
+    [Parameter]
+    public int QuestionnaireId { get; set; }
 
     [Inject]
     private IMapper Mapper { get; set; }
 
     [Inject]
     private IMediator Mediator { get; set; }
-
-    [Parameter]
-    public int QuestionnaireId { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
