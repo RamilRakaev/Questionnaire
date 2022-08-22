@@ -1,5 +1,45 @@
-﻿<h3>Questionnaires</h3>
+﻿@page "/interviewee/"
+
+@using AutoMapper
+@using MediatR
+@using Questionnaire.Blazor.Models
+@using Questionnaire.Domain.Entities
+@using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
+
+<h3>Questionnaires</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Название опроса</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var questionnaire in questionnaires)
+        {
+            <tr>
+                <td>@questionnaire.DisplayName</td>
+                <td>
+                    <a class="btn btn-info" href="@NavigationLinks.PassingTheQuestionnaire/@questionnaire.Id">Перейти</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
+    private QuestionnaireModel[] questionnaires;
 
+    [Inject]
+    private IMediator Mediator { get; set; }
+
+    [Inject]
+    private IMapper Mapper { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        var questionnaireEntities = await Mediator.Send(new GetEntitiesQuery<QuestionnaireEntity>());
+        questionnaires = Mapper.Map<QuestionnaireModel[]>(questionnaireEntities);
+    }
 }
