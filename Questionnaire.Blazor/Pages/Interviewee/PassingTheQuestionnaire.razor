@@ -5,21 +5,22 @@
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Domain.Entities
+@using Questionnaire.Infrastructure.Commands.Requests.Answers
+@using Questionnaire.Infrastructure.Queries.Requests.Properties
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 
 <h3>@questionnaire.DisplayName</h3>
-<EditForm Model=questionnaire>
-    @foreach (var question in questions)
+<EditForm Model=questionnaire OnValidSubmit=Send>
+    @foreach (var questionAnswer in questionsAnswers)
     {
-        <QuestionDisplay Question=question />
+        <QuestionDisplay Question=questionAnswer.Key Answer=questionAnswer.Value />
     }
+    <button class="btn btn-success">Отправить</button>
 </EditForm>
 
 @code {
     private QuestionnaireModel questionnaire = new();
-    private QuestionModel[] questions;
-    private AnswerModel[] answers;
-    private Dictionary<QuestionModel, AnswerModel> questionsAnswers;
+    private Dictionary<QuestionModel, AnswerModel> questionsAnswers = new();
 
     [Parameter]
     public int QuestionnaireId { get; set; }
@@ -33,5 +34,15 @@
     protected async override Task OnInitializedAsync()
     {
         var questionnaireEntity = await Mediator.Send(new GetEntityQuery<QuestionnaireEntity>(QuestionnaireId));
+        questionnaire = Mapper.Map<QuestionnaireModel>(questionnaireEntity);
+
+        var propertyAnswerPairs = await Mediator.Send(new GetPropertyAnswerPairsQuery(QuestionnaireId, 6));
+        questionsAnswers = Mapper.Map<Dictionary<QuestionModel, AnswerModel>>(propertyAnswerPairs);
+    }
+
+    private async Task Send()
+    {
+        var answers = Mapper.Map<IEnumerable<AnswerEntity>>(questionsAnswers.Values.AsEnumerable());
+        await Mediator.Send(new CreateAnswersCommand(answers));
     }
 }

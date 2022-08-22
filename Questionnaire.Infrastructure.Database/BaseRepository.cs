@@ -51,7 +51,6 @@ namespace Questionnaire.Infrastructure.Database
         public async Task UpdateAsync(Entity entity, CancellationToken cancellationToken)
         {
             _context.Update(entity);
-            _context.Entry(entity).State = EntityState.Detached;
             await _context.SaveChangesAsync(cancellationToken);
         }
     }

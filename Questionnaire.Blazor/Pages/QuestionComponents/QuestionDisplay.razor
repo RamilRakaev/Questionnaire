@@ -13,14 +13,15 @@
                 break;
 
             case TagName.Input:
-            <input @attributes=tag.Attrubutes @bind-value=Answers.Name />
+            <input @attributes=tag.Attrubutes @bind-value=Answer.Name />
                 break;
 
             case TagName.Select:
-            <select @attributes=tag.Attrubutes @bind=Answers.Name>
+            <select @attributes=tag.Attrubutes @bind=Answer.Name>
                 @foreach (var option in tag.ChildTags)
-                {
-                    <option @attributes=option.Attrubutes>@option.Value</option> 
+                    {
+                        Answer.Name = option.Value;
+                        <option @attributes=option.Attrubutes>@option.Value</option> 
                 }
             </select>
                 break;
@@ -33,5 +34,5 @@
     public QuestionModel Question { get; set; }
 
     [Parameter]
-    public AnswerModel Answers { get; set; }
+    public AnswerModel Answer { get; set; }
 }

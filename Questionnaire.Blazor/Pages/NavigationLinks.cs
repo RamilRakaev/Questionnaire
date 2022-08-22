@@ -9,7 +9,7 @@
         #endregion
 
         #region
-        public const string PassingTheQuestionnaire = "/interviewee/passingTheQuestionnaire/";
+        public const string PassingTheQuestionnaire = "/interviewee/passingTheQuestionnaire/1";
         #endregion
     }
 }
