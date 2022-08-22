@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Questionnaire.Blazor.Models.Questions.Tags
 {
-    public class TagsCreator
+    public static class TagsCreator
     {
         public static HtmlTag[] CreateTags(PropertyEntity propertyEntity)
         {

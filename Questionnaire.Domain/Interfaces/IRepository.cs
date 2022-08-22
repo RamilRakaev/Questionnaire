@@ -10,13 +10,11 @@ namespace Questionnaire.Domain.Interfaces
         public IQueryable<Entity> GetAllAsync();
 
         public Task AddAsync(Entity entity, CancellationToken cancellationToken);
-
         public Task AddRangeAsync(IEnumerable<Entity> entities, CancellationToken cancellationToken);
 
         public Task UpdateAsync(Entity entity, CancellationToken cancellationToken);
 
         public Task RemoveRangeAsync(IEnumerable<Entity> entities, CancellationToken cancellationToken);
-
         public Task RemoveAsync(Entity entity, CancellationToken cancellationToken);
     }
 }

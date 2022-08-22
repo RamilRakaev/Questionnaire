@@ -21,6 +21,7 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.UniversalHandlers
             {
                 throw new NullReferenceException("Entity was not found in the database");
             }
+
             await _entityRepostory.RemoveAsync(entity, cancellationToken);
 
             return Unit.Value;

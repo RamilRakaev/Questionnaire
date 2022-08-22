@@ -30,15 +30,15 @@ namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
                         { "class", _cssClass },
                     },
                     ChildTags = _options
-                    .Select(option => new HtmlTag()
-                    {
-                        Value = option,
-                        Attrubutes = new()
+                        .Select(option => new HtmlTag()
                         {
-                            { "value", option }
-                        },
-                    })
-                    .ToArray(),
+                            Value = option,
+                            Attrubutes = new()
+                            {
+                                { "value", option }
+                            },
+                        })
+                        .ToArray(),
                 }
             };
         }

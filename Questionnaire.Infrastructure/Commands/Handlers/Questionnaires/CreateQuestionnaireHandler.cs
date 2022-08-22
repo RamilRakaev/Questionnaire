@@ -26,6 +26,7 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Questionnaires
                     property.QuestionnaireId = request.Questionnaire.Id;
                     return property;
                 }); 
+
             await _questionRepository.AddRangeAsync(properties, cancellationToken);
 
             return Unit.Value;

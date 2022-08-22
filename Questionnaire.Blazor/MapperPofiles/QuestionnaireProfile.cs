@@ -12,17 +12,13 @@ namespace Questionnaire.Blazor.MapperPofiles
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
                 .ForMember(dest => dest.JsonName, opt => opt.MapFrom(src => src.JsonName))
-                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options))
-                .ForMember(dest => dest.Properties, opt => opt.MapFrom(src => src.Properties))
-                .ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Answers));
+                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options));
 
             CreateMap<QuestionnaireModel, QuestionnaireEntity>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
                 .ForMember(dest => dest.JsonName, opt => opt.MapFrom(src => src.JsonName))
-                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options))
-                .ForMember(dest => dest.Properties, opt => opt.MapFrom(src => src.Properties))
-                .ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Answers));
+                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options));
         }
     }
 }

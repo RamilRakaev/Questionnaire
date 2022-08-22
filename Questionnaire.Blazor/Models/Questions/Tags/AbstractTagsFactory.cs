@@ -1,5 +1,4 @@
-﻿
-namespace Questionnaire.Blazor.Models.Questions.Tags
+﻿namespace Questionnaire.Blazor.Models.Questions.Tags
 {
     public abstract class AbstractTagsFactory
     {

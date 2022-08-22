@@ -1,5 +1,6 @@
 ﻿@page "/root/concreteQuestionnaire/{questionnaireId:int}"
 @page "/"
+
 @using AutoMapper
 @using MediatR
 @using Questionnaire.Blazor.Models
@@ -7,6 +8,7 @@
 @using Questionnaire.Blazor.Models.Questions.Tags
 @using Questionnaire.Domain.Entities
 @using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
+@using Questionnaire.Infrastructure.Queries.Requests.Properties
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 
 <EditForm Model=@questionnaire OnSubmit=ChangeQuestionnaire>
@@ -28,10 +30,12 @@
         <label>Отображаемое имя вопроса</label>
         <InputText @bind-Value=currentQuestion.DisplayName class="form-control" />
     </div>
+
     <div class="form-group">
         <label>Имя вопроса в json</label>
         <InputText @bind-Value=currentQuestion.JsonName class="form-control" />
     </div>
+
     <div class="form-group">
         <label>Тип вопроса</label>
         <InputSelect @bind-Value=currentQuestion.QuestionType class="custom-select" disabled=@addAnswerOptions>
@@ -42,14 +46,17 @@
             <option value="Enumeration" selected=@addAnswerOptions>Перечисление</option>
         </InputSelect>
     </div>
+
     <div class="form-group">
         <label class="form-check-label">Ввести свои варианты ответа</label>
         <InputCheckbox @bind-Value=addAnswerOptions class="ml-2 form-check-label" @onclick=SwitchToEnumeration />
     </div>
+
     @if (addAnswerOptions)
     {
         <AnswerOptions Options=@currentQuestion.Options />
     }
+
     <button class="btn btn-success">Создать</button>
 </EditForm>
 
@@ -84,6 +91,7 @@
         }
     </tbody>
 </table>
+
 @code {
     private bool addAnswerOptions;
     private QuestionModel currentQuestion = new();
@@ -150,7 +158,7 @@
         var questionnaireEntity = await Mediator.Send(new GetEntityQuery<QuestionnaireEntity>(QuestionnaireId));
         questionnaire = Mapper.Map<QuestionnaireModel>(questionnaireEntity);
 
-        var properties = await Mediator.Send(new GetEntitiesQuery<PropertyEntity>(property => property.QuestionnaireId == QuestionnaireId));
+        var properties = await Mediator.Send(new GetPropertiesByQuestionnaireQuery(QuestionnaireId));
         questions = Mapper.Map<QuestionModel[]>(properties);
     }
 }

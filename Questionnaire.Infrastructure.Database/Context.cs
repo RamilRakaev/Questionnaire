@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Questionnaire.Domain.Entities.Identity;
-using Questionnaire.Infrastructure.Database.Configuration;
 
 namespace Questionnaire.Infrastructure.Database
 {

@@ -78,6 +78,5 @@ namespace Questionnaire.Blazor
                 services.AddTransient(iRequestHandlerType, currentHandlerType);
             }
         }
-
     }
 }

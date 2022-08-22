@@ -27,7 +27,7 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Questionnaires
                 .FirstOrDefaultAsync(cancellationToken);
             if (questionnaire == null)
             {
-                throw new NullReferenceException("Questionnaire was not found in the database");
+                throw new NullReferenceException("Questionnaire no found in DB");
             }
 
             var ansers = _answerRepository.GetAllAsNoTracking().Where(answer => answer.QuestionnaireId == request.QuestionnaireId);

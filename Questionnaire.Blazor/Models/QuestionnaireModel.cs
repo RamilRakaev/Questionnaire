@@ -1,5 +1,4 @@
-﻿using Questionnaire.Blazor.Models.Questions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Questionnaire.Blazor.Models
 {
@@ -11,8 +10,5 @@ namespace Questionnaire.Blazor.Models
         public string JsonName { get; set; }
 
         public List<string> Options { get; set; }
-
-        public List<QuestionModel> Properties { get; set; }
-        public List<AnswerModel> Answers { get; set; }
     }
 }
