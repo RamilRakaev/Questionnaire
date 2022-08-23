@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Questionnaire.Blazor.Areas.Identity;
 using Questionnaire.Domain.Entities;
 using Questionnaire.Domain.Interfaces;
 using Questionnaire.Infrastructure;
@@ -36,6 +37,7 @@ namespace Questionnaire.Blazor
                 o => o.MigrationsAssembly(typeof(Context).Assembly.FullName)));
 
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
+            services.AddScoped<TokenProvider>();
 
             services.AddMediatR(CQRSAssemblyInfo.Assembly);
             services.AddMapper();
@@ -67,8 +69,12 @@ namespace Questionnaire.Blazor
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
