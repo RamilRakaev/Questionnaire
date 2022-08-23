@@ -32,8 +32,9 @@ namespace Questionnaire.Blazor
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services.AddDbContext<Context>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultDbConnection"),
+            services.AddDbContext<Context>(options => options.UseNpgsql(Configuration.GetConnectionString("ContextConnection"),
                 o => o.MigrationsAssembly(typeof(Context).Assembly.FullName)));
+
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
 
             services.AddMediatR(CQRSAssemblyInfo.Assembly);
