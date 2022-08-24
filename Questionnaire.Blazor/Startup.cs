@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Questionnaire.Blazor.Areas.Identity;
 using Questionnaire.Domain.Entities;
+using Questionnaire.Domain.Entities.Identity;
 using Questionnaire.Domain.Interfaces;
 using Questionnaire.Infrastructure;
 using Questionnaire.Infrastructure.Commands.Handlers.UniversalHandlers;
@@ -35,6 +36,8 @@ namespace Questionnaire.Blazor
 
             services.AddDbContext<Context>(options => options.UseNpgsql(Configuration.GetConnectionString("ContextConnection"),
                 o => o.MigrationsAssembly(typeof(Context).Assembly.FullName)));
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                    .AddEntityFrameworkStores<Context>();
 
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddScoped<TokenProvider>();

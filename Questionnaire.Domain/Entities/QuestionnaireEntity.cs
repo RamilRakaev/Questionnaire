@@ -3,7 +3,6 @@
     public class QuestionnaireEntity : BaseEntity
     {
         public string DisplayName { get; set; }
-        public string JsonName { get; set; }
 
         public List<string> Options { get; set; }
 

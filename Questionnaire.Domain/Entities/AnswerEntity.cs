@@ -4,7 +4,7 @@ namespace Questionnaire.Domain.Entities
 {
     public class AnswerEntity : BaseEntity
     {
-        public string Name { get; set; }
+        public string Value { get; set; }
 
         public int QuestionnaireId { get; set; }
         public QuestionnaireEntity Questionnaire { get; set; }

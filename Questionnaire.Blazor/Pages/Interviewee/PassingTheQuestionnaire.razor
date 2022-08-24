@@ -2,12 +2,15 @@
 
 @using AutoMapper
 @using MediatR
+@using Microsoft.AspNetCore.Identity
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Domain.Entities
+@using Questionnaire.Domain.Entities.Identity
 @using Questionnaire.Infrastructure.Commands.Requests.Answers
 @using Questionnaire.Infrastructure.Queries.Requests.Properties
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
+@using Microsoft.AspNetCore.Components.Authorization
 
 <h3>@questionnaire.DisplayName</h3>
 <EditForm Model=questionnaire OnValidSubmit=Send>
@@ -31,6 +34,13 @@
     [Inject]
     private IMediator Mediator { get; set; }
 
+    [Inject]
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+    [Inject]
+    private UserManager<ApplicationUser> UserManager { get; set; }
+
+
     protected async override Task OnInitializedAsync()
     {
         var questionnaireEntity = await Mediator.Send(new GetEntityQuery<QuestionnaireEntity>(QuestionnaireId));
@@ -42,7 +52,11 @@
 
     private async Task Send()
     {
-        var answers = Mapper.Map<IEnumerable<AnswerEntity>>(questionsAnswers.Values.AsEnumerable());
-        await Mediator.Send(new CreateAnswersCommand(answers));
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await UserManager.FindByNameAsync(authState.User.Identity.Name);
+        
+        var answers = Mapper.Map<Dictionary<PropertyEntity, AnswerEntity>>(questionsAnswers);
+
+        await Mediator.Send(new CreateAnswersCommand(answers, user.Id));
     }
 }

@@ -31,7 +31,7 @@ namespace Questionnaire.Blazor
             var types = typeof(BaseEntity)
                 .Assembly
                 .GetTypes()
-                .Where(t => t.BaseType == (typeof(Entity)));
+                .Where(t => t.BaseType == typeof(Entity));
 
             foreach (var entityType in types)
             {

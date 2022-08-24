@@ -2,6 +2,7 @@
 using Questionnaire.Domain.Entities;
 using Questionnaire.Domain.Interfaces;
 using Questionnaire.Infrastructure.Commands.Requests.Answers;
+using System.Text.Json;
 
 namespace Questionnaire.Infrastructure.Commands.Handlers.Answers
 {
@@ -16,8 +17,24 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Answers
 
         public async Task<Unit> Handle(CreateAnswersCommand request, CancellationToken cancellationToken)
         {
-            await _answerRepository.AddRangeAsync(request.Answers, cancellationToken);
-            return Unit.Value;
+            if (request.QuestionsAnswers.Count > 0)
+            {
+                var questionsAnswers = request.QuestionsAnswers.ToDictionary(pair => pair.Key.JsonName, pair => pair.Value.Value);
+                var answersInJson = JsonSerializer.Serialize(questionsAnswers);
+
+                AnswerEntity answerEntity = new()
+                {
+                    QuestionnaireId = request.QuestionsAnswers.Keys.FirstOrDefault().QuestionnaireId,
+                    Value = answersInJson,
+                    UserId = request.UserId,
+                };
+
+                await _answerRepository.AddAsync(answerEntity, cancellationToken);
+
+                return Unit.Value;
+            }
+
+            throw new Exception("Dictionary of questions and answers is empty");
         }
     }
 }
