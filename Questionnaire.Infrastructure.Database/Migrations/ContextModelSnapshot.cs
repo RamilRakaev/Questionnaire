@@ -11,7 +11,7 @@ using Questionnaire.Infrastructure.Database;
 
 namespace Questionnaire.Infrastructure.Database.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(QuestionnaireContext))]
     partial class ContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

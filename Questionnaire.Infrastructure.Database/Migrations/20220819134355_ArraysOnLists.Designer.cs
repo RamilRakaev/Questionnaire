@@ -12,7 +12,7 @@ using Questionnaire.Infrastructure.Database;
 
 namespace Questionnaire.Infrastructure.Database.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(QuestionnaireContext))]
     [Migration("20220819134355_ArraysOnLists")]
     partial class ArraysOnLists
     {

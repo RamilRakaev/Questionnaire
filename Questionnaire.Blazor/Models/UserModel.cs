@@ -17,5 +17,7 @@ namespace Questionnaire.Blazor.Models
         [RegularExpression("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", ErrorMessage = "Слишком простой пароль")]
         [MinLength(8, ErrorMessage = "Слишком короткий пароль")]
         public string Password { get; set; }
+
+        public string Role { get; set; }
     }
 }

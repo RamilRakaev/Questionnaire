@@ -11,7 +11,7 @@ using Questionnaire.Infrastructure.Database;
 
 namespace Questionnaire.Infrastructure.Database.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(QuestionnaireContext))]
     [Migration("20220819113005_InitialCreate")]
     partial class InitialCreate
     {

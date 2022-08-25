@@ -6,9 +6,9 @@ namespace Questionnaire.Infrastructure.Database
 {
     public class BaseRepository<Entity> : IRepository<Entity> where Entity : BaseEntity
     {
-        private readonly Context _context;
+        private readonly QuestionnaireContext _context;
 
-        public BaseRepository(Context context)
+        public BaseRepository(QuestionnaireContext context)
         {
             _context = context;
         }

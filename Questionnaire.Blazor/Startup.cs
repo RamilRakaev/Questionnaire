@@ -13,6 +13,7 @@ using Questionnaire.Infrastructure;
 using Questionnaire.Infrastructure.Commands.Handlers.UniversalHandlers;
 using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands;
 using Questionnaire.Infrastructure.Database;
+using Questionnaire.Infrastructure.DatabaseServices;
 using Questionnaire.Infrastructure.Queries.Handlers.UniversalHandlers;
 using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries;
 
@@ -34,12 +35,15 @@ namespace Questionnaire.Blazor
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services.AddDbContext<Context>(options => options.UseNpgsql(Configuration.GetConnectionString("ContextConnection"),
-                o => o.MigrationsAssembly(typeof(Context).Assembly.FullName)));
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                    .AddEntityFrameworkStores<Context>();
+            services.AddDbContext<QuestionnaireContext>(options => options.UseNpgsql(Configuration.GetConnectionString("ContextConnection"),
+                o => o.MigrationsAssembly(typeof(QuestionnaireContext).Assembly.FullName)));
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                    .AddEntityFrameworkStores<QuestionnaireContext>();
 
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
+
+            services.AddHostedService<DefaultUserService>();
+
             services.AddScoped<TokenProvider>();
 
             services.AddMediatR(CQRSAssemblyInfo.Assembly);
