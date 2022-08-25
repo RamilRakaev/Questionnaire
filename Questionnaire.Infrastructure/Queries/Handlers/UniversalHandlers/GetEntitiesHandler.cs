@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Questionnaire.Domain.Entities;
 using Questionnaire.Domain.Interfaces;
 using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries;
@@ -16,14 +17,7 @@ namespace Questionnaire.Infrastructure.Queries.Handlers.UniversalHandlers
 
         public Task<T[]> Handle(GetEntitiesQuery<T> request, CancellationToken cancellationToken)
         {
-            var entities = _entityRepository.GetAllAsNoTracking();
-
-            if (request.SelectionCondition != null)
-            {
-                entities = entities.Where(request.SelectionCondition);
-            }
-
-            return Task.FromResult(entities.ToArray());
+            return _entityRepository.GetAllAsNoTracking().ToArrayAsync(cancellationToken);
         }
     }
 }

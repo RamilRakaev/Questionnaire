@@ -40,7 +40,6 @@
     [Inject]
     private UserManager<ApplicationUser> UserManager { get; set; }
 
-
     protected async override Task OnInitializedAsync()
     {
         var questionnaireEntity = await Mediator.Send(new GetEntityQuery<QuestionnaireEntity>(QuestionnaireId));

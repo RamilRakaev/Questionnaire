@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Questionnaire.Domain.Entities;
 using Questionnaire.Domain.Interfaces;
 using Questionnaire.Infrastructure.Queries.Requests.Properties;
@@ -14,21 +15,21 @@ namespace Questionnaire.Infrastructure.Queries.Handlers.Properties
             _propertyRepository = propertyRepository;
         }
 
-        public Task<Dictionary<PropertyEntity, AnswerEntity>> Handle(GetPropertyAnswerPairsQuery request, CancellationToken cancellationToken)
+        public async Task<Dictionary<PropertyEntity, AnswerEntity>> Handle(GetPropertyAnswerPairsQuery request, CancellationToken cancellationToken)
         {
             var properties = _propertyRepository.GetAllAsNoTracking().Where(property => property.QuestionnaireId == request.QuestionnaireId);
-            Dictionary<PropertyEntity, AnswerEntity> pairs = new();
 
-            foreach (var property in properties)
-            {
-                pairs.Add(property, new()
-                {
-                    QuestionnaireId = property.QuestionnaireId,
-                    UserId = request.UserId,
-                });
-            }
+            Dictionary<PropertyEntity, AnswerEntity> pairs = await properties
+                .ToDictionaryAsync(
+                    property => property,
+                    property => new AnswerEntity()
+                    {
+                        QuestionnaireId = property.QuestionnaireId,
+                        UserId = request.UserId,
+                    },
+                    cancellationToken);
 
-            return Task.FromResult(pairs);
+            return pairs;
         }
     }
 }
