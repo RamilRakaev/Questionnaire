@@ -34,7 +34,7 @@
 </table>
 
 @code {
-    private QuestionnaireModel[] questionnaires;
+    private QuestionnaireModel[] questionnaires = Array.Empty<QuestionnaireModel>();
 
     [Inject]
     private IMediator Mediator { get; set; }
@@ -42,7 +42,7 @@
     [Inject]
     private IMapper Mapper { get; set; }
 
-    protected override async  Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         await UploadQuestionnaires();
     }

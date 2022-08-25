@@ -6,6 +6,8 @@
         public const string RootQuestionnaires = "/root/";
         public const string CreateQuestionnaire = "/root/createQuestionnaire";
         public const string ConcreteQuestionnaire = "/root/concreteQuestionnaire";
+        public const string RootUsers = "/root/userManage/";
+        public const string RootCreateUser = "/root/userManage/createUser";
         #endregion
 
         #region

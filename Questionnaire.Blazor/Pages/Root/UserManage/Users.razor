@@ -1,0 +1,73 @@
+﻿@page "/root/userManage/"
+
+@using AutoMapper
+@using MediatR
+@using Questionnaire.Blazor.Models
+@using Questionnaire.Domain.Entities.Identity
+@using Questionnaire.Infrastructure.Commands.Requests.Identity
+@using Questionnaire.Infrastructure.Queries.Requests.Identity
+
+<table>
+    <thead>
+        <tr>
+            <th>Почта</th>
+            <th>Пароль</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in users)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td><input type="password" @bind-value=user.Password /></td>
+                <td>
+                    <button class="btn btn-warning" @onclick="() => ChangeUser(user)">Изменить</button>
+                    @if (authenticationState.User.Identity.Name != user.Email)
+                    {
+                        <button class="btn btn-danger" @onclick="() => RemoveUser(user)">Удалить</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private AuthenticationState authenticationState;
+    private string password;
+
+    private UserModel[] users = Array.Empty<UserModel>();
+
+    [Inject]
+    private IMapper Mapper { get; set; }
+
+    [Inject]
+    private IMediator Mediator { get; set; }
+
+    [Inject]
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        await Load();
+    }
+
+    private async Task ChangeUser(UserModel userModel)
+    {
+        var applicationUser = Mapper.Map<ApplicationUser>(userModel);
+        await Mediator.Send(new ChangeUserCommand(applicationUser, userModel.Password));
+    }
+
+    private async Task RemoveUser(UserModel user)
+    {
+        await Mediator.Send(new RemoveUserCommand(user.Id));
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var applicationUsers = await Mediator.Send(new GetAllUsersQuery());
+        users = Mapper.Map<UserModel[]>(applicationUsers);
+    }
+}

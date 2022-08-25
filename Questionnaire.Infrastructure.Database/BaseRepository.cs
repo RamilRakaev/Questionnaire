@@ -52,5 +52,10 @@ namespace Questionnaire.Infrastructure.Database
             _context.Set<Entity>().RemoveRange(entities);
             await _context.SaveChangesAsync(cancellationToken);
         }
+
+        public Task Save(CancellationToken cancellationToken)
+        {
+            return _context.SaveChangesAsync(cancellationToken);
+        }
     }
 }

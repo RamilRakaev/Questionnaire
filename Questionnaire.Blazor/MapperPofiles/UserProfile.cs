@@ -10,7 +10,11 @@ namespace Questionnaire.Blazor.MapperPofiles
         {
             CreateMap<ApplicationUser, UserModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName));
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
+
+            CreateMap<UserModel, ApplicationUser>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
         }
     }
 }

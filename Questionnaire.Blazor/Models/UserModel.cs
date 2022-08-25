@@ -1,11 +1,21 @@
-﻿namespace Questionnaire.Blazor.Models
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace Questionnaire.Blazor.Models
 {
     public class UserModel
     {
         public int Id { get; set; }
 
-        public string UserName { get; set; }
+        [Required(ErrorMessage = "Не введена почта")]
+        [EmailAddress(ErrorMessage = "Неверный формат почты")]
+        [DataType(DataType.EmailAddress, ErrorMessage = "Неправильно введена почта")]
+        public string Email { get; set; }
 
-        public string Role { get; set; }
+        [Required(ErrorMessage = "Не введён пароль")]
+        [DataType(DataType.Password)]
+        [RegularExpression("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", ErrorMessage = "Слишком простой пароль")]
+        [MinLength(8, ErrorMessage = "Слишком короткий пароль")]
+        public string Password { get; set; }
     }
 }

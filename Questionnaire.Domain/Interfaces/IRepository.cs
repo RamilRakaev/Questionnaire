@@ -16,5 +16,7 @@ namespace Questionnaire.Domain.Interfaces
 
         public Task RemoveRangeAsync(IEnumerable<Entity> entities, CancellationToken cancellationToken);
         public Task RemoveAsync(Entity entity, CancellationToken cancellationToken);
+
+        public Task Save(CancellationToken cancellationToken);
     }
 }
