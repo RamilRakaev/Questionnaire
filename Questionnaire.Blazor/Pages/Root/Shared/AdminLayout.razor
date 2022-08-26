@@ -2,7 +2,7 @@
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        <AdminNavMenu />
     </div>
 
     <div class="main">
@@ -11,11 +11,7 @@
         </div>
 
         <div class="content px-4">
-            <AuthorizeView>
-                <Authorized>
-                    @Body
-                </Authorized>
-            </AuthorizeView>
+            @Body
         </div>
     </div>
 </div>

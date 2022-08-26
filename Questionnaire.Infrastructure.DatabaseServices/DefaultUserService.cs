@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Questionnaire.Domain.Entities.Identity;
+using System.Security.Claims;
 
 namespace Questionnaire.Infrastructure.DatabaseServices
 {
@@ -34,11 +35,16 @@ namespace Questionnaire.Infrastructure.DatabaseServices
             {
                 ApplicationUser user = new()
                 {
-                    Email = "Admin@gmail.com",
-                    UserName = "Admin@gmail.com",
+                    Email = "Admin1@gmail.com",
+                    UserName = "Admin1@gmail.com",
                 };
 
-                await userManager.CreateAsync(user, "123AsD*@f");
+                await userManager.CreateAsync(user, "Admin1@gmail.com");
+
+                await userManager.AddToRoleAsync(user, "admin");
+
+                Claim claim = new("role", "admin");
+                await userManager.AddClaimAsync(user, claim);
             }
         }
 

@@ -1,11 +1,28 @@
 ﻿@using Questionnaire.Blazor.Areas.Identity
+@using Questionnaire.Blazor.Pages.Interviewee.Shared
+@using Questionnaire.Blazor.Pages.Root.Shared
+@using Questionnaire.Infrastructure.Conventions
 
 @inject TokenProvider TokenProvider
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
         <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <AuthorizeView>
+                <Authorized>
+                    @if (context.User.FindFirst("role").Value == RoleConstants.Admin)
+                    {
+                        <RouteView RouteData="@routeData" DefaultLayout="@typeof(AdminLayout)" />
+                    }
+                    else if (context.User.FindFirst("role").Value == RoleConstants.Interviewee)
+                    {
+                        <RouteView RouteData="@routeData" DefaultLayout="@typeof(IntervieweeLayout)" />
+                    }
+                </Authorized>
+                <NotAuthorized>
+                    <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                </NotAuthorized>
+            </AuthorizeView>
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(MainLayout)">
@@ -15,8 +32,7 @@
     </Router>
 </CascadingAuthenticationState>
 
-@code
-{
+@code {
     [Parameter]
     public TokenProvider InitialState { get; set; }
 

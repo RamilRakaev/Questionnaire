@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Questionnaire.Infrastructur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Questionnaire.Infrastructure.Database", "Questionnaire.Infrastructure.Database\Questionnaire.Infrastructure.Database.csproj", "{8CB5E7EA-7197-4CF2-AA46-FBE323334EC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Questionnaire.Infrastructure.DatabaseServices", "Questionnaire.Infrastructure.DatabaseServices\Questionnaire.Infrastructure.DatabaseServices.csproj", "{6A8ACF4B-1252-4203-9C2F-A6C205DCA7D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Questionnaire.Infrastructure.DatabaseServices", "Questionnaire.Infrastructure.DatabaseServices\Questionnaire.Infrastructure.DatabaseServices.csproj", "{6A8ACF4B-1252-4203-9C2F-A6C205DCA7D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
