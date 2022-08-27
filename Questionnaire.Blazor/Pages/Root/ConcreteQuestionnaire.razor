@@ -1,5 +1,4 @@
 ﻿@page "/root/concreteQuestionnaire/{questionnaireId:int}"
-@page "/"
 
 @using AutoMapper
 @using MediatR
@@ -149,7 +148,6 @@
 
     private async Task UploadQuestionnaires()
     {
-        QuestionnaireId = 1;
         currentQuestion = new()
         {
             Options = new(),

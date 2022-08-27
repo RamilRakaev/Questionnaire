@@ -18,6 +18,8 @@ namespace Questionnaire.Blazor.Models
         [MinLength(8, ErrorMessage = "Слишком короткий пароль")]
         public string Password { get; set; }
 
+        public bool RememberMe { get; set; }
+
         public string Role { get; set; }
     }
 }

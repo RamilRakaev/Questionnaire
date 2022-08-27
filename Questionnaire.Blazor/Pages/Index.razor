@@ -1,0 +1,46 @@
+﻿@page "/account/login"
+
+@using MediatR
+@using Questionnaire.Blazor.Models
+@using Questionnaire.Infrastructure.Commands.Requests.Identity
+
+<div class="">
+    <EditForm Model=user OnValidSubmit=Login>
+        <ValidationSummary />
+        <DataAnnotationsValidator />
+        <p class="text-danger">@message</p>
+        <div class="form-group">
+            <label>Почта</label>
+            <InputText @bind-Value=user.Email class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Пароль</label>
+            <InputText type="password" @bind-Value=user.Password class="form-control" />
+        </div>
+
+        <div class="form-check">
+            <InputCheckbox @bind-Value=user.RememberMe class="form-check-input" />
+            <label class="form-check-label">Запомнить меня</label>
+        </div>
+
+        <button class="btn btn-success">Войти</button>
+    </EditForm>
+</div>
+
+@code {
+    private UserModel user = new();
+    private string message;
+
+    [Inject]
+    private IMediator Mediator { get; set; }
+
+    [Inject]
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+    private async Task Login()
+    {
+        var success = await Mediator.Send(new LoginCommand(user.Email, user.Password, user.RememberMe));
+        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+    }
+}
