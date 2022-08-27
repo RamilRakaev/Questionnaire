@@ -6,6 +6,7 @@
 @using Questionnaire.Domain.Entities.Identity
 @using Questionnaire.Infrastructure.Commands.Requests.Identity
 @using Questionnaire.Infrastructure.Queries.Requests.Identity
+@using Questionnaire.Infrastructure.Conventions;
 
 <EditForm Model=user OnValidSubmit=Send>
     <ValidationSummary />
@@ -24,8 +25,8 @@
     <div class="form-group">
         <label>Роль</label>
         <InputSelect @bind-Value=user.Role class="custom-select">
-            <option value="interviewee">Опрашиваемый</option>
-            <option value="admin">Администратор</option>
+            <option value=@RoleConstants.Questioned>Опрашиваемый</option>
+            <option value="@RoleConstants.Admin">Администратор</option>
         </InputSelect>
     </div>
 

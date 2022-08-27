@@ -10,7 +10,7 @@ namespace Questionnaire.Infrastructure.DatabaseServices
     {
         private readonly IServiceProvider _serviceProvider;
 
-        private string[] roleNames = { "admin", "interviewee" };
+        private readonly string[] roleNames = { "admin", "questioned" };
 
         public DefaultUserService(IServiceProvider serviceProvider)
         {
@@ -53,6 +53,7 @@ namespace Questionnaire.Infrastructure.DatabaseServices
             using var scope = _serviceProvider.CreateScope();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+            
             await CreateDefaultUser(userManager, roleManager);
         }
 

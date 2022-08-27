@@ -8,24 +8,10 @@
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
         <Found Context="routeData">
-            <AuthorizeView>
-                <Authorized>
-                    @if (context.User.FindFirst("role").Value == RoleConstants.Admin)
-                    {
-                        <RouteView RouteData="@routeData" DefaultLayout="@typeof(AdminLayout)" />
-                    }
-                    else if (context.User.FindFirst("role").Value == RoleConstants.Interviewee)
-                    {
-                        <RouteView RouteData="@routeData" DefaultLayout="@typeof(IntervieweeLayout)" />
-                    }
-                </Authorized>
-                <NotAuthorized>
-                    <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-                </NotAuthorized>
-            </AuthorizeView>
+            <RouteView RouteData="@routeData" DefaultLayout=@(layout) />
         </Found>
         <NotFound>
-            <LayoutView Layout="@typeof(MainLayout)">
+            <LayoutView Layout=@(layout)>
                 <p>Не существует страницы по данному адресу.</p>
             </LayoutView>
         </NotFound>
@@ -33,11 +19,30 @@
 </CascadingAuthenticationState>
 
 @code {
+    private Type layout;
+
     [Parameter]
     public TokenProvider InitialState { get; set; }
 
-    protected override void OnInitialized()
+    [Inject]
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+    protected async override Task OnInitializedAsync()
     {
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        
+        if (authenticationState.User.Identity.IsAuthenticated == false)
+        {
+            NavigationManager.NavigateTo(NavigationLinks.Login);
+        }
+        else if (authenticationState.User.FindFirst("role").Value == RoleConstants.Admin)
+        {
+            layout = typeof(AdminLayout);
+        }
+        else {
+            layout = typeof(QuestionedLayout);
+        }
+
         TokenProvider.XsrfToken = InitialState.XsrfToken;
     }
 }
