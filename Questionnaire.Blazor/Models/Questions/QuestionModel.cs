@@ -1,4 +1,5 @@
 ﻿using Questionnaire.Blazor.Models.Questions.Tags;
+using Questionnaire.Infrastructure.Conventions;
 using System.Collections.Generic;
 
 namespace Questionnaire.Blazor.Models.Questions
@@ -11,7 +12,7 @@ namespace Questionnaire.Blazor.Models.Questions
 
         public string DisplayName { get; set; }
         public string JsonName { get; set; }
-        public string QuestionType { get; set; }
+        public QuestionType QuestionType { get; set; }
 
         public List<string> Options { get; set; }
 

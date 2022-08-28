@@ -1,4 +1,4 @@
-﻿@page "/root/"
+﻿@page "/"
 
 @using AutoMapper
 @using MediatR
@@ -15,7 +15,6 @@
     <thead>
         <tr>
             <th>Имя опроса</th>
-            <th>Имя опроса в json</th>
             <th>Действия</th>
         </tr>
     </thead>
@@ -25,8 +24,17 @@
             <tr>
                 <td>@questionnaire.DisplayName</td>
                 <td>
-                    <a class="btn btn-primary m-3" href="@NavigationLinks.ConcreteQuestionnaire/@questionnaire.Id">Перейти</a>
-                    <button class="btn btn-danger m-3" @onclick="() => Remove(questionnaire.Id)">Удалить</button>
+                    <AuthorizeView>
+                        @if (context.User.FindFirst(RoleConstants.RoleClaim).Value == RoleConstants.Admin)
+                        {
+                            <a class="btn btn-primary m-3" href="@NavigationLinks.ConcreteQuestionnaire/@questionnaire.Id">Перейти</a>
+                            <button class="btn btn-danger m-3" @onclick="() => Remove(questionnaire.Id)">Удалить</button>
+                        }
+                        else if (context.User.FindFirst(RoleConstants.RoleClaim).Value == RoleConstants.Questioned)
+                        {
+                            <a class="btn btn-primary m-3" href="@NavigationLinks.PassingTheQuestionnaire/@questionnaire.Id">Перейти</a>
+                        }
+                    </AuthorizeView>
                 </td>
             </tr>
         }
@@ -49,7 +57,7 @@
     protected override async Task OnInitializedAsync()
     {
         authenticationState = authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        if (authenticationState.User.FindFirst("role").Value != RoleConstants.Admin)
+        if (authenticationState.User.Identity.IsAuthenticated == false)
         {
             NavigationManager.NavigateTo(NavigationLinks.Login);
         }

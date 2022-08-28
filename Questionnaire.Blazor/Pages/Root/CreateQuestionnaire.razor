@@ -8,71 +8,82 @@
 @using Questionnaire.Infrastructure.Commands.Requests.Questionnaires
 @using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
 @using AutoMapper.QueryableExtensions
+@using Questionnaire.Infrastructure.Conventions
 
-<EditForm Model=questionnaire OnValidSubmit=Create>
-    <div class="form-group">
-        <label>Отображаемое имя опросника</label>
-        <InputText @bind-Value=questionnaire.DisplayName class="form-control" />
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <EditForm Model=questionnaire OnValidSubmit=Create class="my-3 col-6">
+            <div class="form-group">
+                <label>Отображаемое имя опросника</label>
+                <InputText @bind-Value=questionnaire.DisplayName class="form-control" />
+            </div>
+
+            @foreach (var question in questions)
+            {
+                <div class="form-group">
+                    <label>Отображаемое имя вопроса</label>
+                    <InputText @bind-Value=question.DisplayName class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label>Имя вопроса в json</label>
+                    <InputText @bind-Value=question.JsonName class="form-control" />
+                </div>
+
+                <p>Тип: @question.QuestionType</p>
+            }
+
+            <button class="btn btn-success">Создать опросник</button>
+        </EditForm>
+
+        <EditForm Model=currentQuestion OnValidSubmit=CreateQuestion class="my-3 col-6">
+            <div class="form-group">
+                <label>Отображаемое имя вопроса</label>
+                <InputText @bind-Value=currentQuestion.DisplayName class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Имя вопроса в json</label>
+                <InputText @bind-Value=currentQuestion.JsonName class="form-control" />
+            </div>
+
+            <p>
+                <InputRadioGroup @bind-Value=currentQuestion.QuestionType class="form-check d-block">
+                    Тип вопроса
+                    <div>
+                        <InputRadio Value="QuestionType.Text" id="Text" />
+                        <label for="Text">Текст</label>
+                    </div>
+                    <div>
+                        <InputRadio Value="QuestionType.Boolean" id="Boolean" />
+                        <label for="Boolean">Чекбокс</label>
+                    </div>
+                    <div>
+                        <InputRadio Value="@QuestionType.Number" id="Number" />
+                        <label for="Number">Номер</label>
+                    </div>
+                    <div>
+                        <InputRadio Value="@QuestionType.DateTime" id="DateTime" />
+                        <label for="DateTime">Дата время</label>
+                    </div>
+                    <div>
+                        <InputRadio Value="QuestionType.Enumeration" id="Enumeration" />
+                        <label for="Enumeration">Перечисление</label>
+                    </div>
+                </InputRadioGroup>
+            </p>
+
+            @if (AddAnswerOptions)
+            {
+                <AnswerOptions Options=@options />
+            }
+
+            <button class="btn btn-success">Добавить вопрос</button>
+        </EditForm>
     </div>
-
-    <div class="form-group">
-        <label>Имя опросника в json</label>
-        <InputText @bind-Value=questionnaire.JsonName class="form-control" />
-    </div>
-
-    @foreach (var question in questions)
-    {
-        <div class="form-group">
-            <label>Отображаемое имя вопроса</label>
-            <InputText @bind-Value=question.DisplayName class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label>Имя вопроса в json</label>
-            <InputText @bind-Value=question.JsonName class="form-control" />
-        </div>
-    }
-
-    <button class="btn btn-success">Создать опросник</button>
-</EditForm>
-
-<EditForm Model=currentQuestion OnValidSubmit=CreateQuestion>
-    <div class="form-group">
-        <label>Отображаемое имя вопроса</label>
-        <InputText @bind-Value=currentQuestion.DisplayName class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label>Имя вопроса в json</label>
-        <InputText @bind-Value=currentQuestion.JsonName class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label>Тип вопроса</label>
-        <InputSelect @bind-Value=currentQuestion.QuestionType class="custom-select" disabled=@addAnswerOptions>
-            <option value="Text" selected>Текст</option>
-            <option value="Boolean">Чекбокс</option>
-            <option value="Number">Номер</option>
-            <option value="DateTime">Дата время</option>
-            <option value="Enumeration" selected=@addAnswerOptions>Перечисление</option>
-        </InputSelect>
-    </div>
-
-    <div class="form-group">
-        <label class="form-check-label">Ввести свои варианты ответа</label>
-        <InputCheckbox @bind-Value=addAnswerOptions class="ml-2 form-check-label" @onclick=SwitchToEnumeration />
-    </div>
-
-    @if (addAnswerOptions)
-    {
-        <AnswerOptions Options=@options />
-    }
-
-    <button class="btn btn-success">Добавить вопрос</button>
-</EditForm>
+</div>
 
 @code {
-    private bool addAnswerOptions;
     private List<string> options;
 
     private QuestionnaireModel questionnaire = new();
@@ -86,26 +97,21 @@
     [Inject]
     private IMediator Mediator { get; set; }
 
+    private bool AddAnswerOptions => currentQuestion.QuestionType == QuestionType.Enumeration;
+
     protected override void OnInitialized()
     {
         options = new();
         questionnaire = new()
         {
             DisplayName = "",
-            JsonName = "",
         };
 
         currentQuestion = new()
-        {
-            DisplayName = "",
-            JsonName = "",
-            QuestionType = "Text",
-        };
-    }
-
-    private void SwitchToEnumeration()
-    {
-        currentQuestion.QuestionType = "Enumeration";
+            {
+                DisplayName = "",
+                JsonName = "",
+            };
     }
 
     private void CreateQuestion()
@@ -129,7 +135,6 @@
         questionnaire = new()
         {
             DisplayName = "",
-            JsonName = "",
         };
     }
 }

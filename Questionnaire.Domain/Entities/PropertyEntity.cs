@@ -8,7 +8,7 @@
         public string DisplayName { get; set; }
         public string JsonName { get; set; }
 
-        public QuestionType Type { get; set; }
+        public PropertyType Type { get; set; }
 
         public List<string> Options { get; set; }
     }

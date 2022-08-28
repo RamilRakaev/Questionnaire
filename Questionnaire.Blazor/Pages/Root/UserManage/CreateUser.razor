@@ -35,9 +35,10 @@
 
 @code {
     private string message;
+
     private UserModel user = new()
     {
-        Role = "interviewee",
+        Role = RoleConstants.Questioned,
     };
 
     [Inject]

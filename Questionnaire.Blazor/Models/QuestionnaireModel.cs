@@ -7,7 +7,6 @@ namespace Questionnaire.Blazor.Models
         public int Id { get; set; }
 
         public string DisplayName { get; set; }
-        public string JsonName { get; set; }
 
         public List<string> Options { get; set; }
     }

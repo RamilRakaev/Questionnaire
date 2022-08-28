@@ -30,7 +30,7 @@
     protected async override Task OnInitializedAsync()
     {
         var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        
+
         if (authenticationState.User.Identity.IsAuthenticated == false)
         {
             NavigationManager.NavigateTo(NavigationLinks.Login);
@@ -39,7 +39,8 @@
         {
             layout = typeof(AdminLayout);
         }
-        else {
+        else
+        {
             layout = typeof(QuestionedLayout);
         }
 

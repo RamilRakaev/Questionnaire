@@ -12,7 +12,7 @@
 
         #region interviewee
         public const string PassingTheQuestionnaire = "/interviewee/passingTheQuestionnaire";
-        public const string QuestionedQuestionnaire = "/interviewee/";
+        public const string QuestionedQuestionnaires = "/interviewee/";
         #endregion
 
         #region account

@@ -1,6 +1,6 @@
 ﻿namespace Questionnaire.Domain.Entities
 {
-    public enum QuestionType
+    public enum PropertyType
     {
         Text, Number, DateTime, Boolean, Enumeration,
     }

@@ -16,11 +16,6 @@
         <InputText @bind-Value=questionnaire.DisplayName class="form-control" />
     </div>
 
-    <div class="form-group">
-        <label>Имя опроса в json</label>
-        <InputText @bind-Value=questionnaire.JsonName class="form-control" />
-    </div>
-
     <button class="btn btn-warning">Изменить опросник</button>
 </EditForm>
 
@@ -34,8 +29,7 @@
         <label>Имя вопроса в json</label>
         <InputText @bind-Value=currentQuestion.JsonName class="form-control" />
     </div>
-
-    <div class="form-group">
+    @*<div class="form-group">
         <label>Тип вопроса</label>
         <InputSelect @bind-Value=currentQuestion.QuestionType class="custom-select" disabled=@addAnswerOptions>
             <option value="Text" selected>Текст</option>
@@ -44,12 +38,11 @@
             <option value="DateTime">Дата время</option>
             <option value="Enumeration" selected=@addAnswerOptions>Перечисление</option>
         </InputSelect>
-    </div>
-
-    <div class="form-group">
+    </div>*@
+    @*<div class="form-group">
         <label class="form-check-label">Ввести свои варианты ответа</label>
         <InputCheckbox @bind-Value=addAnswerOptions class="ml-2 form-check-label" @onclick=SwitchToEnumeration />
-    </div>
+    </div>*@
 
     @if (addAnswerOptions)
     {
@@ -112,11 +105,10 @@
     {
         await UploadQuestionnaires();
     }
-
-    private void SwitchToEnumeration()
-    {
-        currentQuestion.QuestionType = "Enumeration";
-    }
+    //private void SwitchToEnumeration()
+    //{
+    //    currentQuestion.QuestionType = "Enumeration";
+    //}
 
     private async Task ChangeQuestionnaire()
     {

@@ -24,7 +24,7 @@ namespace Questionnaire.Blazor.MapperPofiles
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
                 .ForMember(dest => dest.JsonName, opt => opt.MapFrom(src => src.JsonName))
                 .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options))
-                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => QuestionTypeConverter.Convert(src.QuestionType)));
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.QuestionType));
         }
     }
 }

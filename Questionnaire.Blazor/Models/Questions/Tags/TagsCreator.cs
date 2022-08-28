@@ -13,7 +13,7 @@ namespace Questionnaire.Blazor.Models.Questions.Tags
                 .FirstOrDefault(type => type.Name == propertyEntity.Type.ToString() + "Factory");
 
             object obj;
-            if (propertyEntity.Type == QuestionType.Enumeration)
+            if (propertyEntity.Type == PropertyType.Enumeration)
             {
                 var constructor = factoryType.GetConstructor(new Type[] { typeof(string), propertyEntity.Options.GetType() });
                 obj = constructor.Invoke(new object[] { propertyEntity.DisplayName, propertyEntity.Options });
