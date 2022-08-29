@@ -4,9 +4,9 @@ using Questionnaire.Domain.Entities;
 
 namespace Questionnaire.Infrastructure.Database.Configuration
 {
-    internal class AnswerConfiguration : IEntityTypeConfiguration<AnswerEntity>
+    internal class AnswerConfiguration : IEntityTypeConfiguration<Answer>
     {
-        public void Configure(EntityTypeBuilder<AnswerEntity> builder)
+        public void Configure(EntityTypeBuilder<Answer> builder)
         {
             builder
                 .HasOne(answer => answer.Questionnaire)

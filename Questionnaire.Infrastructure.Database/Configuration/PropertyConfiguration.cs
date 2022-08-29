@@ -4,14 +4,14 @@ using Questionnaire.Domain.Entities;
 
 namespace Questionnaire.Infrastructure.Database.Configuration
 {
-    public class PropertyConfiguration : IEntityTypeConfiguration<PropertyEntity>
+    public class PropertyConfiguration : IEntityTypeConfiguration<Property>
     {
-        public void Configure(EntityTypeBuilder<PropertyEntity> builder)
+        public void Configure(EntityTypeBuilder<Property> builder)
         {
             builder
-                .HasOne(property => property.Questionnaire)
-                .WithMany(questionnaire => questionnaire.Properties)
-                .HasForeignKey(property => property.QuestionnaireId);
+                .HasOne(property => property.Structure)
+                .WithMany(structure => structure.Properties)
+                .HasForeignKey(property => property.StructureId);
         }
     }
 }

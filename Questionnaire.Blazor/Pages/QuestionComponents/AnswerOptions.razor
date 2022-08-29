@@ -1,13 +1,25 @@
-﻿<ol>
-    @foreach (var option in Options)
-    {
-        <li>@option</li>
-    }
-</ol>
+﻿@using Questionnaire.Blazor.Models
+@using Questionnaire.Blazor.Models.Questions
+
+@foreach (var option in Options)
+{
+    <div class="form-group">
+        <InputText @bind-Value=option.DisplayName class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <InputText @bind-Value=option.JsonName class="form-control" />
+    </div>
+}
 
 <div class="form-group">
     <label>Вариант ответа</label>
-    <InputText @bind-Value=currentOption class="form-control" />
+    <InputText @bind-Value=currentOption.DisplayName class="form-control" />
+</div>
+
+<div class="form-group">
+    <label>Вариант ответа</label>
+    <InputText @bind-Value=currentOption.JsonName class="form-control" />
 </div>
 
 <div class="form-group">
@@ -16,13 +28,13 @@
 
 @code {
     [Parameter]
-    public List<string> Options { get; set; }
+    public List<OptionModel> Options { get; set; }
 
-    private string currentOption = "";
+    private OptionModel currentOption = new();
 
     private void AddOption()
     {
         Options.Add(currentOption);
-        currentOption = "";
+        currentOption = new();
     }
 }

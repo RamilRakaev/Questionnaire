@@ -39,7 +39,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        var questionnaireEntities = await Mediator.Send(new GetEntitiesQuery<QuestionnaireEntity>());
+        var questionnaireEntities = await Mediator.Send(new GetEntitiesQuery<Structure>());
         questionnaires = Mapper.Map<QuestionnaireModel[]>(questionnaireEntities);
     }
 }

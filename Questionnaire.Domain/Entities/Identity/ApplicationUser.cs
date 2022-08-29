@@ -4,6 +4,6 @@ namespace Questionnaire.Domain.Entities.Identity
 {
     public class ApplicationUser : IdentityUser<int>
     {
-        public List<AnswerEntity> Answers { get; set; }
+        public List<Answer> Answers { get; set; }
     }
 }

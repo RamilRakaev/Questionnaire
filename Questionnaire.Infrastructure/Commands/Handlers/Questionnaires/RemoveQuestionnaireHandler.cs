@@ -8,12 +8,12 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Questionnaires
 {
     public class RemoveQuestionnaireHandler : IRequestHandler<RemoveQuestionnaireCommand>
     {
-        private readonly IRepository<QuestionnaireEntity> _questionnaireRepository;
-        private readonly IRepository<PropertyEntity> _questionRepository;
-        private readonly IRepository<PropertyEntity> _answerRepository;
+        private readonly IRepository<Structure> _questionnaireRepository;
+        private readonly IRepository<Property> _questionRepository;
+        private readonly IRepository<Property> _answerRepository;
 
-        public RemoveQuestionnaireHandler(IRepository<QuestionnaireEntity> questionnaireRepository, IRepository<PropertyEntity> questionRepository,
-            IRepository<PropertyEntity> answerRepository)
+        public RemoveQuestionnaireHandler(IRepository<Structure> questionnaireRepository, IRepository<Property> questionRepository,
+            IRepository<Property> answerRepository)
         {
             _questionnaireRepository = questionnaireRepository;
             _questionRepository = questionRepository;
@@ -23,17 +23,17 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Questionnaires
         public async Task<Unit> Handle(RemoveQuestionnaireCommand request, CancellationToken cancellationToken)
         {
             var questionnaire = await _questionnaireRepository.GetAllAsNoTracking()
-                .Where(questionnaire => questionnaire.Id == request.QuestionnaireId)
+                .Where(questionnaire => questionnaire.Id == request.StructureId)
                 .FirstOrDefaultAsync(cancellationToken);
             if (questionnaire == null)
             {
                 throw new NullReferenceException("Questionnaire no found in DB");
             }
 
-            var ansers = _answerRepository.GetAllAsNoTracking().Where(answer => answer.QuestionnaireId == request.QuestionnaireId);
+            var ansers = _answerRepository.GetAllAsNoTracking().Where(answer => answer.StructureId == request.StructureId);
             await _answerRepository.RemoveRangeAsync(ansers, cancellationToken);
 
-            var questions = _questionRepository.GetAllAsNoTracking().Where(question => question.QuestionnaireId == request.QuestionnaireId);
+            var questions = _questionRepository.GetAllAsNoTracking().Where(question => question.StructureId == request.StructureId);
             await _questionRepository.RemoveRangeAsync(questions, cancellationToken);
 
             await _questionnaireRepository.RemoveAsync(questionnaire, cancellationToken);

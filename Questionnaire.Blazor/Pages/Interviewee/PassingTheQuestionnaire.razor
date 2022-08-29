@@ -42,7 +42,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        var questionnaireEntity = await Mediator.Send(new GetEntityQuery<QuestionnaireEntity>(QuestionnaireId));
+        var questionnaireEntity = await Mediator.Send(new GetEntityQuery<Structure>(QuestionnaireId));
         questionnaire = Mapper.Map<QuestionnaireModel>(questionnaireEntity);
 
         var propertyAnswerPairs = await Mediator.Send(new GetPropertyAnswerPairsQuery(QuestionnaireId, 6));
@@ -54,7 +54,7 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = await UserManager.FindByNameAsync(authState.User.Identity.Name);
         
-        var answers = Mapper.Map<Dictionary<PropertyEntity, AnswerEntity>>(questionsAnswers);
+        var answers = Mapper.Map<Dictionary<Property, Answer>>(questionsAnswers);
 
         await Mediator.Send(new CreateAnswersCommand(answers, user.Id));
     }

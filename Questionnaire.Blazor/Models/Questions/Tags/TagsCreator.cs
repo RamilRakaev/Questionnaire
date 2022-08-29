@@ -6,7 +6,7 @@ namespace Questionnaire.Blazor.Models.Questions.Tags
 {
     public static class TagsCreator
     {
-        public static HtmlTag[] CreateTags(PropertyEntity propertyEntity)
+        public static HtmlTag[] CreateTags(Property propertyEntity)
         {
             var factoryType = typeof(AbstractTagsFactory).Assembly
                 .GetTypes()
@@ -15,8 +15,10 @@ namespace Questionnaire.Blazor.Models.Questions.Tags
             object obj;
             if (propertyEntity.Type == PropertyType.Enumeration)
             {
-                var constructor = factoryType.GetConstructor(new Type[] { typeof(string), propertyEntity.Options.GetType() });
-                obj = constructor.Invoke(new object[] { propertyEntity.DisplayName, propertyEntity.Options });
+                var options = propertyEntity.Options.Select(option => option.DisplayName);
+
+                var constructor = factoryType.GetConstructor(new Type[] { typeof(string), options.GetType() });
+                obj = constructor.Invoke(new object[] { propertyEntity.DisplayName, options });
             }
             else
             {

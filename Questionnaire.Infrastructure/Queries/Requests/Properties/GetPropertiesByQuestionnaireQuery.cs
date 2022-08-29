@@ -3,13 +3,13 @@ using Questionnaire.Domain.Entities;
 
 namespace Questionnaire.Infrastructure.Queries.Requests.Properties
 {
-    public class GetPropertiesByQuestionnaireQuery : IRequest<PropertyEntity[]>
+    public class GetPropertiesByQuestionnaireQuery : IRequest<Property[]>
     {
-        public GetPropertiesByQuestionnaireQuery(int questionnaireId)
+        public GetPropertiesByQuestionnaireQuery(int structureId)
         {
-            QuestionnaireId = questionnaireId;
+            StructureId = structureId;
         }
 
-        public int QuestionnaireId { get; private set; }
+        public int StructureId { get; private set; }
     }
 }

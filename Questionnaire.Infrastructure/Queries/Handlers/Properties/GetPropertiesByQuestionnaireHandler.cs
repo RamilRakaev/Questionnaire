@@ -6,19 +6,20 @@ using Questionnaire.Infrastructure.Queries.Requests.Properties;
 
 namespace Questionnaire.Infrastructure.Queries.Handlers.Properties
 {
-    public class GetPropertiesByQuestionnaireHandler : IRequestHandler<GetPropertiesByQuestionnaireQuery, PropertyEntity[]>
+    public class GetPropertiesByQuestionnaireHandler : IRequestHandler<GetPropertiesByQuestionnaireQuery, Property[]>
     {
-        private readonly IRepository<PropertyEntity> _propertyRepository;
+        private readonly IRepository<Property> _propertyRepository;
 
-        public GetPropertiesByQuestionnaireHandler(IRepository<PropertyEntity> propertyRepository)
+        public GetPropertiesByQuestionnaireHandler(IRepository<Property> propertyRepository)
         {
             _propertyRepository = propertyRepository;
         }
 
-        public async Task<PropertyEntity[]> Handle(GetPropertiesByQuestionnaireQuery request, CancellationToken cancellationToken)
+        public async Task<Property[]> Handle(GetPropertiesByQuestionnaireQuery request, CancellationToken cancellationToken)
         {
             return await _propertyRepository.GetAllAsNoTracking()
-                .Where(property => property.QuestionnaireId == request.QuestionnaireId)
+                .Where(property => property.StructureId == request.StructureId)
+                .Include(property => property.Options)
                 .ToArrayAsync(cancellationToken);
         }
     }

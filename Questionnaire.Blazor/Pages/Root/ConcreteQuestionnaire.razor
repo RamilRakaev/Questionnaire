@@ -105,6 +105,7 @@
     {
         await UploadQuestionnaires();
     }
+
     //private void SwitchToEnumeration()
     //{
     //    currentQuestion.QuestionType = "Enumeration";
@@ -112,29 +113,29 @@
 
     private async Task ChangeQuestionnaire()
     {
-        var questionnaireEntity = Mapper.Map<QuestionnaireEntity>(questionnaire);
-        await Mediator.Send(new CreateOrChangeEntityCommand<QuestionnaireEntity>(questionnaireEntity));
+        var questionnaireEntity = Mapper.Map<Structure>(questionnaire);
+        await Mediator.Send(new CreateOrChangeEntityCommand<Structure>(questionnaireEntity));
     }
 
     private async Task CreateQuestion()
     {
         currentQuestion.QuestionnaireId = QuestionnaireId;
 
-        var questionEntity = Mapper.Map<PropertyEntity>(currentQuestion);
-        await Mediator.Send(new CreateOrChangeEntityCommand<PropertyEntity>(questionEntity));
+        var questionEntity = Mapper.Map<Property>(currentQuestion);
+        await Mediator.Send(new CreateOrChangeEntityCommand<Property>(questionEntity));
 
         await UploadQuestionnaires();
     }
 
     private async Task ChangeQuestion(QuestionModel question)
     {
-        var questionEntity = Mapper.Map<PropertyEntity>(question);
-        await Mediator.Send(new CreateOrChangeEntityCommand<PropertyEntity>(questionEntity));
+        var questionEntity = Mapper.Map<Property>(question);
+        await Mediator.Send(new CreateOrChangeEntityCommand<Property>(questionEntity));
     }
 
     private async Task RemoveQuestion(int questionnaireId)
     {
-        await Mediator.Send(new RemoveEntityCommand<PropertyEntity>(questionnaireId));
+        await Mediator.Send(new RemoveEntityCommand<Property>(questionnaireId));
         await UploadQuestionnaires();
     }
 
@@ -142,10 +143,10 @@
     {
         currentQuestion = new()
         {
-            Options = new(),
+            Options = new List<OptionModel>(),
         };
 
-        var questionnaireEntity = await Mediator.Send(new GetEntityQuery<QuestionnaireEntity>(QuestionnaireId));
+        var questionnaireEntity = await Mediator.Send(new GetEntityQuery<Structure>(QuestionnaireId));
         questionnaire = Mapper.Map<QuestionnaireModel>(questionnaireEntity);
 
         var properties = await Mediator.Send(new GetPropertiesByQuestionnaireQuery(QuestionnaireId));

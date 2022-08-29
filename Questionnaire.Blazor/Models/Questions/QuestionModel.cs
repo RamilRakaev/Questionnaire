@@ -12,9 +12,10 @@ namespace Questionnaire.Blazor.Models.Questions
 
         public string DisplayName { get; set; }
         public string JsonName { get; set; }
+
         public QuestionType QuestionType { get; set; }
 
-        public List<string> Options { get; set; }
+        public List<OptionModel> Options { get; set; }
 
         public HtmlTag[] HtmlTags { get; set; }
     }

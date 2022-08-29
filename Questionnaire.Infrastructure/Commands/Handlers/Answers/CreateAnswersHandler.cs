@@ -8,9 +8,9 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Answers
 {
     public class CreateAnswersHandler : IRequestHandler<CreateAnswersCommand>
     {
-        private readonly IRepository<AnswerEntity> _answerRepository;
+        private readonly IRepository<Answer> _answerRepository;
 
-        public CreateAnswersHandler(IRepository<AnswerEntity> answerRepository)
+        public CreateAnswersHandler(IRepository<Answer> answerRepository)
         {
             _answerRepository = answerRepository;
         }
@@ -22,9 +22,9 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Answers
                 var questionsAnswers = request.QuestionsAnswers.ToDictionary(pair => pair.Key.JsonName, pair => pair.Value.Value);
                 var answersInJson = JsonSerializer.Serialize(questionsAnswers);
 
-                AnswerEntity answerEntity = new()
+                Answer answerEntity = new()
                 {
-                    QuestionnaireId = request.QuestionsAnswers.Keys.FirstOrDefault().QuestionnaireId,
+                    QuestionnaireId = request.QuestionsAnswers.Keys.FirstOrDefault().StructureId,
                     Value = answersInJson,
                     UserId = request.UserId,
                 };

@@ -5,7 +5,7 @@ namespace Questionnaire.Infrastructure.Commands.Requests.Answers
 {
     public class CreateAnswersCommand : IRequest
     {
-        public CreateAnswersCommand(Dictionary<PropertyEntity, AnswerEntity> answers, int userId)
+        public CreateAnswersCommand(Dictionary<Property, Answer> answers, int userId)
         {
             QuestionsAnswers = answers;
             UserId = userId;
@@ -13,6 +13,6 @@ namespace Questionnaire.Infrastructure.Commands.Requests.Answers
 
         public int UserId { get; private set; }
 
-        public Dictionary<PropertyEntity, AnswerEntity> QuestionsAnswers { get; private set; }
+        public Dictionary<Property, Answer> QuestionsAnswers { get; private set; }
     }
 }

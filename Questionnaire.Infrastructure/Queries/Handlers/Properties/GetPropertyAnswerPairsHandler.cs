@@ -6,30 +6,32 @@ using Questionnaire.Infrastructure.Queries.Requests.Properties;
 
 namespace Questionnaire.Infrastructure.Queries.Handlers.Properties
 {
-    public class GetPropertyAnswerPairsHandler : IRequestHandler<GetPropertyAnswerPairsQuery, Dictionary<PropertyEntity, AnswerEntity>>
+    public class GetPropertyAnswerPairsHandler : IRequestHandler<GetPropertyAnswerPairsQuery, Dictionary<Property, Answer>>
     {
-        private readonly IRepository<PropertyEntity> _propertyRepository;
+        private readonly IRepository<Property> _propertyRepository;
 
-        public GetPropertyAnswerPairsHandler(IRepository<PropertyEntity> propertyRepository)
+        public GetPropertyAnswerPairsHandler(IRepository<Property> propertyRepository)
         {
             _propertyRepository = propertyRepository;
         }
 
-        public async Task<Dictionary<PropertyEntity, AnswerEntity>> Handle(GetPropertyAnswerPairsQuery request, CancellationToken cancellationToken)
+        public async Task<Dictionary<Property, Answer>> Handle(GetPropertyAnswerPairsQuery request, CancellationToken cancellationToken)
         {
-            var properties = _propertyRepository.GetAllAsNoTracking().Where(property => property.QuestionnaireId == request.QuestionnaireId);
+            var properties = await _propertyRepository.GetAllAsNoTracking()
+                .Where(property => property.StructureId == request.StructureId)
+                .Include(property => property.Options)
+                .ToArrayAsync(cancellationToken);
 
-            Dictionary<PropertyEntity, AnswerEntity> pairs = await properties
-                .ToDictionaryAsync(
+            Dictionary<Property, Answer> propertiesAnswers = properties
+                .ToDictionary(
                     property => property,
-                    property => new AnswerEntity()
+                    property => new Answer()
                     {
-                        QuestionnaireId = property.QuestionnaireId,
+                        QuestionnaireId = property.StructureId,
                         UserId = request.UserId,
-                    },
-                    cancellationToken);
+                    });
 
-            return pairs;
+            return propertiesAnswers;
         }
     }
 }

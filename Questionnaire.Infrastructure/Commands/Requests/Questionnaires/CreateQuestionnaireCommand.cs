@@ -5,14 +5,14 @@ namespace Questionnaire.Infrastructure.Commands.Requests.Questionnaires
 {
     public class CreateQuestionnaireCommand : IRequest
     {
-        public CreateQuestionnaireCommand(QuestionnaireEntity questionnaire, IEnumerable<PropertyEntity> properties)
+        public CreateQuestionnaireCommand(Structure questionnaire, IEnumerable<Property> properties)
         {
             Questionnaire = questionnaire;
             Properties = properties;
         }
 
-        public QuestionnaireEntity Questionnaire { get; private set; }
+        public Structure Questionnaire { get; private set; }
 
-        public IEnumerable<PropertyEntity> Properties { get; private set; }
+        public IEnumerable<Property> Properties { get; private set; }
     }
 }

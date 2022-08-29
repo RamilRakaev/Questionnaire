@@ -7,10 +7,10 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Questionnaires
 {
     public class CreateQuestionnaireHandler : IRequestHandler<CreateQuestionnaireCommand>
     {
-        private readonly IRepository<QuestionnaireEntity> _questionnaireRepository;
-        private readonly IRepository<PropertyEntity> _questionRepository;
+        private readonly IRepository<Structure> _questionnaireRepository;
+        private readonly IRepository<Property> _questionRepository;
 
-        public CreateQuestionnaireHandler(IRepository<QuestionnaireEntity> questionnaireRepository, IRepository<PropertyEntity> questionRepository)
+        public CreateQuestionnaireHandler(IRepository<Structure> questionnaireRepository, IRepository<Property> questionRepository)
         {
             _questionnaireRepository = questionnaireRepository;
             _questionRepository = questionRepository;
@@ -23,7 +23,7 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Questionnaires
             var properties = request.Properties
                 .Select(property =>
                 {
-                    property.QuestionnaireId = request.Questionnaire.Id;
+                    property.StructureId = request.Questionnaire.Id;
                     return property;
                 }); 
 

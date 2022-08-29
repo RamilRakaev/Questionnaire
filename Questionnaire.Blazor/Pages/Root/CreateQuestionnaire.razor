@@ -12,7 +12,7 @@
 
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <EditForm Model=questionnaire OnValidSubmit=Create class="my-3 col-6">
+        <EditForm Model=questionnaire OnValidSubmit=Send class="my-3 col-6">
             <div class="form-group">
                 <label>Отображаемое имя опросника</label>
                 <InputText @bind-Value=questionnaire.DisplayName class="form-control" />
@@ -84,7 +84,7 @@
 </div>
 
 @code {
-    private List<string> options;
+    private List<OptionModel> options;
 
     private QuestionnaireModel questionnaire = new();
     private List<QuestionModel> questions = new();
@@ -108,10 +108,10 @@
         };
 
         currentQuestion = new()
-            {
-                DisplayName = "",
-                JsonName = "",
-            };
+        {
+            DisplayName = "",
+            JsonName = "",
+        };
     }
 
     private void CreateQuestion()
@@ -125,10 +125,10 @@
         };
     }
 
-    private async Task Create()
+    private async Task Send()
     {
-        var questionnaireEntity = Mapper.Map<QuestionnaireEntity>(questionnaire);
-        var propertyEntities = Mapper.Map<IEnumerable<PropertyEntity>>(questions);
+        var questionnaireEntity = Mapper.Map<Structure>(questionnaire);
+        var propertyEntities = Mapper.Map<List<Property>>(questions);
 
         await Mediator.Send(new CreateQuestionnaireCommand(questionnaireEntity, propertyEntities));
 

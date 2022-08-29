@@ -4,11 +4,11 @@ namespace Questionnaire.Infrastructure.Commands.Requests.Questionnaires
 {
     public class RemoveQuestionnaireCommand : IRequest
     {
-        public RemoveQuestionnaireCommand(int questionnaireId)
+        public RemoveQuestionnaireCommand(int structureId)
         {
-            QuestionnaireId = questionnaireId;
+            StructureId = structureId;
         }
 
-        public int QuestionnaireId { get; private set; }
+        public int StructureId { get; private set; }
     }
 }

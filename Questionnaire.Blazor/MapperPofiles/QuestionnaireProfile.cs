@@ -8,12 +8,12 @@ namespace Questionnaire.Blazor.MapperPofiles
     {
         public QuestionnaireProfile()
         {
-            CreateMap<QuestionnaireEntity, QuestionnaireModel>()
+            CreateMap<Structure, QuestionnaireModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
                 .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options));
 
-            CreateMap<QuestionnaireModel, QuestionnaireEntity>()
+            CreateMap<QuestionnaireModel, Structure>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
                 .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options));
