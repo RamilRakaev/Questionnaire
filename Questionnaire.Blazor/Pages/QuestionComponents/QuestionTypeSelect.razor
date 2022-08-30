@@ -1,0 +1,43 @@
+﻿@using Questionnaire.Infrastructure.Conventions
+
+<InputRadioGroup ValueChanged="@((e) => SetQuestionType(e))" TValue="QuestionType" ValueExpression="() => QuestionType" class="form-check d-block">
+    Тип вопроса
+    <div>
+        <InputRadio Value="QuestionType.Text" id="Text" />
+        <label for="Text">Текст</label>
+    </div>
+    <div>
+        <InputRadio Value="QuestionType.Boolean" id="Boolean" />
+        <label for="Boolean">Чекбокс</label>
+    </div>
+    <div>
+        <InputRadio Value="@QuestionType.Number" id="Number" />
+        <label for="Number">Номер</label>
+    </div>
+    <div>
+        <InputRadio Value="@QuestionType.DateTime" id="DateTime" />
+        <label for="DateTime">Дата время</label>
+    </div>
+    <div>
+        <InputRadio Value="QuestionType.Enumeration" id="Enumeration" />
+        <label for="Enumeration">Перечисление</label>
+    </div>
+</InputRadioGroup>
+
+@code {
+    [Parameter]
+    public QuestionType QuestionType { get; set; }
+
+    [Parameter]
+    public EventCallback<QuestionType> QuestionTypeChanged { get; set; }
+
+    private async Task SetQuestionType(object sender)
+    {
+        Enum.TryParse<QuestionType>(sender.ToString(), out var value);
+        if (QuestionType != value)
+        {
+            QuestionType = value;
+            await QuestionTypeChanged.InvokeAsync(QuestionType);
+        }
+    }
+}

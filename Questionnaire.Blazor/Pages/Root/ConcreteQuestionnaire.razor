@@ -7,6 +7,7 @@
 @using Questionnaire.Blazor.Models.Questions.Tags
 @using Questionnaire.Domain.Entities
 @using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
+@using Questionnaire.Infrastructure.Conventions
 @using Questionnaire.Infrastructure.Queries.Requests.Properties
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 
@@ -24,32 +25,20 @@
         <label>Отображаемое имя вопроса</label>
         <InputText @bind-Value=currentQuestion.DisplayName class="form-control" />
     </div>
-
+    
     <div class="form-group">
         <label>Имя вопроса в json</label>
         <InputText @bind-Value=currentQuestion.JsonName class="form-control" />
     </div>
-    @*<div class="form-group">
-        <label>Тип вопроса</label>
-        <InputSelect @bind-Value=currentQuestion.QuestionType class="custom-select" disabled=@addAnswerOptions>
-            <option value="Text" selected>Текст</option>
-            <option value="Boolean">Чекбокс</option>
-            <option value="Number">Номер</option>
-            <option value="DateTime">Дата время</option>
-            <option value="Enumeration" selected=@addAnswerOptions>Перечисление</option>
-        </InputSelect>
-    </div>*@
-    @*<div class="form-group">
-        <label class="form-check-label">Ввести свои варианты ответа</label>
-        <InputCheckbox @bind-Value=addAnswerOptions class="ml-2 form-check-label" @onclick=SwitchToEnumeration />
-    </div>*@
 
-    @if (addAnswerOptions)
+    <QuestionTypeSelect @bind-QuestionType=currentQuestion.QuestionType />
+
+    @if (AddAnswerOptions)
     {
         <AnswerOptions Options=@currentQuestion.Options />
     }
 
-    <button class="btn btn-success">Создать</button>
+    <button class="btn btn-success">Добавить</button>
 </EditForm>
 
 <table class="table">
@@ -66,13 +55,16 @@
         @foreach (var question in questions)
         {
             <tr>
-                <td><input type="text" @bind-value=@question.DisplayName class="form-control"/></td>
-                <td><input type="text" @bind-value=@question.JsonName class="form-control"/></td>
+                <td><input type="text" @bind-value=@question.DisplayName class="form-control" /></td>
+                <td><input type="text" @bind-value=@question.JsonName class="form-control" /></td>
                 <td>@question.QuestionType</td>
                 <td>
-                    @if (question.Options != null)
+                    @foreach (var option in question.Options)
                     {
-                        <p>@(string.Join(" ", question.Options))</p>
+                        <div class="form-group">
+                            <input type="text" @bind-value=option.DisplayName class="form-control d-block" />
+                            <input type="text" @bind-value=option.JsonName class="form-control d-block" />
+                        </div>
                     }
                 </td>
                 <td>
@@ -85,7 +77,6 @@
 </table>
 
 @code {
-    private bool addAnswerOptions;
     private QuestionModel currentQuestion = new();
 
     private QuestionnaireModel questionnaire { get; set; } = new();
@@ -101,15 +92,12 @@
     [Inject]
     private IMediator Mediator { get; set; }
 
+    private bool AddAnswerOptions => currentQuestion.QuestionType == QuestionType.Enumeration;
+
     protected async override Task OnInitializedAsync()
     {
         await UploadQuestionnaires();
     }
-
-    //private void SwitchToEnumeration()
-    //{
-    //    currentQuestion.QuestionType = "Enumeration";
-    //}
 
     private async Task ChangeQuestionnaire()
     {
@@ -120,6 +108,11 @@
     private async Task CreateQuestion()
     {
         currentQuestion.QuestionnaireId = QuestionnaireId;
+
+        if (currentQuestion.QuestionType != QuestionType.Enumeration)
+        {
+            currentQuestion.Options = null;
+        }
 
         var questionEntity = Mapper.Map<Property>(currentQuestion);
         await Mediator.Send(new CreateOrChangeEntityCommand<Property>(questionEntity));
