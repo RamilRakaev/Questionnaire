@@ -65,7 +65,7 @@
         };
     }
 
-    private void CreateQuestion()
+    private Task CreateQuestion()
     {
         if (currentQuestion.QuestionType != QuestionType.Enumeration)
         {
@@ -79,6 +79,8 @@
             JsonName = "",
             Options = new(),
         };
+
+        return Task.CompletedTask;
     }
 
     private async Task Send()

@@ -52,7 +52,7 @@
     public List<QuestionModel> Questions { get; set; }
 
     [Parameter]
-    public Action CreateQuestion { get; set; }
+    public Func<Task> CreateQuestion { get; set; }
 
     private bool AddAnswerOptions => CurrentQuestion.QuestionType == QuestionType.Enumeration;
 }
