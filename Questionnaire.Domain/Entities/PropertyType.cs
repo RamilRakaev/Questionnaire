@@ -2,6 +2,6 @@
 {
     public enum PropertyType
     {
-        Text, Number, DateTime, Boolean, Enumeration,
+        Text, Number, DateTime, Boolean, Enumeration, Custom,
     }
 }

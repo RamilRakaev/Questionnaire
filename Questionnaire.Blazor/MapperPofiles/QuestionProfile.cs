@@ -13,6 +13,7 @@ namespace Questionnaire.Blazor.MapperPofiles
             CreateMap<Property, QuestionModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.QuestionnaireId, opt => opt.MapFrom(src => src.StructureId))
+                .ForMember(dest => dest.CustomTypes, opt => opt.MapFrom(src => src.CustomTypes))
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
                 .ForMember(dest => dest.JsonName, opt => opt.MapFrom(src => src.JsonName))
                 .ForMember(dest => dest.QuestionType, opt => opt.MapFrom(src => src.Type.ToString()))
@@ -22,10 +23,11 @@ namespace Questionnaire.Blazor.MapperPofiles
             CreateMap<QuestionModel, Property>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.StructureId, opt => opt.MapFrom(src => src.QuestionnaireId))
+                .ForMember(dest => dest.CustomTypes, opt => opt.MapFrom(src => src.CustomTypes))
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
                 .ForMember(dest => dest.JsonName, opt => opt.MapFrom(src => src.JsonName))
-                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options))
-                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.QuestionType));
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.QuestionType))
+                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options));
         }
     }
 }

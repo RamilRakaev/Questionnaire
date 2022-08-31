@@ -13,8 +13,8 @@ using Questionnaire.Infrastructure.Database;
 namespace Questionnaire.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(QuestionnaireContext))]
-    [Migration("20220831070329_AnswerStructureId")]
-    partial class AnswerStructureId
+    [Migration("20220831161411_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -315,7 +315,14 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                     b.Property<List<string>>("Options")
                         .HasColumnType("text[]");
 
+                    b.Property<int?>("ParentPropertyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValueSql("null");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentPropertyId");
 
                     b.ToTable("Structure");
                 });
@@ -412,6 +419,15 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                     b.Navigation("Structure");
                 });
 
+            modelBuilder.Entity("Questionnaire.Domain.Entities.Structure", b =>
+                {
+                    b.HasOne("Questionnaire.Domain.Entities.Property", "ParentProperty")
+                        .WithMany("CustomTypes")
+                        .HasForeignKey("ParentPropertyId");
+
+                    b.Navigation("ParentProperty");
+                });
+
             modelBuilder.Entity("Questionnaire.Domain.Entities.Identity.ApplicationUser", b =>
                 {
                     b.Navigation("Answers");
@@ -419,6 +435,8 @@ namespace Questionnaire.Infrastructure.Database.Migrations
 
             modelBuilder.Entity("Questionnaire.Domain.Entities.Property", b =>
                 {
+                    b.Navigation("CustomTypes");
+
                     b.Navigation("Options");
                 });
 

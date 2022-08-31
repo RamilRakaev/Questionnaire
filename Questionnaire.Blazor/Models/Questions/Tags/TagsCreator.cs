@@ -8,6 +8,11 @@ namespace Questionnaire.Blazor.Models.Questions.Tags
     {
         public static HtmlTag[] CreateTags(Property propertyEntity)
         {
+            if (propertyEntity.Type == PropertyType.Custom)
+            {
+                return Array.Empty<HtmlTag>();
+            }
+
             var factoryType = typeof(AbstractTagsFactory).Assembly
                 .GetTypes()
                 .FirstOrDefault(type => type.Name == propertyEntity.Type.ToString() + "Factory");

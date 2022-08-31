@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -6,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Questionnaire.Infrastructure.Database.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,21 +50,6 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "QuestionnaireEntity",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    DisplayName = table.Column<string>(type: "text", nullable: true),
-                    JsonName = table.Column<string>(type: "text", nullable: true),
-                    Options = table.Column<string[]>(type: "text[]", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_QuestionnaireEntity", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -173,63 +159,85 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AnswerEntity",
+                name: "Answer",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    QuestionnaireId = table.Column<int>(type: "integer", nullable: false),
+                    Value = table.Column<string>(type: "text", nullable: true),
+                    StructureId = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AnswerEntity", x => x.Id);
+                    table.PrimaryKey("PK_Answer", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AnswerEntity_AspNetUsers_UserId",
+                        name: "FK_Answer_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AnswerEntity_QuestionnaireEntity_QuestionnaireId",
-                        column: x => x.QuestionnaireId,
-                        principalTable: "QuestionnaireEntity",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PropertyEntity",
+                name: "Option",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    QuestionnaireId = table.Column<int>(type: "integer", nullable: false),
+                    PropertyId = table.Column<int>(type: "integer", nullable: false),
                     DisplayName = table.Column<string>(type: "text", nullable: true),
-                    JsonName = table.Column<string>(type: "text", nullable: true),
-                    Type = table.Column<int>(type: "integer", nullable: false),
-                    Options = table.Column<string[]>(type: "text[]", nullable: true)
+                    JsonName = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PropertyEntity", x => x.Id);
+                    table.PrimaryKey("PK_Option", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Property",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    StructureId = table.Column<int>(type: "integer", nullable: false),
+                    DisplayName = table.Column<string>(type: "text", nullable: true),
+                    JsonName = table.Column<string>(type: "text", nullable: true),
+                    Type = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Property", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Structure",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ParentPropertyId = table.Column<int>(type: "integer", nullable: true, defaultValueSql: "null"),
+                    DisplayName = table.Column<string>(type: "text", nullable: true),
+                    Options = table.Column<List<string>>(type: "text[]", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Structure", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PropertyEntity_QuestionnaireEntity_QuestionnaireId",
-                        column: x => x.QuestionnaireId,
-                        principalTable: "QuestionnaireEntity",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Structure_Property_ParentPropertyId",
+                        column: x => x.ParentPropertyId,
+                        principalTable: "Property",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AnswerEntity_QuestionnaireId",
-                table: "AnswerEntity",
-                column: "QuestionnaireId");
+                name: "IX_Answer_StructureId",
+                table: "Answer",
+                column: "StructureId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AnswerEntity_UserId",
-                table: "AnswerEntity",
+                name: "IX_Answer_UserId",
+                table: "Answer",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -270,15 +278,53 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PropertyEntity_QuestionnaireId",
-                table: "PropertyEntity",
-                column: "QuestionnaireId");
+                name: "IX_Option_PropertyId",
+                table: "Option",
+                column: "PropertyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Property_StructureId",
+                table: "Property",
+                column: "StructureId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Structure_ParentPropertyId",
+                table: "Structure",
+                column: "ParentPropertyId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Answer_Structure_StructureId",
+                table: "Answer",
+                column: "StructureId",
+                principalTable: "Structure",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Option_Property_PropertyId",
+                table: "Option",
+                column: "PropertyId",
+                principalTable: "Property",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Property_Structure_StructureId",
+                table: "Property",
+                column: "StructureId",
+                principalTable: "Structure",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Property_Structure_StructureId",
+                table: "Property");
+
             migrationBuilder.DropTable(
-                name: "AnswerEntity");
+                name: "Answer");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -296,7 +342,7 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "PropertyEntity");
+                name: "Option");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -305,7 +351,10 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "QuestionnaireEntity");
+                name: "Structure");
+
+            migrationBuilder.DropTable(
+                name: "Property");
         }
     }
 }

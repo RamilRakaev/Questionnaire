@@ -7,9 +7,9 @@
 @using Questionnaire.Blazor.Models.Questions.Tags
 @using Questionnaire.Domain.Entities
 @using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
-@using Questionnaire.Infrastructure.Conventions
 @using Questionnaire.Infrastructure.Queries.Requests.Properties
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
+@using System.Collections.Concurrent
 
 <EditForm Model=@questionnaire OnSubmit=ChangeQuestionnaire>
     <div class="form-group">
@@ -20,7 +20,7 @@
     <button class="btn btn-warning">Изменить опросник</button>
 </EditForm>
 
-<QuestionForm CurrentQuestion=@currentQuestion CreateQuestion=CreateQuestion />
+<QuestionForm CurrentQuestion=@currentQuestion CreateQuestion=CreateQuestion CustomTypes=nameIdPairs />
 
 <table class="table">
     <thead class="thead-light">
@@ -94,6 +94,7 @@
 }
 
 @code {
+    private ConcurrentDictionary<string, int> nameIdPairs = new();
     private OptionModel currentOption = new();
     private QuestionModel currentQuestion = new();
 
@@ -154,6 +155,10 @@
 
     private async Task UploadQuestionnaires()
     {
+        var structures = await Mediator.Send(new GetEntitiesQuery<Structure>());
+        var questionnaires = Mapper.Map<List<QuestionnaireModel>>(structures);
+        nameIdPairs = new(questionnaires.ToDictionary(type => type.DisplayName, type => type.Id));
+
         currentQuestion = new()
         {
             Options = new List<OptionModel>(),

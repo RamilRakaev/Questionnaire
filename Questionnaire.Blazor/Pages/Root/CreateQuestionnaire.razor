@@ -8,17 +8,21 @@
 @using Questionnaire.Infrastructure.Commands.Requests.Questionnaires
 @using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
 @using AutoMapper.QueryableExtensions
-@using Questionnaire.Infrastructure.Conventions
+@using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
+@using System.Collections.Concurrent
 
 <div class="container-fluid">
     <div class="row justify-content-center">
         <EditForm Model=questionnaire OnValidSubmit=Send class="my-3 col-6">
+            <ValidationSummary />
+            <DataAnnotationsValidator />
+
             <div class="form-group">
                 <label>Отображаемое имя опросника</label>
                 <InputText @bind-Value=questionnaire.DisplayName class="form-control" />
             </div>
 
-            @foreach (var question in questions)
+            @foreach (var question in questionnaire.Questions)
             {
                 <div class="form-group">
                     <label>Отображаемое имя вопроса</label>
@@ -36,11 +40,12 @@
             <button class="btn btn-success">Создать опросник</button>
         </EditForm>
 
-        <QuestionForm CurrentQuestion=@currentQuestion CreateQuestion=CreateQuestion />
+        <QuestionForm CurrentQuestion=@currentQuestion CreateQuestion=CreateQuestion CustomTypes=nameIdPairs />
     </div>
 </div>
 
 @code {
+    private ConcurrentDictionary<string, int> nameIdPairs = new();
     private QuestionnaireModel questionnaire = new();
     private List<QuestionModel> questions = new();
 
@@ -52,17 +57,22 @@
     [Inject]
     private IMediator Mediator { get; set; }
 
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
         questionnaire = new()
         {
             DisplayName = "",
+            Questions = new(),
         };
-
+        
         currentQuestion = new()
         {
             Options = new(),
         };
+
+        var structures = await Mediator.Send(new GetEntitiesQuery<Structure>());
+        var questionnaires = Mapper.Map<List<QuestionnaireModel>>(structures);
+        nameIdPairs = new(questionnaires.ToDictionary(type => type.DisplayName, type => type.Id));
     }
 
     private Task CreateQuestion()
@@ -72,7 +82,7 @@
             currentQuestion.Options = null;
         }
 
-        questions.Add(currentQuestion);
+        questionnaire.Questions.Add(currentQuestion);
         currentQuestion = new()
         {
             DisplayName = "",
@@ -86,13 +96,14 @@
     private async Task Send()
     {
         var questionnaireEntity = Mapper.Map<Structure>(questionnaire);
-        var propertyEntities = Mapper.Map<List<Property>>(questions);
+        //var propertyEntities = Mapper.Map<List<Property>>(questions);
 
-        await Mediator.Send(new CreateQuestionnaireCommand(questionnaireEntity, propertyEntities));
-
+        //await Mediator.Send(new CreateQuestionnaireCommand(questionnaireEntity, propertyEntities));
+        await Mediator.Send(new CreateOrChangeEntityCommand<Structure>(questionnaireEntity));
         questionnaire = new()
         {
             DisplayName = "",
+            Questions = new(),
         };
     }
 }

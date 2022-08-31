@@ -1,7 +1,15 @@
-﻿@using Questionnaire.Blazor.Models.Questions
-@using Questionnaire.Infrastructure.Conventions
+﻿@using AutoMapper
+@using MediatR
+@using Questionnaire.Blazor.Models
+@using Questionnaire.Blazor.Models.Questions
+@using Questionnaire.Domain.Entities
+@using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
+@using System.Collections.Concurrent
 
 <EditForm Model=CurrentQuestion OnValidSubmit=CreateQuestion class="my-3 col-6">
+    <ValidationSummary />
+    <DataAnnotationsValidator />
+
     <div class="form-group">
         <label>Отображаемое имя вопроса</label>
         <InputText @bind-Value=CurrentQuestion.DisplayName class="form-control" />
@@ -34,17 +42,38 @@
             <InputRadio Value="QuestionType.Enumeration" id="Enumeration" />
             <label for="Enumeration">Перечисление</label>
         </div>
+        <div>
+            <InputRadio Value="QuestionType.Custom" id="Enumeration" />
+            <label for="Enumeration">Пользовательский</label>
+        </div>
     </InputRadioGroup>
 
-    @if (AddAnswerOptions)
+    @if (CurrentQuestion.QuestionType == QuestionType.Enumeration)
     {
         <AnswerOptions Options=@CurrentQuestion.Options />
+    }
+    else if (CurrentQuestion.QuestionType == QuestionType.Custom)
+    {
+        <div class="form-group">
+            <input type="text" list="custom-list" @oninput=SetValue class="form-control" />
+            <datalist id="custom-list">
+                @if (CustomTypes != null)
+                {
+                    @foreach (var pair in CustomTypes)
+                    {
+                        <option value=@pair.Key />
+                    }
+                }
+            </datalist>
+        </div>
     }
 
     <button class="btn btn-success">Добавить вопрос</button>
 </EditForm>
 
 @code {
+    private int customTypeId;
+
     [Parameter]
     public QuestionModel CurrentQuestion { get; set; }
 
@@ -54,5 +83,17 @@
     [Parameter]
     public Func<Task> CreateQuestion { get; set; }
 
-    private bool AddAnswerOptions => CurrentQuestion.QuestionType == QuestionType.Enumeration;
+    [Parameter]
+    public ConcurrentDictionary<string, int> CustomTypes { get; set; }
+
+    private void SetValue(ChangeEventArgs args)
+    {
+        if (CustomTypes == null)
+            return;
+        var value = args.Value.ToString();
+        if (CustomTypes.ContainsKey(value))
+        {
+            CurrentQuestion.CustomTypeId = CustomTypes[value];
+        }
+    }
 }
