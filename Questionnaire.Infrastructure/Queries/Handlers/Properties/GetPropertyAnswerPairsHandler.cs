@@ -27,7 +27,7 @@ namespace Questionnaire.Infrastructure.Queries.Handlers.Properties
                     property => property,
                     property => new Answer()
                     {
-                        QuestionnaireId = property.StructureId,
+                        StructureId = property.StructureId,
                         UserId = request.UserId,
                     });
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Questionnaire.Infrastructure.Database;
@@ -12,9 +13,10 @@ using Questionnaire.Infrastructure.Database;
 namespace Questionnaire.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(QuestionnaireContext))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220831070329_AnswerStructureId")]
+    partial class AnswerStructureId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

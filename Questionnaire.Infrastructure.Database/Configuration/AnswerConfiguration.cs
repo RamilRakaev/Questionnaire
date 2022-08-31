@@ -11,7 +11,7 @@ namespace Questionnaire.Infrastructure.Database.Configuration
             builder
                 .HasOne(answer => answer.Questionnaire)
                 .WithMany(question => question.Answers)
-                .HasForeignKey(answer => answer.QuestionnaireId);
+                .HasForeignKey(answer => answer.StructureId);
 
             builder
                 .HasOne(answer => answer.User)

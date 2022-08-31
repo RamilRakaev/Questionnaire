@@ -24,7 +24,7 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Answers
 
                 Answer answerEntity = new()
                 {
-                    QuestionnaireId = request.QuestionsAnswers.Keys.FirstOrDefault().StructureId,
+                    StructureId = request.QuestionsAnswers.Keys.FirstOrDefault().StructureId,
                     Value = answersInJson,
                     UserId = request.UserId,
                 };

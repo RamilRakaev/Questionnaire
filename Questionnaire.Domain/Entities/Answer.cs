@@ -6,7 +6,7 @@ namespace Questionnaire.Domain.Entities
     {
         public string Value { get; set; }
 
-        public int QuestionnaireId { get; set; }
+        public int StructureId { get; set; }
         public Structure Questionnaire { get; set; }
 
         public int UserId { get; set; }
