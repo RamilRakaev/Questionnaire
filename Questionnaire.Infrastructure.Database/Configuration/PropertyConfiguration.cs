@@ -12,6 +12,11 @@ namespace Questionnaire.Infrastructure.Database.Configuration
                 .HasOne(property => property.Structure)
                 .WithMany(structure => structure.Properties)
                 .HasForeignKey(property => property.StructureId);
+
+            builder
+                .HasOne(property => property.CustomType)
+                .WithMany(structure => structure.CustomProperties)
+                .HasForeignKey(property => property.CustomTypeId);
         }
     }
 }

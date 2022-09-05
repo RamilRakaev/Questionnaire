@@ -10,9 +10,11 @@ namespace Questionnaire.Blazor.Models.Questions
 
         public int QuestionnaireId { get; set; }
 
-        public List<QuestionnaireModel> CustomTypes { get; set; }
+        public QuestionnaireModel CustomTypeId { get; set; }
+        public QuestionnaireModel CustomType { get; set; }
 
-        [Required(ErrorMessage = "Не введено отображаемое имя")]
+        public List<OptionModel> Options { get; set; }
+
         public string DisplayName { get; set; }
 
         [Required(ErrorMessage = "Не введено имя в json")]
@@ -20,8 +22,6 @@ namespace Questionnaire.Blazor.Models.Questions
 
         public QuestionType QuestionType { get; set; }
         public int CustomTypeId { get; set; }
-
-        public List<OptionModel> Options { get; set; }
 
         public HtmlTag[] HtmlTags { get; set; }
     }

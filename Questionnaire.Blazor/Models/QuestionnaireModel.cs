@@ -9,9 +9,8 @@ namespace Questionnaire.Blazor.Models
     {
         public int Id { get; set; }
 
-        public int? ParentQuestionId { get; set; }
+        public List<QuestionModel> Questions { get; set; }
 
-        [Required(ErrorMessage = "Не введено имя")]
         public string DisplayName { get; set; }
 
         [Required]

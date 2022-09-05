@@ -7,7 +7,9 @@ namespace Questionnaire.Domain.Entities
         public int StructureId { get; set; }
         public Structure Structure { get; set; }
 
-        [NotNull]
+        public int? CustomTypeId { get; set; }
+        public Structure CustomType { get; set; }
+
         public string DisplayName { get; set; }
 
         [NotNull]
@@ -15,7 +17,5 @@ namespace Questionnaire.Domain.Entities
 
         public PropertyType Type { get; set; }
         public IEnumerable<Option> Options { get; set; }
-
-        public IEnumerable<Structure> CustomTypes { get; set; }
     }
 }
