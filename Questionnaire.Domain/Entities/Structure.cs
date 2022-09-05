@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
+﻿
 namespace Questionnaire.Domain.Entities
 {
     public class Structure : BaseEntity

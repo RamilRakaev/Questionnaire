@@ -9,8 +9,6 @@ namespace Questionnaire.Blazor.Models
     {
         public int Id { get; set; }
 
-        public List<QuestionModel> Questions { get; set; }
-
         public string DisplayName { get; set; }
 
         [Required]

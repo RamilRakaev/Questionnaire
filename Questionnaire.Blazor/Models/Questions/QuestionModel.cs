@@ -21,7 +21,6 @@ namespace Questionnaire.Blazor.Models.Questions
         public string JsonName { get; set; }
 
         public QuestionType QuestionType { get; set; }
-        public int CustomTypeId { get; set; }
 
         public HtmlTag[] HtmlTags { get; set; }
     }
