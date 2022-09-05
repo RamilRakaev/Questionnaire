@@ -96,10 +96,8 @@
     private async Task Send()
     {
         var questionnaireEntity = Mapper.Map<Structure>(questionnaire);
-        //var propertyEntities = Mapper.Map<List<Property>>(questions);
-
-        //await Mediator.Send(new CreateQuestionnaireCommand(questionnaireEntity, propertyEntities));
         await Mediator.Send(new CreateOrChangeEntityCommand<Structure>(questionnaireEntity));
+
         questionnaire = new()
         {
             DisplayName = "",

@@ -20,8 +20,8 @@ namespace Questionnaire.Infrastructure.Queries.Handlers.Properties
             var properties = await _propertyRepository.GetAllAsNoTracking()
                 .Where(property => property.StructureId == request.StructureId)
                 .Include(property => property.Options)
-                .Include(property => property.CustomTypes)
-                .ThenInclude(property => property.Properties)
+                .Include(property => property.CustomType)
+                //.ThenInclude(property => property.Properties)
                 .ToArrayAsync(cancellationToken);
 
             Dictionary<Property, Answer> propertiesAnswers = properties

@@ -8,7 +8,7 @@ namespace Questionnaire.Blazor.Models.Questions.Tags
 
         public Dictionary<string, object> Attrubutes { get; set; }
 
-        public HtmlTag[] ChildTags { get; set; }
+        public List<HtmlTag> ChildTags { get; set; }
 
         public string Value { get; set; }
     }

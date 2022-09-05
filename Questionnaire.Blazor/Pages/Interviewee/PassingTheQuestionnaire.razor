@@ -5,10 +5,12 @@
 @using Microsoft.AspNetCore.Identity
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Blazor.Models.Questions
+@using Questionnaire.Blazor.Models.Questions.Tags
 @using Questionnaire.Domain.Entities
 @using Questionnaire.Domain.Entities.Identity
 @using Questionnaire.Infrastructure.Commands.Requests.Answers
 @using Questionnaire.Infrastructure.Queries.Requests.Properties
+@using Questionnaire.Infrastructure.Queries.Requests.Structures
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 @using Microsoft.AspNetCore.Components.Authorization
 
@@ -16,7 +18,7 @@
 <EditForm Model=questionnaire OnValidSubmit=Send>
     @foreach (var questionAnswer in questionsAnswers)
     {
-        <QuestionDisplay Question=questionAnswer.Key Answer=questionAnswer.Value />
+        <QuestionDisplay Question=questionAnswer.Key Answer=questionAnswer.Value HtmlTags=htmlTags />
     }
     <button class="btn btn-success">Отправить</button>
 </EditForm>
@@ -24,6 +26,8 @@
 @code {
     private QuestionnaireModel questionnaire = new();
     private Dictionary<QuestionModel, AnswerModel> questionsAnswers = new();
+
+    private List<HtmlTag> htmlTags = new();
 
     [Parameter]
     public int QuestionnaireId { get; set; }
@@ -45,11 +49,22 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = await UserManager.FindByNameAsync(authState.User.Identity.Name);
 
-        var questionnaireEntity = await Mediator.Send(new GetEntityQuery<Structure>(QuestionnaireId));
+        var questionnaireEntity = await Mediator.Send(new GetStructureQuery(QuestionnaireId));
         questionnaire = Mapper.Map<QuestionnaireModel>(questionnaireEntity);
 
-        var propertyAnswerPairs = await Mediator.Send(new GetPropertyAnswerPairsQuery(QuestionnaireId, user.Id));
-        questionsAnswers = Mapper.Map<Dictionary<QuestionModel, AnswerModel>>(propertyAnswerPairs);
+        foreach (var question in questionnaire.Questions)
+        {
+            if (question.QuestionType == QuestionType.Custom)
+            {
+                htmlTags.AddRange(TagsCreator.CreateTags(question));
+            }
+
+            AnswerModel answer = new()
+            {
+                QuestionnaireId = questionnaire.Id,
+            };
+            questionsAnswers.Add(question, answer);
+        }
     }
 
     private async Task Send()

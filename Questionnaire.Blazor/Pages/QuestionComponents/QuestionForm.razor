@@ -43,8 +43,8 @@
             <label for="Enumeration">Перечисление</label>
         </div>
         <div>
-            <InputRadio Value="QuestionType.Custom" id="Enumeration" />
-            <label for="Enumeration">Пользовательский</label>
+            <InputRadio Value="QuestionType.Custom" id="Custom" />
+            <label for="Custom">Пользовательский</label>
         </div>
     </InputRadioGroup>
 
@@ -72,8 +72,6 @@
 </EditForm>
 
 @code {
-    private int customTypeId;
-
     [Parameter]
     public QuestionModel CurrentQuestion { get; set; }
 

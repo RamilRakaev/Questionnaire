@@ -1,14 +1,16 @@
-﻿namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
+﻿using System.Collections.Generic;
+
+namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
 {
     public class BooleanFactory : AbstractInputFactory
     {
         public BooleanFactory(string displayName) : base(displayName)
         {
             _type = "checkbox";
-            _cssClass = "form-check-inline";
+            _cssClass = "form-check-inline mx-2";
         }
 
-        public override HtmlTag[] CreateTags()
+        public override List<HtmlTag> CreateTags()
         {
             return CreateInput();
         }

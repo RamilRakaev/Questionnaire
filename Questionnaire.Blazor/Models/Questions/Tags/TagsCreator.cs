@@ -7,11 +7,11 @@ namespace Questionnaire.Blazor.Models.Questions.Tags
 {
     public static class TagsCreator
     {
-        public static HtmlTag[] CreateTags(Property propertyEntity)
+        public static List<HtmlTag> CreateTags(Property propertyEntity)
         {
             if (propertyEntity.Type == PropertyType.Custom)
             {
-                return Array.Empty<HtmlTag>();
+                return new();
             }
 
             var factoryType = typeof(AbstractTagsFactory).Assembly
@@ -45,7 +45,7 @@ namespace Questionnaire.Blazor.Models.Questions.Tags
             return result;
         }
 
-        public static HtmlTag[] CreateTags(QuestionModel question)
+        public static List<HtmlTag> CreateTags(QuestionModel question)
         {
             var factoryType = typeof(AbstractTagsFactory).Assembly
                 .GetTypes()
@@ -69,7 +69,7 @@ namespace Questionnaire.Blazor.Models.Questions.Tags
                         tags.AddRange(CreateTags(subQuestion));
                     }
 
-                    return tags.ToArray();
+                    return tags;
 
                 default:
                     factoryObject = CreateFactory(factoryType, question.DisplayName);

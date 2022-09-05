@@ -20,7 +20,7 @@ namespace Questionnaire.Infrastructure.Queries.Handlers.Properties
             return await _propertyRepository.GetAllAsNoTracking()
                 .Where(property => property.StructureId == request.StructureId)
                 .Include(property => property.Options)
-                .Include(property => property.CustomTypes)
+                .Include(property => property.CustomType)
                 .ThenInclude(property => property.Properties)
                 .ToArrayAsync(cancellationToken);
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
@@ -13,33 +14,51 @@ namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
             _options = options;
         }
 
-        public override HtmlTag[] CreateTags()
+        public override List<HtmlTag> CreateTags()
         {
-            return new HtmlTag[]
+            var inputId = Guid.NewGuid().ToString();
+
+            return new()
             {
                 new()
                 {
-                    TagName = TagName.Label,
-                    Value = _displayName,
-                },
-                new()
-                {
-                    TagName = TagName.Select,
+                    TagName = TagName.Div,
                     Attrubutes = new()
                     {
-                        { "class", _cssClass },
+                        { "class", "form-group" },
                     },
-                    ChildTags = _options
-                        .Select(option => new HtmlTag()
+                    ChildTags = new()
+                    {
+                        new()
                         {
-                            Value = option,
+                            TagName = TagName.Label,
+                            Value = _displayName,
                             Attrubutes = new()
                             {
-                                { "value", option }
+                                { "for", inputId }
+                            }
+                        },
+                        new()
+                        {
+                            TagName = TagName.Select,
+                            Attrubutes = new()
+                            {
+                                { "class", _cssClass },
+                                { "id", inputId },
                             },
-                        })
-                        .ToArray(),
-                }
+                            ChildTags = _options
+                                .Select(option => new HtmlTag()
+                                {
+                                    Value = option,
+                                    Attrubutes = new()
+                                    {
+                                        { "value", option }
+                                    },
+                                })
+                                .ToList(),
+                        },
+                    },
+                },
             };
         }
     }

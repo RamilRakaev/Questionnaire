@@ -3,29 +3,7 @@
 @using Questionnaire.Blazor.Models.Questions.Tags
 
 <div class="form-group col-6">
-    @foreach (var tag in Question.HtmlTags)
-    {
-        @switch (tag.TagName)
-        {
-            case TagName.Label:
-            <label>@tag.Value</label>
-                break;
-
-            case TagName.Input:
-            <input @attributes=tag.Attrubutes @bind-value=Answer.Value />
-                break;
-
-            case TagName.Select:
-            <select @attributes=tag.Attrubutes @bind=Answer.Value>
-                @foreach (var option in tag.ChildTags)
-                    {
-                        Answer.Value = option.Value;
-                        <option @attributes=option.Attrubutes>@option.Value</option> 
-                }
-            </select>
-                break;
-        }
-    }
+    @Display(HtmlTags)
 </div>
 
 @code {
@@ -34,4 +12,45 @@
 
     [Parameter]
     public AnswerModel Answer { get; set; }
+
+    [Parameter]
+    public List<HtmlTag> HtmlTags { get; set; }
+
+    private RenderFragment Display(List<HtmlTag> HtmlTags)
+    {
+        return __builder =>
+        {
+            @foreach (var tag in HtmlTags)
+            {
+                @switch (tag.TagName)
+                {
+                    case TagName.Label:
+                        <label @attributes=tag.Attrubutes>
+                            @tag.Value
+                        </label>
+                        break;
+
+                    case TagName.Input:
+                        <input @attributes=tag.Attrubutes @bind-value=Answer.Value />
+                        break;
+
+                    case TagName.Select:
+                        <select @attributes=tag.Attrubutes @bind=Answer.Value>
+                            @foreach (var option in tag.ChildTags)
+                            {
+                                Answer.Value = option.Value;
+                                <option @attributes=option.Attrubutes>@option.Value</option>
+                            }
+                        </select>
+                        break;
+
+                    case TagName.Div:
+                        <div @attributes=tag.Attrubutes>
+                            @Display(tag.ChildTags)
+                        </div>
+                        break;
+                }
+            }
+        };
+    }
 }

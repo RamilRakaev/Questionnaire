@@ -1,4 +1,6 @@
-﻿namespace Questionnaire.Blazor.Models.Questions.Tags
+﻿using System.Collections.Generic;
+
+namespace Questionnaire.Blazor.Models.Questions.Tags
 {
     public abstract class AbstractTagsFactory
     {
@@ -10,6 +12,6 @@
             _displayName = displayName;
         }
 
-        public abstract HtmlTag[] CreateTags();
+        public abstract List<HtmlTag> CreateTags();
     }
 }

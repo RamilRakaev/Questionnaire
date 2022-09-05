@@ -2,6 +2,6 @@
 {
     public enum TagName
     {
-        Input, Label, Select, Option
+        Input, Label, Select, Option, Div
     }
 }

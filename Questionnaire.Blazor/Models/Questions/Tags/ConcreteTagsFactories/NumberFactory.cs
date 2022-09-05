@@ -1,4 +1,6 @@
-﻿namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
+﻿using System.Collections.Generic;
+
+namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
 {
     public class NumberFactory : AbstractInputFactory
     {
@@ -7,7 +9,7 @@
             _type = "number";
         }
 
-        public override HtmlTag[] CreateTags()
+        public override List<HtmlTag> CreateTags()
         {
             return CreateInput();
         }

@@ -1,4 +1,7 @@
-﻿namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
+﻿using System;
+using System.Collections.Generic;
+
+namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
 {
     public abstract class AbstractInputFactory : AbstractTagsFactory
     {
@@ -8,22 +11,41 @@
         {
         }
 
-        protected HtmlTag[] CreateInput()
+        protected List<HtmlTag> CreateInput()
         {
-            return new HtmlTag[]
+            var inputId = Guid.NewGuid().ToString();
+
+            return new()
             {
                 new()
                 {
-                    TagName = TagName.Label,
-                    Value = _displayName,
-                },
-                new()
-                {
-                    TagName = TagName.Input,
+                    TagName = TagName.Div,
                     Attrubutes = new()
                     {
-                        { "type", _type },
-                        { "class", _cssClass },
+                        { "class", "form-group" },
+                    },
+                    ChildTags = new()
+                    {
+                        new()
+                        {
+                            TagName = TagName.Label,
+                            Value = _displayName,
+                            Attrubutes = new()
+                            {
+                                { "for", inputId },
+                            },
+                        },
+
+                        new()
+                        {
+                            TagName = TagName.Input,
+                            Attrubutes = new()
+                            {
+                                { "type", _type },
+                                { "class", _cssClass },
+                                { "id", inputId },
+                            },
+                        },
                     },
                 },
             };

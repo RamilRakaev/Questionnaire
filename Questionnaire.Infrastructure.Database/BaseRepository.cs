@@ -19,7 +19,7 @@ namespace Questionnaire.Infrastructure.Database
             return entity ?? throw new NullReferenceException("Entity no found in DB");
         }
 
-        public IQueryable<Entity> GetAllAsync() => _context.Set<Entity>().AsNoTracking();
+        public IQueryable<Entity> GetAllAsync() => _context.Set<Entity>();
 
         public IQueryable<Entity> GetAllAsNoTracking() => _context.Set<Entity>().AsNoTracking();
 

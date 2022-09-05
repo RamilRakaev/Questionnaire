@@ -10,7 +10,7 @@ namespace Questionnaire.Blazor.Models.Questions
 
         public int QuestionnaireId { get; set; }
 
-        public QuestionnaireModel CustomTypeId { get; set; }
+        public int? CustomTypeId { get; set; }
         public QuestionnaireModel CustomType { get; set; }
 
         public List<OptionModel> Options { get; set; }
