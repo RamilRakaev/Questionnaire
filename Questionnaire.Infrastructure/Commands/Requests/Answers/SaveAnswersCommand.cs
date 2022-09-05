@@ -3,9 +3,9 @@ using Questionnaire.Domain.Entities;
 
 namespace Questionnaire.Infrastructure.Commands.Requests.Answers
 {
-    public class CreateAnswersCommand : IRequest
+    public class SaveAnswersCommand : IRequest
     {
-        public CreateAnswersCommand(Dictionary<Property, Answer> answers, int userId)
+        public SaveAnswersCommand(Dictionary<Property, Answer> answers, int userId)
         {
             QuestionsAnswers = answers;
             UserId = userId;

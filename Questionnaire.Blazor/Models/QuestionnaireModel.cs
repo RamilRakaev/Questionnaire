@@ -1,7 +1,7 @@
 ﻿using Questionnaire.Blazor.Models.Questions;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Questionnaire.Blazor.Models
 {
@@ -16,5 +16,13 @@ namespace Questionnaire.Blazor.Models
         public List<QuestionModel> Questions { get; set; }
 
         public List<string> Options { get; set; }
+
+        public List<AnswerModel> Answers
+        {
+            get
+            {
+                return Questions.SelectMany(question => question.AllAnswers).ToList();
+            }
+        }
     }
 }

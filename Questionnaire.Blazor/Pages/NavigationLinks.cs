@@ -10,7 +10,7 @@
         public const string RootCreateUser = "/root/userManage/createUser";
         #endregion
 
-        #region interviewee
+        #region questioned
         public const string PassingTheQuestionnaire = "/questioned/passingTheQuestionnaire";
         public const string QuestionedQuestionnaires = "/questioned/";
         #endregion

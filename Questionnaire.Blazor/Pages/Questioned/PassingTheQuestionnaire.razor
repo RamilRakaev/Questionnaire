@@ -58,12 +58,6 @@
             {
                 htmlTags.AddRange(TagsCreator.CreateTags(question));
             }
-
-            AnswerModel answer = new()
-            {
-                QuestionnaireId = questionnaire.Id,
-            };
-            questionsAnswers.Add(question, answer);
         }
     }
 
@@ -72,8 +66,8 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = await UserManager.FindByNameAsync(authState.User.Identity.Name);
         
-        var answers = Mapper.Map<Dictionary<Property, Answer>>(questionsAnswers);
+        var answers = Mapper.Map<List<Property>>(questionnaire.Answers);
 
-        await Mediator.Send(new CreateAnswersCommand(answers, user.Id));
+        await Mediator.Send(new SaveAnswersCommand(answers, user.Id));
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Questionnaire.Blazor.Models.Questions.Tags;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Questionnaire.Blazor.Models.Questions
 {
@@ -23,5 +24,24 @@ namespace Questionnaire.Blazor.Models.Questions
         public QuestionType QuestionType { get; set; }
 
         public HtmlTag[] HtmlTags { get; set; }
+
+        public AnswerModel AnswerToCurrentQuestion { get; set; } = new();
+
+        public List<AnswerModel> AllAnswers
+        {
+            get
+            {
+                List<AnswerModel> answers = new();
+                answers.Add(AnswerToCurrentQuestion);
+
+                if (CustomType != null)
+                {
+                    answers.AddRange(CustomType.Questions.Select(question => question.AnswerToCurrentQuestion));
+                }
+
+                return answers;
+            }
+        }
+
     }
 }
