@@ -23,7 +23,7 @@ namespace Questionnaire.Blazor.Models.Questions
 
         public QuestionType QuestionType { get; set; }
 
-        public HtmlTag[] HtmlTags { get; set; }
+        public List<HtmlTag> HtmlTags { get; set; }
 
         public AnswerModel AnswerToCurrentQuestion { get; set; } = new();
 

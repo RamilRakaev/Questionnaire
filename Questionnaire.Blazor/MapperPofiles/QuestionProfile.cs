@@ -18,8 +18,7 @@ namespace Questionnaire.Blazor.MapperPofiles
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
                 .ForMember(dest => dest.JsonName, opt => opt.MapFrom(src => src.JsonName))
                 .ForMember(dest => dest.QuestionType, opt => opt.MapFrom(src => src.Type.ToString()))
-                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options.ToList()))
-                .ForMember(dest => dest.HtmlTags, opt => opt.MapFrom(src => TagsCreator.CreateTags(src)));
+                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options.ToList()));
 
             CreateMap<QuestionModel, Property>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))

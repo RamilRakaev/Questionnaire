@@ -17,14 +17,14 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Answers
 
         public async Task<Unit> Handle(SaveAnswersCommand request, CancellationToken cancellationToken)
         {
-            if (request.QuestionsAnswers.Count > 0)
+            if (request.Answers.Count > 0)
             {
-                var questionsAnswers = request.QuestionsAnswers.ToDictionary(pair => pair.Key.JsonName, pair => pair.Value.Value);
+                var questionsAnswers = request.Answers.ToDictionary(pair => pair.Key.JsonName, pair => pair.Value.Value);
                 var answersInJson = JsonSerializer.Serialize(questionsAnswers);
 
                 Answer answerEntity = new()
                 {
-                    StructureId = request.QuestionsAnswers.Keys.FirstOrDefault().StructureId,
+                    StructureId = request.StructureId,
                     Value = answersInJson,
                     UserId = request.UserId,
                 };

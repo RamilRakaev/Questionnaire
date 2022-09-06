@@ -61,13 +61,26 @@
         }
     }
 
+    private Dictionary<QuestionModel, AnswerModel> GetQuestionsAnswersPairs(List<QuestionModel> questions)
+    {
+        Dictionary<QuestionModel, AnswerModel> pairs = new();
+
+        foreach (var question in questions)
+        {
+            if (question.QuestionType == QuestionType.Custom)
+            {
+                pairs.
+            }
+        }
+    }
+
     private async Task Send()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = await UserManager.FindByNameAsync(authState.User.Identity.Name);
         
-        var answers = Mapper.Map<List<Property>>(questionnaire.Answers);
+        //var answers = Mapper.Map<List<Answer>>(questionnaire.Answers);
 
-        await Mediator.Send(new SaveAnswersCommand(answers, user.Id));
+        //await Mediator.Send(new SaveAnswersCommand(answers, user.Id, questionnaire.Id));
     }
 }

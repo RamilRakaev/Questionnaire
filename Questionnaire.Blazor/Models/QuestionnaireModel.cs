@@ -17,12 +17,6 @@ namespace Questionnaire.Blazor.Models
 
         public List<string> Options { get; set; }
 
-        public List<AnswerModel> Answers
-        {
-            get
-            {
-                return Questions.SelectMany(question => question.AllAnswers).ToList();
-            }
-        }
+        public Dictionary<QuestionModel, AnswerModel> QuestionsAnswers { get; set; }
     }
 }
