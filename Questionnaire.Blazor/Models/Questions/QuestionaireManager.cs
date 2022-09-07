@@ -7,49 +7,23 @@ namespace Questionnaire.Blazor.Models.Questions
 {
     public class QuestionaireManager
     {
-        private readonly QuestionnaireModel questionnaire;
         private readonly int userId;
-        private readonly List<HtmlTag> htmlTags = new();
 
         public QuestionaireManager(QuestionnaireModel questionnaire, int userId)
         {
-            this.questionnaire = questionnaire;
+            Questionnaire = questionnaire;
             this.userId = userId;
+            PrepareQuestionnaireToDisplay(questionnaire);
         }
 
-        public QuestionnaireModel PrepareQuestionnaireToDisplay(QuestionnaireModel questionnaire, List<QuestionModel> questions)
-        {
+        public QuestionnaireModel Questionnaire { get; } = new();
 
+        private void PrepareQuestionnaireToDisplay(QuestionnaireModel questionnaire)
+        {
+            questionnaire.QuestionsAnswers = new();
             foreach (var question in questionnaire.Questions)
             {
-                question.HtmlTags = new();
-
-                AnswerModel answer = new()
-                {
-                    QuestionnaireId = questionnaire.Id,
-                    UserId = userId,
-                };
-                questionnaire.QuestionsAnswers.Add(question, answer);
-
-                switch (question.QuestionType)
-                {
-                    case QuestionType.Enumeration:
-
-                        break;
-
-                    case QuestionType.Custom:
-
-                        foreach (var subQuestion in question.CustomType.Questions)
-                        {
-                            htmlTags.AddRange(CreateTags(questionsAnswers, subQuestion));
-                        }
-
-                        return;
-
-                    default:
-
-                        break;
-                }
+                PrepareQuestion(question);
             }
         }
 
@@ -65,8 +39,8 @@ namespace Questionnaire.Blazor.Models.Questions
         private static Type GetFactoryType(QuestionType questionType)
         {
             return typeof(AbstractTagsFactory).Assembly
-                   .GetTypes()
-                   .FirstOrDefault(type => type.Name == questionType.ToString() + "Factory");
+                .GetTypes()
+                .FirstOrDefault(type => type.Name == questionType.ToString() + "Factory");
         }
 
         private static List<HtmlTag> CreateEnumeration(QuestionModel question)
@@ -91,18 +65,16 @@ namespace Questionnaire.Blazor.Models.Questions
             return factory.CreateTags();
         }
 
-        public void PrepareQuestion(QuestionModel question)
+        private void PrepareQuestion(QuestionModel question)
         {
             switch (question.QuestionType)
             {
                 case QuestionType.Enumeration:
-
-                    questionnaire.QuestionsAnswers.Add(question, new(userId, questionnaire.Id));
+                    Questionnaire.QuestionsAnswers.Add(question, new(userId, Questionnaire.Id));
                     question.HtmlTags = CreateEnumeration(question);
                     break;
 
                 case QuestionType.Custom:
-
                     List<HtmlTag> tags = new();
                     foreach (var subQuestion in question.CustomType.Questions)
                     {
@@ -113,7 +85,7 @@ namespace Questionnaire.Blazor.Models.Questions
                     break;
 
                 default:
-                    questionnaire.QuestionsAnswers.Add(question, new());
+                    Questionnaire.QuestionsAnswers.Add(question, new());
                     question.HtmlTags = CreateDefault(question);
                     break;
             }

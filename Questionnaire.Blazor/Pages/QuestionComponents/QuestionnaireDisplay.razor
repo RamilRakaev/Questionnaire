@@ -1,0 +1,37 @@
+﻿@using Questionnaire.Blazor.Models
+@using Questionnaire.Blazor.Models.Questions
+
+@if (Questionnaire.Questions != null)
+{
+    @foreach (var question in Questionnaire.Questions)
+    {
+        @Display(question)
+        ;
+    }
+}
+
+@code {
+    [Parameter]
+    public QuestionnaireModel Questionnaire { get; set; }
+
+    private RenderFragment Display(QuestionModel question)
+    {
+        return __builder =>
+        {
+            @if (question.QuestionType == QuestionType.Custom)
+            {
+                <div class="border border-info p-3 mb-3">
+                    <h3>@question.CustomType.DisplayName</h3>
+                    @foreach (var subQuestion in question.CustomType.Questions)
+                    {
+                        @Display(subQuestion)
+                    }
+                </div>
+            }
+            else
+            {
+                <QuestionDisplay Question=question />
+            }
+        };
+    }
+}

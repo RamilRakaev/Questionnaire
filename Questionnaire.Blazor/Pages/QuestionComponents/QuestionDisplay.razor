@@ -3,15 +3,12 @@
 @using Questionnaire.Blazor.Models.Questions.Tags
 
 <div class="form-group col-6">
-    @Display(HtmlTags)
+    @Display(Question.HtmlTags)
 </div>
 
 @code {
     [Parameter]
     public QuestionModel Question { get; set; }
-
-    [Parameter]
-    public List<HtmlTag> HtmlTags { get; set; }
 
     private RenderFragment Display(List<HtmlTag> HtmlTags)
     {

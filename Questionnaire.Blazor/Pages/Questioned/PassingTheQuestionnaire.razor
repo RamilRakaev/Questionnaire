@@ -16,10 +16,7 @@
 
 <h3>@questionnaire.DisplayName</h3>
 <EditForm Model=questionnaire OnValidSubmit=Send>
-    @foreach (var questionAnswer in questionsAnswers)
-    {
-        <QuestionDisplay Question=questionAnswer.Key Answer=questionAnswer.Value HtmlTags=htmlTags />
-    }
+    <QuestionnaireDisplay Questionnaire=questionnaire />
     <button class="btn btn-success">Отправить</button>
 </EditForm>
 
@@ -51,25 +48,13 @@
 
         var questionnaireEntity = await Mediator.Send(new GetStructureQuery(QuestionnaireId));
         questionnaire = Mapper.Map<QuestionnaireModel>(questionnaireEntity);
+        QuestionaireManager manager = new(questionnaire, user.Id);
 
         foreach (var question in questionnaire.Questions)
         {
             if (question.QuestionType == QuestionType.Custom)
             {
                 htmlTags.AddRange(TagsCreator.CreateTags(question));
-            }
-        }
-    }
-
-    private Dictionary<QuestionModel, AnswerModel> GetQuestionsAnswersPairs(List<QuestionModel> questions)
-    {
-        Dictionary<QuestionModel, AnswerModel> pairs = new();
-
-        foreach (var question in questions)
-        {
-            if (question.QuestionType == QuestionType.Custom)
-            {
-                pairs.
             }
         }
     }
