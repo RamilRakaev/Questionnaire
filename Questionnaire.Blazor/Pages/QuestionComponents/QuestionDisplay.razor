@@ -3,12 +3,15 @@
 @using Questionnaire.Blazor.Models.Questions.Tags
 
 <div class="form-group col-6">
-    @Display(Question.HtmlTags)
+    @Display(HtmlTags)
 </div>
 
 @code {
     [Parameter]
-    public QuestionModel Question { get; set; }
+    public AnswerModel Answer { get; set; }
+
+    [Parameter]
+    public List<HtmlTag> HtmlTags { get; set; }
 
     private RenderFragment Display(List<HtmlTag> HtmlTags)
     {
@@ -25,14 +28,14 @@
                         break;
 
                     case TagName.Input:
-                        <input @attributes=tag.Attrubutes @bind-value=Question.AnswerToCurrentQuestion.Value />
+                        <input @attributes=tag.Attrubutes @bind-value=Answer.Value />
                         break;
 
                     case TagName.Select:
-                        <select @attributes=tag.Attrubutes @bind=Question.AnswerToCurrentQuestion.Value>
+                        <select @attributes=tag.Attrubutes @bind=Answer.Value>
                             @foreach (var option in tag.ChildTags)
                             {
-                                Question.AnswerToCurrentQuestion.Value = option.Value;
+                                Answer.Value = option.Value;
                                 <option @attributes=option.Attrubutes>@option.Value</option>
                             }
                         </select>

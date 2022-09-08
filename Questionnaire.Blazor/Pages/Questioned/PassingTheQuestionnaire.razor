@@ -64,8 +64,8 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = await UserManager.FindByNameAsync(authState.User.Identity.Name);
         
-        //var answers = Mapper.Map<List<Answer>>(questionnaire.Answers);
+        var questionsAnswers = Mapper.Map<Dictionary<Answer, Property>>(questionnaire.QuestionsAnswers);
 
-        //await Mediator.Send(new SaveAnswersCommand(answers, user.Id, questionnaire.Id));
+        await Mediator.Send(new SaveAnswersCommand(questionsAnswers, user.Id));
     }
 }

@@ -3,10 +3,9 @@
 
 @if (Questionnaire.Questions != null)
 {
-    @foreach (var question in Questionnaire.Questions)
+    @foreach (var question in Questionnaire.QuestionAnswers)
     {
         @Display(question)
-        ;
     }
 }
 
@@ -14,23 +13,23 @@
     [Parameter]
     public QuestionnaireModel Questionnaire { get; set; }
 
-    private RenderFragment Display(QuestionModel question)
+    private RenderFragment Display(QuestionAnswerModel questionAnswer)
     {
         return __builder =>
         {
-            @if (question.QuestionType == QuestionType.Custom)
+            @if (questionAnswer.Question.QuestionType == QuestionType.Custom)
             {
                 <div class="border border-info p-3 mb-3">
-                    <h3>@question.CustomType.DisplayName</h3>
-                    @foreach (var subQuestion in question.CustomType.Questions)
+                    <h3>@questionAnswer.Question.CustomType.DisplayName</h3>
+                    @foreach (var subQuestionAnswer in questionAnswer.QuestionAnswers)
                     {
-                        @Display(subQuestion)
+                        @Display(subQuestionAnswer)
                     }
                 </div>
             }
             else
             {
-                <QuestionDisplay Question=question />
+                <QuestionDisplay Answer=questionAnswer.Answer HtmlTags=questionAnswer.HtmlTags />
             }
         };
     }

@@ -5,7 +5,7 @@ namespace Questionnaire.Infrastructure.Commands.Requests.Answers
 {
     public class SaveAnswersCommand : IRequest
     {
-        public SaveAnswersCommand(Dictionary<Property, Answer> answers, int userId)
+        public SaveAnswersCommand(Dictionary<Answer, Property> answers, int userId)
         {
             QuestionsAnswers = answers;
             UserId = userId;
@@ -13,6 +13,6 @@ namespace Questionnaire.Infrastructure.Commands.Requests.Answers
 
         public int UserId { get; private set; }
 
-        public Dictionary<Property, Answer> QuestionsAnswers { get; private set; }
+        public Dictionary<Answer, Property> QuestionsAnswers { get; private set; }
     }
 }

@@ -19,7 +19,7 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Answers
         {
             if (request.QuestionsAnswers.Count > 0)
             {
-                var questionsAnswers = request.QuestionsAnswers.ToDictionary(pair => pair.Key.JsonName, pair => pair.Value.Value);
+                var questionsAnswers = request.QuestionsAnswers.ToDictionary(pair => pair.Value.JsonName, pair => pair.Key.Value);
                 var answersInJson = JsonSerializer.Serialize(questionsAnswers);
 
                 Answer answerEntity = new()

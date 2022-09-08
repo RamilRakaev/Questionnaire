@@ -21,26 +21,44 @@ namespace Questionnaire.Blazor.Models.Questions
         private void PrepareQuestionnaireToDisplay(QuestionnaireModel questionnaire)
         {
             questionnaire.QuestionsAnswers = new();
+            questionnaire.QuestionAnswers = new();
             foreach (var question in questionnaire.Questions)
             {
-                PrepareQuestion(question);
+                questionnaire.QuestionAnswers.Add(CreateQuestionAnswer(question));
             }
         }
 
-        private static object CreateFactory(Type factoryType, params object[] parameters)
+        private QuestionAnswerModel CreateQuestionAnswer(QuestionModel question)
         {
-            var types = parameters.Select(parameter => parameter.GetType()).ToArray();
-            var constructor = factoryType.GetConstructor(types);
-            var result = constructor.Invoke(parameters);
+            QuestionAnswerModel questionAnswer = new()
+            {
+                Question = question,
+                Answer = new(userId, Questionnaire.Id),
+            };
 
-            return result;
-        }
+            switch (question.QuestionType)
+            {
+                case QuestionType.Enumeration:
+                    Questionnaire.QuestionsAnswers.Add(questionAnswer.Answer, question);
 
-        private static Type GetFactoryType(QuestionType questionType)
-        {
-            return typeof(AbstractTagsFactory).Assembly
-                .GetTypes()
-                .FirstOrDefault(type => type.Name == questionType.ToString() + "Factory");
+                    questionAnswer.HtmlTags = CreateEnumeration(question);
+                    return questionAnswer;
+
+                case QuestionType.Custom:
+                    foreach (var subQuestion in question.CustomType.Questions)
+                    {
+                        questionAnswer.QuestionAnswers = new();
+                        questionAnswer.QuestionAnswers.Add(CreateQuestionAnswer(subQuestion));
+                    }
+
+                    return questionAnswer;
+
+                default:
+                    Questionnaire.QuestionsAnswers.Add(questionAnswer.Answer, question);
+
+                    questionAnswer.HtmlTags = CreateDefault(question);
+                    return questionAnswer;
+            }
         }
 
         private static List<HtmlTag> CreateEnumeration(QuestionModel question)
@@ -65,30 +83,20 @@ namespace Questionnaire.Blazor.Models.Questions
             return factory.CreateTags();
         }
 
-        private void PrepareQuestion(QuestionModel question)
+        private static Type GetFactoryType(QuestionType questionType)
         {
-            switch (question.QuestionType)
-            {
-                case QuestionType.Enumeration:
-                    Questionnaire.QuestionsAnswers.Add(question, new(userId, Questionnaire.Id));
-                    question.HtmlTags = CreateEnumeration(question);
-                    break;
+            return typeof(AbstractTagsFactory).Assembly
+                .GetTypes()
+                .FirstOrDefault(type => type.Name == questionType.ToString() + "Factory");
+        }
 
-                case QuestionType.Custom:
-                    List<HtmlTag> tags = new();
-                    foreach (var subQuestion in question.CustomType.Questions)
-                    {
-                        PrepareQuestion(subQuestion);
-                    }
+        private static object CreateFactory(Type factoryType, params object[] parameters)
+        {
+            var types = parameters.Select(parameter => parameter.GetType()).ToArray();
+            var constructor = factoryType.GetConstructor(types);
+            var result = constructor.Invoke(parameters);
 
-                    tags.AddRange(tags);
-                    break;
-
-                default:
-                    Questionnaire.QuestionsAnswers.Add(question, new());
-                    question.HtmlTags = CreateDefault(question);
-                    break;
-            }
+            return result;
         }
     }
 }
