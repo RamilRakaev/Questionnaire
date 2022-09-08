@@ -13,6 +13,14 @@
     [Parameter]
     public List<HtmlTag> HtmlTags { get; set; }
 
+    private void ChangeAnswer(ChangeEventArgs args)
+    {
+        if (args.Value != null)
+        {
+            Answer.Value = args.Value.ToString();
+        }
+    }
+
     private RenderFragment Display(List<HtmlTag> HtmlTags)
     {
         return __builder =>
@@ -28,14 +36,22 @@
                         break;
 
                     case TagName.Input:
-                        <input @attributes=tag.Attrubutes @bind-value=Answer.Value />
+                        if (Answer.Value == null)
+                        {
+                            Answer.Value = tag.Value;
+                        }
+                        <input @attributes=tag.Attrubutes @onchange=ChangeAnswer />
                         break;
 
                     case TagName.Select:
+                        if (Answer.Value == null)
+                        {
+                            Answer.Value = tag.ChildTags.FirstOrDefault().Value;
+                        }
+
                         <select @attributes=tag.Attrubutes @bind=Answer.Value>
                             @foreach (var option in tag.ChildTags)
                             {
-                                Answer.Value = option.Value;
                                 <option @attributes=option.Attrubutes>@option.Value</option>
                             }
                         </select>

@@ -45,9 +45,10 @@ namespace Questionnaire.Blazor.Models.Questions
                     return questionAnswer;
 
                 case QuestionType.Custom:
+                    questionAnswer.QuestionAnswers = new();
+
                     foreach (var subQuestion in question.CustomType.Questions)
                     {
-                        questionAnswer.QuestionAnswers = new();
                         questionAnswer.QuestionAnswers.Add(CreateQuestionAnswer(subQuestion));
                     }
 

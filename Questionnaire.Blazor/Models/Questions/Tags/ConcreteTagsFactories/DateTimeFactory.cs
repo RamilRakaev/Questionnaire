@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
 {
@@ -7,6 +8,7 @@ namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
         public DateTimeFactory(string displayName) : base(displayName)
         {
             _type = "datetime-local";
+            defaultValue = DateTime.MinValue.ToString("s");
         }
 
         public override List<HtmlTag> CreateTags()

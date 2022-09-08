@@ -6,6 +6,7 @@ namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
     public abstract class AbstractInputFactory : AbstractTagsFactory
     {
         protected string _type = "text";
+        protected string defaultValue = "";
 
         protected AbstractInputFactory(string displayName) : base(displayName)
         {
@@ -45,6 +46,7 @@ namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
                                 { "class", _cssClass },
                                 { "id", inputId },
                             },
+                            Value = defaultValue,
                         },
                     },
                 },

@@ -8,6 +8,7 @@ namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
         {
             _type = "checkbox";
             _cssClass = "form-check-inline mx-2";
+            defaultValue = "False";
         }
 
         public override List<HtmlTag> CreateTags()
