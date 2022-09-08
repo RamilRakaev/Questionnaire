@@ -9,6 +9,7 @@
 @using Questionnaire.Domain.Entities
 @using Questionnaire.Domain.Entities.Identity
 @using Questionnaire.Infrastructure.Commands.Requests.Answers
+@using Questionnaire.Infrastructure.Models
 @using Questionnaire.Infrastructure.Queries.Requests.Properties
 @using Questionnaire.Infrastructure.Queries.Requests.Structures
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
@@ -64,8 +65,8 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = await UserManager.FindByNameAsync(authState.User.Identity.Name);
         
-        var questionsAnswers = Mapper.Map<Dictionary<Answer, Property>>(questionnaire.QuestionsAnswers);
+        var questionsAnswers = Mapper.Map<List<PropertyAnswer>>(questionnaire.QuestionAnswers);
 
-        await Mediator.Send(new SaveAnswersCommand(questionsAnswers, user.Id));
+        await Mediator.Send(new SaveAnswersCommand(questionsAnswers, questionnaire.Id, user.Id));
     }
 }

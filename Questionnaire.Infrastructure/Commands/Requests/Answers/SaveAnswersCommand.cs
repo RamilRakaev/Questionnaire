@@ -1,18 +1,20 @@
 ﻿using MediatR;
-using Questionnaire.Domain.Entities;
+using Questionnaire.Infrastructure.Models;
 
 namespace Questionnaire.Infrastructure.Commands.Requests.Answers
 {
     public class SaveAnswersCommand : IRequest
     {
-        public SaveAnswersCommand(Dictionary<Answer, Property> answers, int userId)
+        public SaveAnswersCommand(List<PropertyAnswer> propertyAnswers, int structureId, int userId)
         {
-            QuestionsAnswers = answers;
+            PropertyAnswers = propertyAnswers;
+            StructureId = structureId;
             UserId = userId;
         }
 
-        public int UserId { get; private set; }
+        public List<PropertyAnswer> PropertyAnswers { get; private set; }
 
-        public Dictionary<Answer, Property> QuestionsAnswers { get; private set; }
+        public int StructureId { get; private set; }
+        public int UserId { get; private set; }
     }
 }
