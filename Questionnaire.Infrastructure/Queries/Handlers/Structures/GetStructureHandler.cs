@@ -20,14 +20,24 @@ namespace Questionnaire.Infrastructure.Queries.Handlers.Structures
         public async Task<Structure?> Handle(GetStructureQuery request, CancellationToken cancellationToken)
         {
             var structure = await _structureRepository.GetAsync(request.StructureId, cancellationToken);
-            structure.Properties = await _propertyRepository.GetAllAsync()
-                .Where(property => property.StructureId == request.StructureId)
-                .Include(property => property.CustomType)
-                    .ThenInclude(structure => structure.Properties)
-                    .ThenInclude(property => property.Options)
-                .ToListAsync(cancellationToken);
+            structure.Properties = await GetProperties(request.StructureId, cancellationToken);
 
             return structure;
+        }
+
+        private async Task<List<Property>> GetProperties(int structureId, CancellationToken cancellationToken)
+        {
+            var properties = await _propertyRepository.GetAllAsNoTracking()
+                .Where(property => property.StructureId == structureId).
+                ToListAsync(cancellationToken);
+
+            foreach (var property in properties.Where(property => property.Type == PropertyType.Custom))
+            {
+                property.CustomType = await _structureRepository.GetAsync(property.CustomTypeId.Value, cancellationToken);
+                property.CustomType.Properties = await GetProperties(property.CustomTypeId.Value, cancellationToken);
+            }
+
+            return properties;
         }
     }
 }
