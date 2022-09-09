@@ -8,9 +8,9 @@ namespace Questionnaire.Blazor.Models
     {
         public int Id { get; set; }
 
+        [Required]
         public string DisplayName { get; set; }
 
-        [Required]
         [MinLength(1, ErrorMessage = "Введите минимум один вопрос")]
         public List<QuestionModel> Questions { get; set; }
 

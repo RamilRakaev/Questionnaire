@@ -4,16 +4,19 @@
 @using MediatR
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Blazor.Models.Questions
+@using Questionnaire.Blazor.Services.UserInterfaceDisplay
 @using Questionnaire.Domain.Entities
 @using Questionnaire.Infrastructure.Commands.Requests.Questionnaires
 @using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
 @using AutoMapper.QueryableExtensions
+@using Questionnaire.Infrastructure.Queries.Requests.Structures
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 @using System.Collections.Concurrent
 
 <div class="container-fluid">
     <div class="row justify-content-center">
         <EditForm Model=questionnaire OnValidSubmit=Send class="my-3 col-6">
+            <p class=@message.CssClass>@message.Text</p>
             <ValidationSummary />
             <DataAnnotationsValidator />
 
@@ -45,9 +48,10 @@
 </div>
 
 @code {
+    private FormMessage message = new();
+
     private ConcurrentDictionary<string, int> nameIdPairs = new();
     private QuestionnaireModel questionnaire = new();
-    private List<QuestionModel> questions = new();
 
     private QuestionModel currentQuestion = new();
 
@@ -64,7 +68,7 @@
             DisplayName = "",
             Questions = new(),
         };
-        
+
         currentQuestion = new()
         {
             Options = new(),
@@ -77,31 +81,71 @@
 
     private Task CreateQuestion()
     {
-        if (currentQuestion.QuestionType != QuestionType.Enumeration)
+        if (CheckNameUniqueness())
         {
-            currentQuestion.Options = null;
-        }
+            if (currentQuestion.QuestionType != QuestionType.Enumeration)
+            {
+                currentQuestion.Options = null;
+            }
 
-        questionnaire.Questions.Add(currentQuestion);
-        currentQuestion = new()
-        {
-            DisplayName = "",
-            JsonName = "",
-            Options = new(),
-        };
+            questionnaire.Questions.Add(currentQuestion);
+            currentQuestion = new()
+            {
+                DisplayName = "",
+                JsonName = "",
+                Options = new(),
+            };
+        }
 
         return Task.CompletedTask;
     }
 
+    private bool CheckNameUniqueness()
+    {
+        message.Reset();
+
+        var result = true;
+
+        var displayNameIsBusy = questionnaire.Questions.Any(question => question.DisplayName == currentQuestion.DisplayName);
+        var jsonNameIsBusy = questionnaire.Questions.Any(question => question.JsonName == currentQuestion.JsonName);
+
+        if (displayNameIsBusy)
+        {
+            message.SetDangerText("Отображаемое имя уже занято");
+            result = false;
+        }
+        else if (jsonNameIsBusy)
+        {
+            message.SetDangerText("Json-имя уже занято");
+            result = false;
+        }
+        else
+        {
+            message.SetSuccessText("Добавлен вопрос \n");
+        }
+
+        return result;
+    }
+
     private async Task Send()
     {
-        var questionnaireEntity = Mapper.Map<Structure>(questionnaire);
-        await Mediator.Send(new CreateOrChangeEntityCommand<Structure>(questionnaireEntity));
-
-        questionnaire = new()
+        var displayNameIsUniqueness = await Mediator.Send(new CheckDisplayNameUniquenessQuery(questionnaire.DisplayName));
+        if (displayNameIsUniqueness)
         {
-            DisplayName = "",
-            Questions = new(),
-        };
+            var questionnaireEntity = Mapper.Map<Structure>(questionnaire);
+            await Mediator.Send(new CreateOrChangeEntityCommand<Structure>(questionnaireEntity));
+
+            questionnaire = new()
+            {
+                DisplayName = "",
+                Questions = new(),
+            };
+
+            message.SetSuccessText("Добавлен опрос");
+        }
+        else
+        {
+            message.SetDangerText("Имя опроса уже занято");
+        }
     }
 }
