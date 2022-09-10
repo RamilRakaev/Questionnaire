@@ -61,7 +61,10 @@
         {
             NavigationManager.NavigateTo(NavigationLinks.Login);
         }
-        await UploadQuestionnaires();
+        else
+        {
+            await UploadQuestionnaires();
+        }
     }
 
     private async Task Remove(int questionnaireId)
