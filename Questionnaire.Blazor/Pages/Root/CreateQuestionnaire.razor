@@ -43,14 +43,14 @@
             <button class="btn btn-success">Создать опросник</button>
         </EditForm>
 
-        <QuestionForm CurrentQuestion=@currentQuestion CreateQuestion=CreateQuestion CustomTypes=nameIdPairs />
+        <QuestionForm CurrentQuestion=@currentQuestion CreateQuestion=CreateQuestion CustomTypes=nameIdDictionary />
     </div>
 </div>
 
 @code {
     private FormMessage message = new();
 
-    private ConcurrentDictionary<string, int> nameIdPairs = new();
+    private ConcurrentDictionary<string, int> nameIdDictionary = new();
     private QuestionnaireModel questionnaire = new();
 
     private QuestionModel currentQuestion = new();
@@ -76,7 +76,7 @@
 
         var structures = await Mediator.Send(new GetEntitiesQuery<Structure>());
         var questionnaires = Mapper.Map<List<QuestionnaireModel>>(structures);
-        nameIdPairs = new(questionnaires.ToDictionary(type => type.DisplayName, type => type.Id));
+        nameIdDictionary = new(questionnaires.ToDictionary(type => type.DisplayName, type => type.Id));
     }
 
     private Task CreateQuestion()

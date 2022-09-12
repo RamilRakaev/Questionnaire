@@ -1,46 +1,34 @@
-﻿using Questionnaire.Blazor.Models.Questions.Tags;
+﻿using Questionnaire.Blazor.Models;
+using Questionnaire.Blazor.Models.Questions;
+using Questionnaire.Blazor.Models.Questions.Tags;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Questionnaire.Blazor.Models.Questions
+namespace Questionnaire.Blazor.Services.Questionnaire
 {
     public class QuestionaireManager
     {
-        private readonly long userId;
-
-        public QuestionaireManager(QuestionnaireModel questionnaire, long userId)
+        public static void PrepareQuestionnaireToDisplay(QuestionnaireModel modifiableQuestionnaire, long userId)
         {
-            Questionnaire = questionnaire;
-            this.userId = userId;
-            PrepareQuestionnaireToDisplay(questionnaire);
-        }
-
-        public QuestionnaireModel Questionnaire { get; } = new();
-
-        private void PrepareQuestionnaireToDisplay(QuestionnaireModel questionnaire)
-        {
-            questionnaire.QuestionsAnswersDictionary = new();
-            questionnaire.QuestionAnswers = new();
-            foreach (var question in questionnaire.Questions)
+            modifiableQuestionnaire.QuestionAnswers = new();
+            foreach (var question in modifiableQuestionnaire.Questions)
             {
-                questionnaire.QuestionAnswers.Add(CreateQuestionAnswer(question));
+                modifiableQuestionnaire.QuestionAnswers.Add(CreateQuestionAnswer(question, userId, modifiableQuestionnaire.Id));
             }
         }
 
-        private QuestionAnswerModel CreateQuestionAnswer(QuestionModel question)
+        private static QuestionAnswerModel CreateQuestionAnswer(QuestionModel question, long userId, int questionnaireId)
         {
             QuestionAnswerModel questionAnswer = new()
             {
                 Question = question,
-                Answer = new(userId, Questionnaire.Id),
+                Answer = new(userId, questionnaireId),
             };
 
             switch (question.QuestionType)
             {
                 case QuestionType.Enumeration:
-                    Questionnaire.QuestionsAnswersDictionary.Add(questionAnswer.Answer, question);
-
                     questionAnswer.HtmlTags = CreateEnumeration(question);
                     return questionAnswer;
 
@@ -49,14 +37,12 @@ namespace Questionnaire.Blazor.Models.Questions
 
                     foreach (var subQuestion in question.CustomType.Questions)
                     {
-                        questionAnswer.QuestionAnswers.Add(CreateQuestionAnswer(subQuestion));
+                        questionAnswer.QuestionAnswers.Add(CreateQuestionAnswer(subQuestion, userId, questionnaireId));
                     }
 
                     return questionAnswer;
 
                 default:
-                    Questionnaire.QuestionsAnswersDictionary.Add(questionAnswer.Answer, question);
-
                     questionAnswer.HtmlTags = CreateDefault(question);
                     return questionAnswer;
             }

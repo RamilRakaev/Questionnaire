@@ -17,7 +17,5 @@ namespace Questionnaire.Blazor.Models
         public List<string> Options { get; set; }
 
         public List<QuestionAnswerModel> QuestionAnswers { get; set; }
-
-        public Dictionary<AnswerModel, QuestionModel> QuestionsAnswersDictionary { get; set; }
     }
 }

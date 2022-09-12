@@ -6,6 +6,7 @@
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Blazor.Models.Questions.Tags
+@using Questionnaire.Blazor.Services.Questionnaire
 @using Questionnaire.Domain.Entities
 @using Questionnaire.Domain.Entities.Identity
 @using Questionnaire.Infrastructure.Commands.Requests.Answers
@@ -45,11 +46,12 @@
     protected async override Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = await UserManager.FindByNameAsync(authState.User.Identity.Name);
+        var userEntity = await UserManager.FindByNameAsync(authState.User.Identity.Name);
+        var user = Mapper.Map<UserModel>(userEntity);
 
         var questionnaireEntity = await Mediator.Send(new GetStructureQuery(QuestionnaireId));
         questionnaire = Mapper.Map<QuestionnaireModel>(questionnaireEntity);
-        QuestionaireManager manager = new(questionnaire, user.Id);
+        QuestionaireManager.PrepareQuestionnaireToDisplay(questionnaire, user.Id);
 
         foreach (var question in questionnaire.Questions)
         {
