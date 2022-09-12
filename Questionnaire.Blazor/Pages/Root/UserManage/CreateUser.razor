@@ -50,16 +50,16 @@
 
     private async Task Send()
     {
-        if (await Mediator.Send(new EmailIsBusyQuery(user.Email)))
+        var applicationUser = Mapper.Map<ApplicationUser>(user);
+        var result = await Mediator.Send(new CreateUserCommand(applicationUser, user.Password, user.Role));
+
+        if (result.Success)
         {
-            message.SetDangerText("Эта почта уже занята");
+            message.SetSuccessText(result.Message);
         }
         else
         {
-            var applicationUser = Mapper.Map<ApplicationUser>(user);
-            await Mediator.Send(new CreateUserCommand(applicationUser, user.Password, user.Role));
-
-            message.SetSuccessText("Аккаунт успешно создан");
+            message.SetDangerText(result.Message);
         }
     }
 }
