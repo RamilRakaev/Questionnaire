@@ -14,8 +14,6 @@ namespace Questionnaire.Blazor.Models.Questions
         public int? CustomTypeId { get; set; }
         public QuestionnaireModel CustomType { get; set; }
 
-        public List<OptionModel> Options { get; set; }
-
         public string DisplayName { get; set; }
 
         [Required(ErrorMessage = "Не введено имя в json")]
@@ -23,25 +21,10 @@ namespace Questionnaire.Blazor.Models.Questions
 
         public QuestionType QuestionType { get; set; }
 
+        public List<OptionModel> Options { get; set; }
+
         public List<HtmlTag> HtmlTags { get; set; }
 
         public AnswerModel AnswerToCurrentQuestion { get; set; } = new();
-
-        public List<AnswerModel> AllAnswers
-        {
-            get
-            {
-                List<AnswerModel> answers = new();
-                answers.Add(AnswerToCurrentQuestion);
-
-                if (CustomType != null)
-                {
-                    answers.AddRange(CustomType.Questions.Select(question => question.AnswerToCurrentQuestion));
-                }
-
-                return answers;
-            }
-        }
-
     }
 }

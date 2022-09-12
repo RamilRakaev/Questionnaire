@@ -6,7 +6,7 @@ using Questionnaire.Infrastructure.Queries.Requests.Structures;
 
 namespace Questionnaire.Infrastructure.Queries.Handlers.Structures
 {
-    public class GetStructureHandler : IRequestHandler<GetStructureQuery, Structure?>
+    public class GetStructureHandler : IRequestHandler<GetStructureQuery, Structure>
     {
         private readonly IRepository<Structure> _structureRepository;
         private readonly IRepository<Property> _propertyRepository;
@@ -17,7 +17,7 @@ namespace Questionnaire.Infrastructure.Queries.Handlers.Structures
             _propertyRepository = propertyRepository;
         }
 
-        public async Task<Structure?> Handle(GetStructureQuery request, CancellationToken cancellationToken)
+        public async Task<Structure> Handle(GetStructureQuery request, CancellationToken cancellationToken)
         {
             var structure = await _structureRepository.GetAsync(request.StructureId, cancellationToken);
             structure.Properties = await GetProperties(request.StructureId, cancellationToken);
@@ -31,7 +31,7 @@ namespace Questionnaire.Infrastructure.Queries.Handlers.Structures
                 .Where(property => property.StructureId == structureId).
                 ToListAsync(cancellationToken);
 
-            foreach (var property in properties.Where(property => property.Type == PropertyType.Custom))
+            foreach (var property in properties.Where(property => property.PropertyType == PropertyType.Custom))
             {
                 property.CustomType = await _structureRepository.GetAsync(property.CustomTypeId.Value, cancellationToken);
                 property.CustomType.Properties = await GetProperties(property.CustomTypeId.Value, cancellationToken);

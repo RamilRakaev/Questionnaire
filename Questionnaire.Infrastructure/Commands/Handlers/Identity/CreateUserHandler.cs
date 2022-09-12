@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Questionnaire.Domain.Entities.Identity;
 using Questionnaire.Infrastructure.Commands.Requests.Identity;
+using Questionnaire.Infrastructure.Conventions;
 using System.Security.Claims;
 
 namespace Questionnaire.Infrastructure.Commands.Handlers.Identity
@@ -22,7 +23,7 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Identity
 
             await _userManager.AddToRoleAsync(request.User, request.Role);
 
-            Claim claim = new("role", request.Role);
+            Claim claim = new(RoleConstants.RoleClaim, request.Role);
             await _userManager.AddClaimAsync(request.User, claim);
 
             return Unit.Value;

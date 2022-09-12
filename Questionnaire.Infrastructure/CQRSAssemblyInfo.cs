@@ -4,6 +4,6 @@ namespace Questionnaire.Infrastructure
 {
     public class CQRSAssemblyInfo
     {
-        public static Assembly Assembly { get { return typeof(CQRSAssemblyInfo).Assembly; } }
+        public static Assembly Assembly => typeof(CQRSAssemblyInfo).Assembly;
     }
 }

@@ -4,12 +4,12 @@ namespace Questionnaire.Domain.Entities
 {
     public class Answer : BaseEntity
     {
-        public string Value { get; set; }
-
         public int StructureId { get; set; }
         public Structure Questionnaire { get; set; }
 
-        public int UserId { get; set; }
+        public long UserId { get; set; }
         public ApplicationUser User { get; set; }
+
+        public string Value { get; set; }
     }
 }

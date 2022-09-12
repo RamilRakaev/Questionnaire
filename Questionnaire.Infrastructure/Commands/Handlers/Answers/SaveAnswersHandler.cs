@@ -50,7 +50,7 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Answers
 
             foreach (var propertyAnswer in propertyAnswers)
             {
-                if (propertyAnswer.Property.Type == PropertyType.Custom)
+                if (propertyAnswer.Property.PropertyType == PropertyType.Custom)
                 {
                     var answers = CreateObjectForJson(propertyAnswer.PropertyAnswers);
                     properties.Add(propertyAnswer.Property.JsonName, answers);

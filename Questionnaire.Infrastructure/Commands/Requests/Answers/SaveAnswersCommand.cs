@@ -5,7 +5,7 @@ namespace Questionnaire.Infrastructure.Commands.Requests.Answers
 {
     public class SaveAnswersCommand : IRequest
     {
-        public SaveAnswersCommand(List<PropertyAnswer> propertyAnswers, int structureId, int userId)
+        public SaveAnswersCommand(List<PropertyAnswer> propertyAnswers, int structureId, long userId)
         {
             PropertyAnswers = propertyAnswers;
             StructureId = structureId;
@@ -15,6 +15,6 @@ namespace Questionnaire.Infrastructure.Commands.Requests.Answers
         public List<PropertyAnswer> PropertyAnswers { get; private set; }
 
         public int StructureId { get; private set; }
-        public int UserId { get; private set; }
+        public long UserId { get; private set; }
     }
 }

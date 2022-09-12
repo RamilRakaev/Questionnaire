@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Questionnaire.Blazor.Models.Questions;
-using Questionnaire.Blazor.Models.Questions.Tags;
 using Questionnaire.Domain.Entities;
 using System.Linq;
 
@@ -17,7 +16,7 @@ namespace Questionnaire.Blazor.MapperPofiles
                 .ForMember(dest => dest.CustomType, opt => opt.MapFrom(src => src.CustomType))
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
                 .ForMember(dest => dest.JsonName, opt => opt.MapFrom(src => src.JsonName))
-                .ForMember(dest => dest.QuestionType, opt => opt.MapFrom(src => src.Type.ToString()))
+                .ForMember(dest => dest.QuestionType, opt => opt.MapFrom(src => src.PropertyType.ToString()))
                 .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options.ToList()));
 
             CreateMap<QuestionModel, Property>()
@@ -26,7 +25,7 @@ namespace Questionnaire.Blazor.MapperPofiles
                 .ForMember(dest => dest.CustomType, opt => opt.MapFrom(src => src.CustomType))
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
                 .ForMember(dest => dest.JsonName, opt => opt.MapFrom(src => src.JsonName))
-                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.QuestionType))
+                .ForMember(dest => dest.PropertyType, opt => opt.MapFrom(src => src.QuestionType))
                 .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options));
         }
     }

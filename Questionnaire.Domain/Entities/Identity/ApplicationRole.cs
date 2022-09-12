@@ -2,7 +2,7 @@
 
 namespace Questionnaire.Domain.Entities.Identity
 {
-    public class ApplicationRole : IdentityRole<int>
+    public class ApplicationRole : IdentityRole<long>
     {
     }
 }

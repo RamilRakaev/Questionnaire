@@ -35,7 +35,7 @@
         {
             NavigationManager.NavigateTo(NavigationLinks.Login);
         }
-        else if (authenticationState.User.FindFirst("role").Value == RoleConstants.Admin)
+        else if (authenticationState.User.FindFirst(RoleConstants.RoleClaim).Value == RoleConstants.Admin)
         {
             layout = typeof(AdminLayout);
         }

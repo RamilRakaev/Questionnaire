@@ -9,6 +9,6 @@ namespace Questionnaire.Domain.Entities
 
         public List<Property> Properties { get; set; }
         public List<Answer> Answers { get; set; }
-        public IEnumerable<Property> CustomProperties { get; set; }
+        public List<Property> CustomProperties { get; set; }
     }
 }

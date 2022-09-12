@@ -2,7 +2,7 @@
 
 namespace Questionnaire.Domain.Entities.Identity
 {
-    public class ApplicationUser : IdentityUser<int>
+    public class ApplicationUser : IdentityUser<long>
     {
         public List<Answer> Answers { get; set; }
     }

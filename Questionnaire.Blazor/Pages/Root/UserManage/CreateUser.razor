@@ -3,6 +3,7 @@
 @using AutoMapper
 @using MediatR
 @using Questionnaire.Blazor.Models
+@using Questionnaire.Blazor.Services.UserInterfaceDisplay
 @using Questionnaire.Domain.Entities.Identity
 @using Questionnaire.Infrastructure.Commands.Requests.Identity
 @using Questionnaire.Infrastructure.Queries.Requests.Identity
@@ -11,7 +12,7 @@
 <EditForm Model=user OnValidSubmit=Send>
     <ValidationSummary />
     <DataAnnotationsValidator />
-    <p class="text-danger">@message</p>
+    <p class=@message.CssClass>@message.Text</p>
     <div class="form-group">
         <label>Почта</label>
         <InputText type="email" @bind-Value=user.Email class="form-control" />
@@ -34,7 +35,7 @@
 </EditForm>
 
 @code {
-    private string message;
+    private FormMessage message = new();
 
     private UserModel user = new()
     {
@@ -51,14 +52,14 @@
     {
         if (await Mediator.Send(new EmailIsBusyQuery(user.Email)))
         {
-            message = "Эта почта уже занята";
+            message.SetDangerText("Эта почта уже занята");
         }
         else
         {
             var applicationUser = Mapper.Map<ApplicationUser>(user);
             await Mediator.Send(new CreateUserCommand(applicationUser, user.Password, user.Role));
 
-            message = "Аккаунт успешно создан";
+            message.SetSuccessText("Аккаунт успешно создан");
         }
     }
 }

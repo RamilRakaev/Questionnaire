@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Questionnaire.Domain.Entities
+﻿namespace Questionnaire.Domain.Entities
 {
     public class Property : BaseEntity
     {
@@ -12,10 +10,9 @@ namespace Questionnaire.Domain.Entities
 
         public string DisplayName { get; set; }
 
-        [NotNull]
         public string JsonName { get; set; }
 
-        public PropertyType Type { get; set; }
-        public IEnumerable<Option> Options { get; set; }
+        public PropertyType PropertyType { get; set; }
+        public List<Option> Options { get; set; }
     }
 }

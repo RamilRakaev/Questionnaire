@@ -49,7 +49,7 @@
     protected override async Task OnInitializedAsync()
     {
         authenticationState = authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        if (authenticationState.User.FindFirst("role").Value != RoleConstants.Admin)
+        if (authenticationState.User.FindFirst(RoleConstants.RoleClaim).Value != RoleConstants.Admin)
         {
             NavigationManager.NavigateTo(NavigationLinks.Login);
         }

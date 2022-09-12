@@ -18,6 +18,6 @@ namespace Questionnaire.Blazor.Models
 
         public List<QuestionAnswerModel> QuestionAnswers { get; set; }
 
-        public Dictionary<AnswerModel, QuestionModel> QuestionsAnswers { get; set; }
+        public Dictionary<AnswerModel, QuestionModel> QuestionsAnswersDictionary { get; set; }
     }
 }

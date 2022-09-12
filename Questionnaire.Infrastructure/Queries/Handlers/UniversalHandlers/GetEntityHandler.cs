@@ -14,9 +14,9 @@ namespace Questionnaire.Infrastructure.Queries.Handlers.UniversalHandlers
             _entityRepository = entityRepository;
         }
 
-        public async Task<T> Handle(GetEntityQuery<T> request, CancellationToken cancellationToken)
+        public Task<T> Handle(GetEntityQuery<T> request, CancellationToken cancellationToken)
         {
-            return await _entityRepository.GetAsync(request.Id, cancellationToken);
+            return _entityRepository.GetAsync(request.Id, cancellationToken);
         }
     }
 }

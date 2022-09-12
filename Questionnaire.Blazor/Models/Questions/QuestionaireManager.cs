@@ -7,9 +7,9 @@ namespace Questionnaire.Blazor.Models.Questions
 {
     public class QuestionaireManager
     {
-        private readonly int userId;
+        private readonly long userId;
 
-        public QuestionaireManager(QuestionnaireModel questionnaire, int userId)
+        public QuestionaireManager(QuestionnaireModel questionnaire, long userId)
         {
             Questionnaire = questionnaire;
             this.userId = userId;
@@ -20,7 +20,7 @@ namespace Questionnaire.Blazor.Models.Questions
 
         private void PrepareQuestionnaireToDisplay(QuestionnaireModel questionnaire)
         {
-            questionnaire.QuestionsAnswers = new();
+            questionnaire.QuestionsAnswersDictionary = new();
             questionnaire.QuestionAnswers = new();
             foreach (var question in questionnaire.Questions)
             {
@@ -39,7 +39,7 @@ namespace Questionnaire.Blazor.Models.Questions
             switch (question.QuestionType)
             {
                 case QuestionType.Enumeration:
-                    Questionnaire.QuestionsAnswers.Add(questionAnswer.Answer, question);
+                    Questionnaire.QuestionsAnswersDictionary.Add(questionAnswer.Answer, question);
 
                     questionAnswer.HtmlTags = CreateEnumeration(question);
                     return questionAnswer;
@@ -55,7 +55,7 @@ namespace Questionnaire.Blazor.Models.Questions
                     return questionAnswer;
 
                 default:
-                    Questionnaire.QuestionsAnswers.Add(questionAnswer.Answer, question);
+                    Questionnaire.QuestionsAnswersDictionary.Add(questionAnswer.Answer, question);
 
                     questionAnswer.HtmlTags = CreateDefault(question);
                     return questionAnswer;

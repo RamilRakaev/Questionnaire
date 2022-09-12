@@ -4,7 +4,7 @@ using Questionnaire.Domain.Entities.Identity;
 
 namespace Questionnaire.Infrastructure.Database
 {
-    public class QuestionnaireContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>
+    public class QuestionnaireContext : IdentityDbContext<ApplicationUser, ApplicationRole, long>
     {
         public QuestionnaireContext(DbContextOptions<QuestionnaireContext> options) : base(options)
         {
@@ -13,7 +13,6 @@ namespace Questionnaire.Infrastructure.Database
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
             builder.ApplyConfigurationsFromAssembly(GetType().Assembly);
         }
     }

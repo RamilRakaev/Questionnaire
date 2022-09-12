@@ -19,7 +19,7 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.UniversalHandlers
         public async Task<Unit> Handle(CreateOrChangeEntityCommand<T> request, CancellationToken cancellationToken)
         {
             var entityRepository = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IRepository<T>>();
-            
+
             var entity = await entityRepository.GetAllAsNoTracking()
                 .FirstOrDefaultAsync(entity => entity.Id == request.Entity.Id, cancellationToken);
 

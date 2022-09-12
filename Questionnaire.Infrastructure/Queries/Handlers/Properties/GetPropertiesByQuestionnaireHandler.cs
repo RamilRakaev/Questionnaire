@@ -15,9 +15,9 @@ namespace Questionnaire.Infrastructure.Queries.Handlers.Properties
             _propertyRepository = propertyRepository;
         }
 
-        public async Task<Property[]> Handle(GetPropertiesByQuestionnaireQuery request, CancellationToken cancellationToken)
+        public Task<Property[]> Handle(GetPropertiesByQuestionnaireQuery request, CancellationToken cancellationToken)
         {
-            return await _propertyRepository.GetAllAsNoTracking()
+            return _propertyRepository.GetAllAsNoTracking()
                 .Where(property => property.StructureId == request.StructureId)
                 .Include(property => property.Options)
                 .Include(property => property.CustomType)

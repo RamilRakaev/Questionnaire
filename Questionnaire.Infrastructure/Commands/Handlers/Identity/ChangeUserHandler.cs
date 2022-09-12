@@ -1,13 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Questionnaire.Domain.Entities.Identity;
-using Questionnaire.Domain.Interfaces;
 using Questionnaire.Infrastructure.Commands.Requests.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Questionnaire.Infrastructure.Commands.Handlers.Identity
 {
