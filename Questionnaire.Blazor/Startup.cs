@@ -53,11 +53,11 @@ namespace Questionnaire.Blazor
             services.AddMapper();
 
             //services.ConfigureEntitiesQueryHandlers<BaseEntity>(typeof(GetEntitiesQuery<>), typeof(GetEntitiesHandler<>));
-            services.Configure<BaseEntity>(typeof(GetEntitiesQuery<>), typeof(GetEntitiesHandler<>), entityType => Array.CreateInstance(entityType, 0).GetType());
-            services.ConfigureEntityQueryHandlers<BaseEntity>(typeof(GetEntityQuery<>), typeof(GetEntityHandler<>));
+            services.AddUniversalHandler<BaseEntity>(typeof(GetEntitiesQuery<>), typeof(GetEntitiesHandler<>), entityType => entityType.MakeArrayType());
+            services.AddUniversalHandler<BaseEntity>(typeof(GetEntityQuery<>), typeof(GetEntityHandler<>));
 
-            services.ConfigureEntityCommandHandlers<BaseEntity>(typeof(CreateOrChangeEntityCommand<>), typeof(CreateOrChangeEntityHandler<>));
-            services.ConfigureEntityCommandHandlers<BaseEntity>(typeof(RemoveEntityCommand<>), typeof(RemoveEntityHandler<>));
+            services.AddUniversalHandler<BaseEntity>(typeof(CreateOrChangeEntityCommand<>), typeof(CreateOrChangeEntityHandler<>), entityType => typeof(Unit));
+            services.AddUniversalHandler<BaseEntity>(typeof(RemoveEntityCommand<>), typeof(RemoveEntityHandler<>), entityType => typeof(Unit));
         }
 
 

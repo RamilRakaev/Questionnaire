@@ -26,12 +26,12 @@ namespace Questionnaire.Blazor
             services.AddSingleton(mapper);
         }
 
-        public static void Configure<Entity>(this IServiceCollection services, Type commandType, Type handlerType)
+        public static void AddUniversalHandler<Entity>(this IServiceCollection services, Type commandType, Type handlerType)
         {
-            Configure<Entity>(services, commandType, handlerType, entityType => entityType);
+            AddUniversalHandler<Entity>(services, commandType, handlerType, entityType => entityType);
         }
 
-        public static void Configure<Entity>(this IServiceCollection services, Type commandType, Type handlerType, Func<Type, Type> handlerResult)
+        public static void AddUniversalHandler<Entity>(this IServiceCollection services, Type commandType, Type handlerType, Func<Type, Type> handlerResult)
         {
             var types = typeof(BaseEntity)
                 .Assembly
@@ -42,40 +42,6 @@ namespace Questionnaire.Blazor
             {
                 var currentQueryType = commandType.MakeGenericType(entityType);
                 var iRequestHandlerType = typeof(IRequestHandler<,>).MakeGenericType(currentQueryType, handlerResult(entityType));
-                var currentHandlerType = handlerType.MakeGenericType(entityType);
-
-                services.AddTransient(iRequestHandlerType, currentHandlerType);
-            }
-        }
-
-        public static void ConfigureEntityQueryHandlers<Entity>(this IServiceCollection services, Type commandType, Type handlerType)
-        {
-            var types = typeof(BaseEntity)
-                .Assembly
-                .GetTypes()
-                .Where(t => t.BaseType == typeof(Entity));
-
-            foreach (var entityType in types)
-            {
-                var currentCommandType = commandType.MakeGenericType(entityType);
-                var iRequestHandlerType = typeof(IRequestHandler<,>).MakeGenericType(currentCommandType, entityType);
-                var currentHandlerType = handlerType.MakeGenericType(entityType);
-
-                services.AddTransient(iRequestHandlerType, currentHandlerType);
-            }
-        }
-
-        public static void ConfigureEntityCommandHandlers<Entity>(this IServiceCollection services, Type commandType, Type handlerType)
-        {
-            var types = typeof(BaseEntity)
-                .Assembly
-                .GetTypes()
-                .Where(t => t.BaseType == typeof(Entity));
-
-            foreach (var entityType in types)
-            {
-                var currentCommandType = commandType.MakeGenericType(entityType);
-                var iRequestHandlerType = typeof(IRequestHandler<,>).MakeGenericType(currentCommandType, typeof(Unit));
                 var currentHandlerType = handlerType.MakeGenericType(entityType);
 
                 services.AddTransient(iRequestHandlerType, currentHandlerType);

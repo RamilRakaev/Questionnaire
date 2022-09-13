@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Questionnaire.Blazor.Services.Questionnaire
 {
-    public class QuestionaireManager
+    public static class QuestionaireManager
     {
         public static void PrepareQuestionnaireToDisplay(QuestionnaireModel modifiableQuestionnaire, long userId)
         {
