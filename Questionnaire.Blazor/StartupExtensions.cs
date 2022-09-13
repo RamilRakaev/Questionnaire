@@ -22,7 +22,7 @@ namespace Questionnaire.Blazor
                 }
             });
 
-            IMapper mapper = mapperConfig.CreateMapper();
+            var mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
         }
 
@@ -31,7 +31,7 @@ namespace Questionnaire.Blazor
             AddUniversalHandler<Entity>(services, commandType, handlerType, entityType => entityType);
         }
 
-        public static void AddUniversalHandler<Entity>(this IServiceCollection services, Type commandType, Type handlerType, Func<Type, Type> handlerResult)
+        public static void AddUniversalHandler<Entity>(this IServiceCollection services, Type requestType, Type handlerType, Func<Type, Type> handlerResultType)
         {
             var types = typeof(BaseEntity)
                 .Assembly
@@ -40,11 +40,11 @@ namespace Questionnaire.Blazor
 
             foreach (var entityType in types)
             {
-                var currentQueryType = commandType.MakeGenericType(entityType);
-                var iRequestHandlerType = typeof(IRequestHandler<,>).MakeGenericType(currentQueryType, handlerResult(entityType));
-                var currentHandlerType = handlerType.MakeGenericType(entityType);
+                var genericRequestType = requestType.MakeGenericType(entityType);
+                var genericIRequestHandlerType = typeof(IRequestHandler<,>).MakeGenericType(genericRequestType, handlerResultType(entityType));
+                var genericHandlerType = handlerType.MakeGenericType(entityType);
 
-                services.AddTransient(iRequestHandlerType, currentHandlerType);
+                services.AddTransient(genericIRequestHandlerType, genericHandlerType);
             }
         }
     }
