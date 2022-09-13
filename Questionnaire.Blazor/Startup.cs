@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,6 +17,7 @@ using Questionnaire.Infrastructure.Database;
 using Questionnaire.Infrastructure.DatabaseServices;
 using Questionnaire.Infrastructure.Queries.Handlers.UniversalHandlers;
 using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries;
+using System;
 
 namespace Questionnaire.Blazor
 {
@@ -50,7 +52,8 @@ namespace Questionnaire.Blazor
             services.AddMediatR(CQRSAssemblyInfo.Assembly);
             services.AddMapper();
 
-            services.ConfigureEntitiesQueryHandlers<BaseEntity>(typeof(GetEntitiesQuery<>), typeof(GetEntitiesHandler<>));
+            //services.ConfigureEntitiesQueryHandlers<BaseEntity>(typeof(GetEntitiesQuery<>), typeof(GetEntitiesHandler<>));
+            services.Configure<BaseEntity>(typeof(GetEntitiesQuery<>), typeof(GetEntitiesHandler<>), entityType => Array.CreateInstance(entityType, 0).GetType());
             services.ConfigureEntityQueryHandlers<BaseEntity>(typeof(GetEntityQuery<>), typeof(GetEntityHandler<>));
 
             services.ConfigureEntityCommandHandlers<BaseEntity>(typeof(CreateOrChangeEntityCommand<>), typeof(CreateOrChangeEntityHandler<>));

@@ -26,7 +26,12 @@ namespace Questionnaire.Blazor
             services.AddSingleton(mapper);
         }
 
-        public static void ConfigureEntitiesQueryHandlers<Entity>(this IServiceCollection services, Type commandType, Type handlerType)
+        public static void Configure<Entity>(this IServiceCollection services, Type commandType, Type handlerType)
+        {
+            Configure<Entity>(services, commandType, handlerType, entityType => entityType);
+        }
+
+        public static void Configure<Entity>(this IServiceCollection services, Type commandType, Type handlerType, Func<Type, Type> handlerResult)
         {
             var types = typeof(BaseEntity)
                 .Assembly
@@ -35,10 +40,8 @@ namespace Questionnaire.Blazor
 
             foreach (var entityType in types)
             {
-                var arrayType = Array.CreateInstance(entityType, 0).GetType();
-
                 var currentQueryType = commandType.MakeGenericType(entityType);
-                var iRequestHandlerType = typeof(IRequestHandler<,>).MakeGenericType(currentQueryType, arrayType);
+                var iRequestHandlerType = typeof(IRequestHandler<,>).MakeGenericType(currentQueryType, handlerResult(entityType));
                 var currentHandlerType = handlerType.MakeGenericType(entityType);
 
                 services.AddTransient(iRequestHandlerType, currentHandlerType);
