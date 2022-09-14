@@ -1,4 +1,5 @@
-﻿
+﻿@using Questionnaire.Infrastructure.Conventions
+
 <div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">Questionnaire.Blazor</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -8,37 +9,38 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Опросы
+            </NavLink>
+        </li>
         <AuthorizeView>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <span class="oi oi-home" aria-hidden="true"></span> Home
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href=@NavigationLinks.RootQuestionnaires>
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Админ
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href=@NavigationLinks.RootCreateUser>
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Создать пользователя
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href=@NavigationLinks.RootUsers>
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Пользователи
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href=@NavigationLinks.CreateQuestionnaire>
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Создать опрос
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href=@NavigationLinks.QuestionedQuestionnaires>
-                    <span class="oi oi-plus" aria-hidden="true"></span> Опрашиваемый
-                </NavLink>
-            </li>
+            @if (context.User.FindFirst(claim => claim.Type == RoleConstants.RoleClaim).Value == RoleConstants.Questioned)
+            {
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href=@NavigationLinks.QuestionedQuestionnaires>
+                        <span class="oi oi-plus" aria-hidden="true"></span> Опрашиваемый
+                    </NavLink>
+                </li>
+            }
+            else if (context.User.FindFirst(claim => claim.Type == RoleConstants.RoleClaim).Value == RoleConstants.Admin)
+            {
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href=@NavigationLinks.CreateQuestionnaire>
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Создать опрос
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href=@NavigationLinks.RootUsers>
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Пользователи
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href=@NavigationLinks.RootCreateUser>
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Создать пользователя
+                    </NavLink>
+                </li>
+            }
         </AuthorizeView>
     </ul>
 </div>

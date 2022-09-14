@@ -1,5 +1,7 @@
 ﻿@page "/questioned/passingTheQuestionnaire/{questionnaireId:int}"
 
+@attribute [Authorize(Roles = RoleConstants.Questioned)]
+
 @using AutoMapper
 @using MediatR
 @using Microsoft.AspNetCore.Identity
@@ -10,6 +12,7 @@
 @using Questionnaire.Domain.Entities
 @using Questionnaire.Domain.Entities.Identity
 @using Questionnaire.Infrastructure.Commands.Requests.Answers
+@using Questionnaire.Infrastructure.Conventions
 @using Questionnaire.Infrastructure.Models
 @using Questionnaire.Infrastructure.Queries.Requests.Properties
 @using Questionnaire.Infrastructure.Queries.Requests.Structures

@@ -1,9 +1,12 @@
 ﻿@page "/questioned/"
 
+@attribute [Authorize(Roles = RoleConstants.Questioned)]
+
 @using AutoMapper
 @using MediatR
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Domain.Entities
+@using Questionnaire.Infrastructure.Conventions
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 
 <table class="table">

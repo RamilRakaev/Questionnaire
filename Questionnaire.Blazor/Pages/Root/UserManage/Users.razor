@@ -1,10 +1,13 @@
 ﻿@page "/root/userManage/"
 
+@attribute [Authorize(Roles = RoleConstants.Admin)]
+
 @using AutoMapper
 @using MediatR
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Domain.Entities.Identity
 @using Questionnaire.Infrastructure.Commands.Requests.Identity
+@using Questionnaire.Infrastructure.Conventions
 @using Questionnaire.Infrastructure.Queries.Requests.Identity
 
 <table>

@@ -1,5 +1,7 @@
 ﻿@page "/root/"
 
+@attribute [Authorize(Roles = RoleConstants.Admin)]
+
 @using AutoMapper
 @using MediatR
 @using Questionnaire.Blazor.Models.Questions

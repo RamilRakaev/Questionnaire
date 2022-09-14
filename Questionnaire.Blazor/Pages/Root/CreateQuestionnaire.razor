@@ -1,5 +1,7 @@
 ﻿@page "/root/createQuestionnaire/"
 
+@attribute [Authorize(Roles = RoleConstants.Admin)]
+
 @using AutoMapper
 @using MediatR
 @using Questionnaire.Blazor.Models
@@ -9,6 +11,7 @@
 @using Questionnaire.Infrastructure.Commands.Requests.Questionnaires
 @using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
 @using AutoMapper.QueryableExtensions
+@using Questionnaire.Infrastructure.Conventions
 @using Questionnaire.Infrastructure.Queries.Requests.Structures
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 @using System.Collections.Concurrent

@@ -1,5 +1,7 @@
 ﻿@page "/root/userManage/createUser"
 
+@attribute [Authorize(Roles = RoleConstants.Admin)]
+
 @using AutoMapper
 @using MediatR
 @using Questionnaire.Blazor.Models
