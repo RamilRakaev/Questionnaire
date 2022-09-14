@@ -6,6 +6,20 @@
 
         public string Text { get; private set; }
 
+        public void ActionNotification(string messageTest, bool successed)
+        {
+            Text = messageTest;
+
+            if (successed)
+            {
+                CssClass = "text-success";
+            }
+            else
+            {
+                CssClass = "text-danger";
+            }
+        }
+
         public void SetDangerText(string text)
         {
             Text = text;

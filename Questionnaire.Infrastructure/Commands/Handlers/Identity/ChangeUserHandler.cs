@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Identity;
 using Questionnaire.Domain.Entities.Identity;
 using Questionnaire.Infrastructure.Commands.Requests.Identity;
+using Questionnaire.Infrastructure.Models;
 
 namespace Questionnaire.Infrastructure.Commands.Handlers.Identity
 {
-    public class ChangeUserHandler : IRequestHandler<ChangeUserCommand>
+    public class ChangeUserHandler : IRequestHandler<ChangeUserCommand, RequestResult>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
@@ -16,7 +17,7 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Identity
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<Unit> Handle(ChangeUserCommand request, CancellationToken cancellationToken)
+        public async Task<RequestResult> Handle(ChangeUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.User.Id.ToString());
 
@@ -26,9 +27,21 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Identity
                 user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
             }
 
-            await _userManager.UpdateAsync(user);
+            var result = await _userManager.UpdateAsync(user);
 
-            return Unit.Value;
+            RequestResult requestResult = new();
+
+            if (result.Succeeded)
+            {
+                requestResult.Successed = true;
+                requestResult.Message = "Пароль пользователя успешно изменён";
+            }
+            else
+            {
+                requestResult.Message = "Ошибка при изменении пароля";
+            }
+
+            return requestResult;
         }
     }
 }

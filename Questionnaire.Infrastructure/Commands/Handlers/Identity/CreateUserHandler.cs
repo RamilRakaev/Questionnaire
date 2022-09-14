@@ -43,7 +43,7 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Identity
             Claim claim = new(RoleConstants.RoleClaim, request.Role);
             await _userManager.AddClaimAsync(request.User, claim);
 
-            queryResult.Success = true;
+            queryResult.Successed = true;
             queryResult.Message = "Аккаунт успешно создан";
             return queryResult;
         }

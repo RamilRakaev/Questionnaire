@@ -5,11 +5,13 @@
 @using AutoMapper
 @using MediatR
 @using Questionnaire.Blazor.Models
+@using Questionnaire.Blazor.Services.UserInterfaceDisplay
 @using Questionnaire.Domain.Entities.Identity
 @using Questionnaire.Infrastructure.Commands.Requests.Identity
 @using Questionnaire.Infrastructure.Conventions
 @using Questionnaire.Infrastructure.Queries.Requests.Identity
 
+<p class=@message.CssClass>@message.Text</p>
 <table>
     <thead>
         <tr>
@@ -40,6 +42,8 @@
 
     private UserModel[] users = Array.Empty<UserModel>();
 
+    private FormMessage message = new();
+
     [Inject]
     private IMapper Mapper { get; set; }
 
@@ -58,13 +62,17 @@
     private async Task ChangeUser(UserModel userModel)
     {
         var applicationUser = Mapper.Map<ApplicationUser>(userModel);
-        await Mediator.Send(new ChangeUserCommand(applicationUser, userModel.Password));
+        var result = await Mediator.Send(new ChangeUserCommand(applicationUser, userModel.Password));
+
+        message.ActionNotification(result.Message, result.Successed);
     }
 
     private async Task RemoveUser(UserModel user)
     {
-        await Mediator.Send(new RemoveUserCommand(user.Id));
+        var result = await Mediator.Send(new RemoveUserCommand(user.Id));
         await Load();
+
+        message.ActionNotification(result.Message, result.Successed);
     }
 
     private async Task Load()

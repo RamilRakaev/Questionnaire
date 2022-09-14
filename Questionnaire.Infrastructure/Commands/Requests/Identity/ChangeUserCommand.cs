@@ -1,9 +1,10 @@
 ﻿using MediatR;
 using Questionnaire.Domain.Entities.Identity;
+using Questionnaire.Infrastructure.Models;
 
 namespace Questionnaire.Infrastructure.Commands.Requests.Identity
 {
-    public class ChangeUserCommand : IRequest
+    public class ChangeUserCommand : IRequest<RequestResult>
     {
         public ChangeUserCommand(ApplicationUser user, string password)
         {

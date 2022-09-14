@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Identity;
 using Questionnaire.Domain.Entities.Identity;
 using Questionnaire.Infrastructure.Commands.Requests.Identity;
+using Questionnaire.Infrastructure.Models;
 
 namespace Questionnaire.Infrastructure.Commands.Handlers.Identity
 {
-    public class RemoveUserHandler : IRequestHandler<RemoveUserCommand>
+    public class RemoveUserHandler : IRequestHandler<RemoveUserCommand, RequestResult>
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -14,12 +15,24 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Identity
             _userManager = userManager;
         }
 
-        public async Task<Unit> Handle(RemoveUserCommand request, CancellationToken cancellationToken)
+        public async Task<RequestResult> Handle(RemoveUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.UserId.ToString());
-            await _userManager.DeleteAsync(user);
+            var result = await _userManager.DeleteAsync(user);
 
-            return Unit.Value;
+            RequestResult requestResult = new();
+
+            if (result.Succeeded)
+            {
+                requestResult.Successed = true;
+                requestResult.Message = "Пользователь удалён";
+            }
+            else
+            {
+                requestResult.Message = "При удалении произошла ошибка";
+            }
+
+            return requestResult;
         }
     }
 }
