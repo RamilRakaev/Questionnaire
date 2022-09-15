@@ -7,14 +7,18 @@
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Blazor.Models.Questions.Tags
+@using Questionnaire.Blazor.Services.UserInterfaceDisplay
 @using Questionnaire.Domain.Entities
 @using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
 @using Questionnaire.Infrastructure.Conventions
 @using Questionnaire.Infrastructure.Queries.Requests.Properties
+@using Questionnaire.Infrastructure.Queries.Requests.Structures
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 @using System.Collections.Concurrent
 
-<EditForm Model=@questionnaire OnSubmit=ChangeQuestionnaire>
+<p class=@message.CssClass>@message.Text</p>
+
+<EditForm Model=@questionnaire OnSubmit=ChangeNameQuestionnaire>
     <div class="form-group">
         <label>Имя опроса</label>
         <InputText @bind-Value=questionnaire.DisplayName class="form-control" />
@@ -81,6 +85,7 @@
                             <label>Отображаемое имя</label>
                             <InputText @bind-Value=currentOption.DisplayName class="form-control" />
                         </div>
+
                         <div class="form-group">
                             <label>Имя в json</label>
                             <InputText @bind-Value=currentOption.JsonName class="form-control" />
@@ -98,14 +103,15 @@
 
 @code {
     private ConcurrentDictionary<string, int> nameIdPairs = new();
+
     private OptionModel currentOption = new();
     private QuestionModel currentQuestion = new();
-
-    private QuestionnaireModel questionnaire { get; set; } = new();
+    private QuestionnaireModel questionnaire = new();
 
     private QuestionModel[] questions = Array.Empty<QuestionModel>();
 
     private bool addQuestionDialogOpen;
+    private FormMessage message = new();
 
     [Parameter]
     public int QuestionnaireId { get; set; }
@@ -123,10 +129,20 @@
         await UploadQuestionnaires();
     }
 
-    private async Task ChangeQuestionnaire()
+    private async Task ChangeNameQuestionnaire()
     {
-        var questionnaireEntity = Mapper.Map<Structure>(questionnaire);
-        await Mediator.Send(new CreateOrChangeEntityCommand<Structure>(questionnaireEntity));
+        var displayNameIsUniqueness = await Mediator.Send(new CheckDisplayNameUniquenessQuery(questionnaire.DisplayName));
+        if (displayNameIsUniqueness)
+        {
+            var questionnaireEntity = Mapper.Map<Structure>(questionnaire);
+            await Mediator.Send(new CreateOrChangeEntityCommand<Structure>(questionnaireEntity));
+
+            message.SetSuccessText("Имя опроса успешно изменено");
+        }
+        else
+        {
+            message.SetDangerText("Имя опроса уже занято");
+        }
     }
 
     private async Task CreateQuestion()

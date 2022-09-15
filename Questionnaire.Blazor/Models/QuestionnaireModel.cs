@@ -11,10 +11,10 @@ namespace Questionnaire.Blazor.Models
         [Required(ErrorMessage = "Не введено имя опроса")]
         public string DisplayName { get; set; }
 
+        public List<string> Options { get; set; }
+
         [MinLength(1, ErrorMessage = "Введите минимум один вопрос")]
         public List<QuestionModel> Questions { get; set; }
-
-        public List<string> Options { get; set; }
 
         public List<QuestionAnswerModel> QuestionAnswers { get; set; }
     }
