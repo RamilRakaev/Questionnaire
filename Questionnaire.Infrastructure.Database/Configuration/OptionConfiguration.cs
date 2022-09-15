@@ -11,6 +11,7 @@ namespace Questionnaire.Infrastructure.Database.Configuration
             builder
                 .HasOne(option => option.Property)
                 .WithMany(property => property.Options)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasForeignKey(option => option.PropertyId);
         }
     }

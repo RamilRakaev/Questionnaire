@@ -8,7 +8,6 @@
 @using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Blazor.Services.UserInterfaceDisplay
 @using Questionnaire.Domain.Entities
-@using Questionnaire.Infrastructure.Commands.Requests.Questionnaires
 @using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
 @using AutoMapper.QueryableExtensions
 @using Questionnaire.Infrastructure.Conventions
@@ -88,7 +87,6 @@
         {
             if (currentQuestion.QuestionType == QuestionType.Enumeration && currentQuestion.Options.Count < 2)
             {
-                //currentQuestion.Options = null;
                 message.SetDangerText("Должно быть по крайне мере два варианта ответа");
                 return Task.CompletedTask;
             }
@@ -126,7 +124,7 @@
         }
         else
         {
-            message.SetSuccessText("Добавлен вопрос \n");
+            message.SetSuccessText("Добавлен вопрос");
         }
 
         return result;

@@ -19,17 +19,19 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Identity
 
         public async Task<RequestResult> Handle(ChangeUserCommand request, CancellationToken cancellationToken)
         {
+            RequestResult requestResult = new();
             var user = await _userManager.FindByIdAsync(request.User.Id.ToString());
 
             user.Email = request.User.Email;
-            if (request.Password != null)
+
+            if (request.Password == null)
             {
-                user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
+                requestResult.Message = "Пустой пароль";
+                return requestResult;
             }
 
+            user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
             var result = await _userManager.UpdateAsync(user);
-
-            RequestResult requestResult = new();
 
             if (result.Succeeded)
             {

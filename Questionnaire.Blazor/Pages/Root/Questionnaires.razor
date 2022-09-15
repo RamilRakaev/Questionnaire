@@ -7,7 +7,6 @@
 @using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Domain.Entities
-@using Questionnaire.Infrastructure.Commands.Requests.Questionnaires
 @using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
 @using Questionnaire.Infrastructure.Conventions
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
@@ -60,7 +59,7 @@
 
     private async Task Remove(int questionnaireId)
     {
-        await Mediator.Send(new RemoveQuestionnaireCommand(questionnaireId));
+        await Mediator.Send(new RemoveEntityCommand<Structure>(questionnaireId));
         await UploadQuestionnaires();
     }
 

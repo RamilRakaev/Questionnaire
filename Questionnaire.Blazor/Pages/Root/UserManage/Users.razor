@@ -12,30 +12,20 @@
 @using Questionnaire.Infrastructure.Queries.Requests.Identity
 
 <p class=@message.CssClass>@message.Text</p>
-<table>
-    <thead>
-        <tr>
-            <th>Почта</th>
-            <th>Пароль</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in users)
-        {
-            <tr>
-                <td>@user.Email</td>
-                <td><input type="password" @bind-value=user.Password /></td>
-                <td>
-                    <button class="btn btn-warning" @onclick="() => ChangeUser(user)">Изменить</button>
-                    @if (authenticationState.User.Identity.Name != user.Email)
-                    {
-                        <button class="btn btn-danger" @onclick="() => RemoveUser(user)">Удалить</button>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+@foreach (var user in users)
+{
+    <EditForm Model=user OnValidSubmit="() => ChangeUser(user)">
+        <ValidationSummary />
+        <DataAnnotationsValidator />
+
+        <p class="d-inline">@user.Email</p>
+        <InputText @bind-Value=user.Password class="form-inline d-inline" />
+
+        <button class="btn btn-warning">Изменить</button>
+        <button type="button" @onclick="() => RemoveUser(user)" class="btn btn-danger">Удалить</button>
+    </EditForm>
+}
 
 @code {
     private AuthenticationState authenticationState;

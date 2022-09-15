@@ -11,11 +11,13 @@ namespace Questionnaire.Infrastructure.Database.Configuration
             builder
                 .HasOne(answer => answer.Questionnaire)
                 .WithMany(question => question.Answers)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasForeignKey(answer => answer.StructureId);
 
             builder
                 .HasOne(answer => answer.User)
                 .WithMany(user => user.Answers)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasForeignKey(answer => answer.UserId);
         }
     }

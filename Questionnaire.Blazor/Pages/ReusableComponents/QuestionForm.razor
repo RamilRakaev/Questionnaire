@@ -76,9 +76,6 @@
     public QuestionModel CurrentQuestion { get; set; }
 
     [Parameter]
-    public List<QuestionModel> Questions { get; set; }
-
-    [Parameter]
     public Func<Task> CreateQuestion { get; set; }
 
     [Parameter]
