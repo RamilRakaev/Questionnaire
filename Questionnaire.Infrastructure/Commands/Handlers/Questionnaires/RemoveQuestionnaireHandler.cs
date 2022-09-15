@@ -22,23 +22,32 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Questionnaires
 
         public async Task<Unit> Handle(RemoveQuestionnaireCommand request, CancellationToken cancellationToken)
         {
-            var questionnaire = await _questionnaireRepository.GetAllAsNoTracking()
-                .Where(questionnaire => questionnaire.Id == request.StructureId)
+            await RemoveStructure(request.StructureId, cancellationToken);
+
+            return Unit.Value;
+        }
+
+        private async Task RemoveStructure(int structureId, CancellationToken cancellationToken)
+        {
+            var structure = await _questionnaireRepository.GetAllAsNoTracking()
+                .Where(structure => structure.Id == structureId)
+                .Include(structure => structure.Answers)
+                .Include(structure => structure.Properties)
                 .FirstOrDefaultAsync(cancellationToken);
-            if (questionnaire == null)
+
+            if (structure == null)
             {
                 throw new NullReferenceException("Questionnaire no found in DB");
             }
 
-            var ansers = _answerRepository.GetAllAsNoTracking().Where(answer => answer.StructureId == request.StructureId);
-            await _answerRepository.RemoveRangeAsync(ansers, cancellationToken);
+            var customProperties = _questionRepository.GetAllAsNoTracking().Where(property => property.CustomTypeId == structureId);
 
-            var questions = _questionRepository.GetAllAsNoTracking().Where(question => question.StructureId == request.StructureId);
-            await _questionRepository.RemoveRangeAsync(questions, cancellationToken);
+            foreach (var customProperty in customProperties)
+            {
+                await RemoveStructure(customProperty.StructureId, cancellationToken);
+            }
 
-            await _questionnaireRepository.RemoveAsync(questionnaire, cancellationToken);
-
-            return Unit.Value;
+            await _questionnaireRepository.RemoveAsync(structure, cancellationToken);
         }
     }
 }

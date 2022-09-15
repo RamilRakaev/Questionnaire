@@ -14,6 +14,7 @@ namespace Questionnaire.Blazor.Models.Questions
         public int? CustomTypeId { get; set; }
         public QuestionnaireModel CustomType { get; set; }
 
+        [Required(ErrorMessage = "Не введено отображаемое имя")]
         public string DisplayName { get; set; }
 
         [Required(ErrorMessage = "Не введено имя в json")]

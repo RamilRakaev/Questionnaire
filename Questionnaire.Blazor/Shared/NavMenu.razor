@@ -15,7 +15,7 @@
             </NavLink>
         </li>
         <AuthorizeView>
-            @if (context.User.FindFirst(claim => claim.Type == RoleConstants.RoleClaim).Value == RoleConstants.Questioned)
+            @if (context.User.IsInRole(RoleConstants.Questioned))
             {
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href=@NavigationLinks.QuestionedQuestionnaires>
@@ -23,7 +23,7 @@
                     </NavLink>
                 </li>
             }
-            else if (context.User.FindFirst(claim => claim.Type == RoleConstants.RoleClaim).Value == RoleConstants.Admin)
+            else if (context.User.IsInRole(RoleConstants.Admin))
             {
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href=@NavigationLinks.CreateQuestionnaire>

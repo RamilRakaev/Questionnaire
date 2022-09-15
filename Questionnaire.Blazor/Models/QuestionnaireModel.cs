@@ -8,7 +8,7 @@ namespace Questionnaire.Blazor.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Не введено имя опроса")]
         public string DisplayName { get; set; }
 
         [MinLength(1, ErrorMessage = "Введите минимум один вопрос")]

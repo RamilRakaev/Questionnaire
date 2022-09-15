@@ -86,9 +86,11 @@
     {
         if (CheckNameUniqueness())
         {
-            if (currentQuestion.QuestionType != QuestionType.Enumeration)
+            if (currentQuestion.QuestionType == QuestionType.Enumeration && currentQuestion.Options.Count < 2)
             {
-                currentQuestion.Options = null;
+                //currentQuestion.Options = null;
+                message.SetDangerText("Должно быть по крайне мере два варианта ответа");
+                return Task.CompletedTask;
             }
 
             questionnaire.Questions.Add(currentQuestion);

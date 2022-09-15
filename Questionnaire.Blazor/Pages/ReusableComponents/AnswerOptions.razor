@@ -12,19 +12,23 @@
     </div>
 }
 
-<div class="form-group">
-    <label>Вариант ответа</label>
-    <InputText @bind-Value=currentOption.DisplayName class="form-control" />
-</div>
+<EditForm Context="OptionForm" Model=currentOption OnValidSubmit=AddOption>
+    <ValidationSummary />
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Отображаемое имя варианта ответа</label>
+        <InputText @bind-Value=currentOption.DisplayName class="form-control" />
+    </div>
 
-<div class="form-group">
-    <label>Вариант ответа</label>
-    <InputText @bind-Value=currentOption.JsonName class="form-control" />
-</div>
+    <div class="form-group">
+        <label>Имя варианта ответа для json</label>
+        <InputText @bind-Value=currentOption.JsonName class="form-control" />
+    </div>
 
-<div class="form-group">
-    <button type="button" @onclick=AddOption class="btn btn-info">Добавить вариант</button>
-</div>
+    <div class="form-group">
+        <button class="btn btn-info">Добавить вариант</button>
+    </div>
+</EditForm>
 
 @code {
     [Parameter]
