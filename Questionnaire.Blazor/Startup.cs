@@ -38,7 +38,7 @@ namespace Questionnaire.Blazor
             services.AddServerSideBlazor();
 
             services.AddDbContext<QuestionnaireContext>(options => options.UseNpgsql(Configuration.GetConnectionString("ContextConnection"),
-                o => o.MigrationsAssembly(typeof(QuestionnaireContext).Assembly.FullName)));
+                options => options.MigrationsAssembly(typeof(QuestionnaireContext).Assembly.FullName)));
             services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = false)
                     .AddEntityFrameworkStores<QuestionnaireContext>();
 
@@ -52,7 +52,6 @@ namespace Questionnaire.Blazor
             services.AddMediatR(CQRSAssemblyInfo.Assembly);
             services.AddMapper();
 
-            //services.ConfigureEntitiesQueryHandlers<BaseEntity>(typeof(GetEntitiesQuery<>), typeof(GetEntitiesHandler<>));
             services.AddUniversalHandler<BaseEntity>(typeof(GetEntitiesQuery<>), typeof(GetEntitiesHandler<>), entityType => entityType.MakeArrayType());
             services.AddUniversalHandler<BaseEntity>(typeof(GetEntityQuery<>), typeof(GetEntityHandler<>));
 

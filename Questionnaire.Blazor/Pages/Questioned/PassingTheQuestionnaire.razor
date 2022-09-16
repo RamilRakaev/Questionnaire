@@ -18,9 +18,10 @@
 @using Questionnaire.Infrastructure.Queries.Requests.Structures
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 @using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Principal
 
 <h3>@questionnaire.DisplayName</h3>
-<EditForm Model=questionnaire OnValidSubmit=Send>
+<EditForm Model=questionnaire OnValidSubmit=SendAnswersQuestions>
     <QuestionnaireDisplay Questionnaire=questionnaire />
     <button class="btn btn-success">Отправить</button>
 </EditForm>
@@ -30,6 +31,8 @@
     private Dictionary<QuestionModel, AnswerModel> questionsAnswers = new();
 
     private List<HtmlTag> htmlTags = new();
+
+    private IIdentity identity;
 
     [Parameter]
     public int QuestionnaireId { get; set; }
@@ -48,8 +51,9 @@
 
     protected async override Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var userEntity = await UserManager.FindByNameAsync(authState.User.Identity.Name);
+        identity = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
+
+        var userEntity = await UserManager.FindByNameAsync(identity.Name);
         var user = Mapper.Map<UserModel>(userEntity);
 
         var questionnaireEntity = await Mediator.Send(new GetStructureQuery(QuestionnaireId));
@@ -65,10 +69,10 @@
         }
     }
 
-    private async Task Send()
+    private async Task SendAnswersQuestions()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = await UserManager.FindByNameAsync(authState.User.Identity.Name);
+        var user = await UserManager.FindByNameAsync(identity.Name);
         
         var questionsAnswers = Mapper.Map<List<PropertyAnswer>>(questionnaire.QuestionAnswers);
 
