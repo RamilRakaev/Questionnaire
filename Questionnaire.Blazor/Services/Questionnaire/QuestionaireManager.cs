@@ -28,10 +28,6 @@ namespace Questionnaire.Blazor.Services.Questionnaire
 
             switch (question.QuestionType)
             {
-                case QuestionType.Enumeration:
-                    questionAnswer.HtmlTags = CreateEnumeration(question);
-                    return questionAnswer;
-
                 case QuestionType.Custom:
                     questionAnswer.QuestionAnswers = new();
 
@@ -40,6 +36,10 @@ namespace Questionnaire.Blazor.Services.Questionnaire
                         questionAnswer.QuestionAnswers.Add(CreateQuestionAnswer(subQuestion, userId, questionnaireId));
                     }
 
+                    return questionAnswer;
+
+                case QuestionType.Enumeration:
+                    questionAnswer.HtmlTags = CreateEnumeration(question);
                     return questionAnswer;
 
                 default:

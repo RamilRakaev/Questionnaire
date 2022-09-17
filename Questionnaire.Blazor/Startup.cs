@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +16,6 @@ using Questionnaire.Infrastructure.Database;
 using Questionnaire.Infrastructure.DatabaseServices;
 using Questionnaire.Infrastructure.Queries.Handlers.UniversalHandlers;
 using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries;
-using System;
 
 namespace Questionnaire.Blazor
 {
