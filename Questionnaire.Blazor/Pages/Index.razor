@@ -54,7 +54,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var authenticationState = authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         if (authenticationState.User.Identity.IsAuthenticated == false)
         {
             NavigationManager.NavigateTo(NavigationLinks.Login);

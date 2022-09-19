@@ -15,6 +15,8 @@
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 @using System.Collections.Concurrent
 
+@inherits QuestionValidator
+
 <div class="container-fluid">
     <div class="row justify-content-center">
         <EditForm Model=questionnaire OnValidSubmit=Send class="my-3 col-6">
@@ -50,12 +52,7 @@
 </div>
 
 @code {
-    private FormMessage message = new();
-
     private ConcurrentDictionary<string, int> nameIdDictionary = new();
-    private QuestionnaireModel questionnaire = new();
-
-    private QuestionModel currentQuestion = new();
 
     [Inject]
     private IMapper Mapper { get; set; }
@@ -83,7 +80,7 @@
 
     private Task CreateQuestion()
     {
-        if (CheckNameUniqueness())
+        if (ValidateQuestion())
         {
             if (currentQuestion.QuestionType == QuestionType.Enumeration && currentQuestion.Options.Count < 2)
             {
@@ -101,33 +98,6 @@
         }
 
         return Task.CompletedTask;
-    }
-
-    private bool CheckNameUniqueness()
-    {
-        message.Reset();
-
-        var result = true;
-
-        var displayNameIsBusy = questionnaire.Questions.Any(question => question.DisplayName == currentQuestion.DisplayName);
-        var jsonNameIsBusy = questionnaire.Questions.Any(question => question.JsonName == currentQuestion.JsonName);
-
-        if (displayNameIsBusy)
-        {
-            message.SetDangerText("Отображаемое имя уже занято");
-            result = false;
-        }
-        else if (jsonNameIsBusy)
-        {
-            message.SetDangerText("Json-имя уже занято");
-            result = false;
-        }
-        else
-        {
-            message.SetSuccessText("Добавлен вопрос");
-        }
-
-        return result;
     }
 
     private async Task Send()

@@ -16,6 +16,8 @@
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 @using System.Collections.Concurrent
 
+@inherits QuestionValidator
+
 <p class=@message.CssClass>@message.Text</p>
 
 <EditForm Model=@questionnaire OnSubmit=ChangeNameQuestionnaire>
@@ -40,7 +42,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var question in questions)
+        @foreach (var question in questionnaire.Questions)
         {
             <tr>
                 <td><input type="text" @bind-value=@question.DisplayName class="form-control" /></td>
@@ -107,13 +109,8 @@
     private ConcurrentDictionary<string, int> nameIdDictionary = new();
 
     private OptionModel currentOption = new();
-    private QuestionModel currentQuestion = new();
-    private QuestionnaireModel questionnaire = new();
-
-    private QuestionModel[] questions = Array.Empty<QuestionModel>();
 
     private bool addQuestionDialogOpen;
-    private FormMessage message = new();
 
     [Parameter]
     public int QuestionnaireId { get; set; }
@@ -149,17 +146,22 @@
 
     private async Task CreateQuestion()
     {
-        currentQuestion.QuestionnaireId = QuestionnaireId;
-
-        if (currentQuestion.QuestionType != QuestionType.Enumeration)
+        if (ValidateQuestion())
         {
-            currentQuestion.Options = null;
+            currentQuestion.QuestionnaireId = QuestionnaireId;
+
+            var questionEntity = Mapper.Map<Property>(currentQuestion);
+            await Mediator.Send(new CreateOrChangeEntityCommand<Property>(questionEntity));
+            
+            questionnaire.Questions.Add(currentQuestion);
+            currentQuestion = new()
+            {
+                Id = questionEntity.Id,
+                DisplayName = "",
+                JsonName = "",
+                Options = new(),
+            };
         }
-
-        var questionEntity = Mapper.Map<Property>(currentQuestion);
-        await Mediator.Send(new CreateOrChangeEntityCommand<Property>(questionEntity));
-
-        await UploadQuestionnaires();
     }
 
     private async Task ChangeQuestion(QuestionModel question)
@@ -176,6 +178,11 @@
 
     private async Task UploadQuestionnaires()
     {
+        questionnaire = new()
+        {
+            Questions = new(),
+        };
+
         var structures = await Mediator.Send(new GetEntitiesQuery<Structure>());
         var questionnaires = Mapper.Map<List<QuestionnaireModel>>(structures);
         nameIdDictionary = new(questionnaires.ToDictionary(type => type.DisplayName, type => type.Id));
@@ -189,7 +196,7 @@
         questionnaire = Mapper.Map<QuestionnaireModel>(questionnaireEntity);
 
         var properties = await Mediator.Send(new GetPropertiesByQuestionnaireQuery(QuestionnaireId));
-        questions = Mapper.Map<QuestionModel[]>(properties);
+        questionnaire.Questions = Mapper.Map<List<QuestionModel>>(properties);
     }
 
     private void OpenOptionDialog(QuestionModel question)
