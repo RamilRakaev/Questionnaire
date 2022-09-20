@@ -23,7 +23,14 @@ namespace Questionnaire.Blazor.Pages.Root
                 questionIsCorrect = EnumerationIsCorrect();
             }
 
-            return CheckQuestionNameUniqueness() && questionIsCorrect;
+            questionIsCorrect = CheckQuestionNameUniqueness() && questionIsCorrect;
+
+            if (questionIsCorrect)
+            {
+                message.SetSuccessText("Добавлен вопрос");
+            }
+
+            return questionIsCorrect;
         }
 
         private bool CheckQuestionNameUniqueness()
@@ -43,11 +50,7 @@ namespace Questionnaire.Blazor.Pages.Root
                 message.SetDangerText("Json-имя уже занято");
                 nameIsUniqueness = false;
             }
-            else
-            {
-                message.SetSuccessText("Добавлен вопрос");
-            }
-
+            
             return nameIsUniqueness;
         }
 

@@ -48,6 +48,8 @@
         </div>
     </InputRadioGroup>
 
+    <button class="btn btn-success">Добавить вопрос</button>
+
     @if (CurrentQuestion.QuestionType == QuestionType.Enumeration)
     {
         <AnswerOptions Options=@CurrentQuestion.Options />
@@ -67,8 +69,6 @@
             </datalist>
         </div>
     }
-
-    <button class="btn btn-success">Добавить вопрос</button>
 </EditForm>
 
 @code {

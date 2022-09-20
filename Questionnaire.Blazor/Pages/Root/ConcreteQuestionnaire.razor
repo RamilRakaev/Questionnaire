@@ -107,11 +107,8 @@
 
 @code {
     private Dictionary<string, int> nameIdDictionary = new();
-    private ConcurrentDictionary<string, int> nameIdDictionary = new();
 
     private OptionModel currentOption = new();
-
-    private QuestionModel[] questions = Array.Empty<QuestionModel>();
 
     private bool addQuestionDialogOpen;
 
@@ -147,6 +144,8 @@
         }
     }
 
+    private async Task CreateQuestion()
+    {
         if (ValidateQuestion())
         {
             currentQuestion.QuestionnaireId = QuestionnaireId;
@@ -163,8 +162,6 @@
                 Options = new(),
             };
         }
-
-        await UploadQuestionnaires();
     }
 
     private async Task ChangeQuestion(QuestionModel question)
@@ -186,9 +183,7 @@
             Questions = new(),
         };
 
-        nameIdDictionary = new(questionnaires.ToDictionary(type => type.DisplayName, type => type.Id));
-
-        nameIdPairs = new(questionnaires.ToDictionary(type => type.DisplayName, type => type.Id));
+        nameIdDictionary = await Mediator.Send(new GetNameIdFromStructuresQuery());
 
         currentQuestion = new()
         {
