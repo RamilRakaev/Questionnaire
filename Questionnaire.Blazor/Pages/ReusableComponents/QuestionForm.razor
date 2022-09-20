@@ -79,12 +79,13 @@
     public Func<Task> CreateQuestion { get; set; }
 
     [Parameter]
-    public ConcurrentDictionary<string, int> CustomTypes { get; set; }
+    public Dictionary<string, int> CustomTypes { get; set; }
 
     private void SetValue(ChangeEventArgs args)
     {
         if (CustomTypes == null)
             return;
+
         var value = args.Value.ToString();
         if (CustomTypes.ContainsKey(value))
         {

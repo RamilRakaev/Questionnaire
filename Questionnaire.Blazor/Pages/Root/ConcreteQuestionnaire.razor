@@ -16,6 +16,8 @@
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 @using System.Collections.Concurrent
 
+@inherits CreateQuestion
+
 <p class=@message.CssClass>@message.Text</p>
 
 <EditForm Model=@questionnaire OnSubmit=ChangeNameQuestionnaire>
@@ -27,7 +29,7 @@
     <button class="btn btn-warning">Изменить опросник</button>
 </EditForm>
 
-<QuestionForm CurrentQuestion=@currentQuestion CreateQuestion=CreateQuestion CustomTypes=nameIdPairs />
+<QuestionForm CurrentQuestion=@currentQuestion CreateQuestion=CreateQuestion CustomTypes=nameIdDictionary />
 
 <table class="table">
     <thead class="thead-light">
@@ -40,7 +42,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var question in questions)
+        @foreach (var question in questionnaire.Questions)
         {
             <tr>
                 <td><input type="text" @bind-value=@question.DisplayName class="form-control" /></td>
@@ -102,16 +104,13 @@
 }
 
 @code {
-    private ConcurrentDictionary<string, int> nameIdPairs = new();
+    private Dictionary<string, int> nameIdDictionary = new();
 
     private OptionModel currentOption = new();
-    private QuestionModel currentQuestion = new();
-    private QuestionnaireModel questionnaire = new();
 
     private QuestionModel[] questions = Array.Empty<QuestionModel>();
 
     private bool addQuestionDialogOpen;
-    private FormMessage message = new();
 
     [Parameter]
     public int QuestionnaireId { get; set; }
@@ -147,17 +146,29 @@
 
     private async Task CreateQuestion()
     {
-        currentQuestion.QuestionnaireId = QuestionnaireId;
-
-        if (currentQuestion.QuestionType != QuestionType.Enumeration)
+        if (CheckNameUniqueness())
         {
-            currentQuestion.Options = null;
+            if (currentQuestion.QuestionType == QuestionType.Enumeration && currentQuestion.Options.Count < 2)
+            {
+                message.SetDangerText("Должно быть по крайне мере два варианта ответа");
+            }
+            else
+            {
+                currentQuestion.QuestionnaireId = QuestionnaireId;
+                questionnaire.Questions.Add(currentQuestion);
+
+                var questionEntity = Mapper.Map<Property>(currentQuestion);
+                await Mediator.Send(new CreateOrChangeEntityCommand<Property>(questionEntity));
+
+                currentQuestion = new()
+                {
+                    DisplayName = "",
+                    JsonName = "",
+                    Options = new(),
+                };
+                message.SetSuccessText("Добавлен вопрос");
+            }
         }
-
-        var questionEntity = Mapper.Map<Property>(currentQuestion);
-        await Mediator.Send(new CreateOrChangeEntityCommand<Property>(questionEntity));
-
-        await UploadQuestionnaires();
     }
 
     private async Task ChangeQuestion(QuestionModel question)
@@ -176,8 +187,7 @@
     {
         var structures = await Mediator.Send(new GetEntitiesQuery<Structure>());
         var questionnaires = Mapper.Map<List<QuestionnaireModel>>(structures);
-        nameIdPairs = new(questionnaires.ToDictionary(type => type.DisplayName, type => type.Id));
-
+        nameIdDictionary = await Mediator.Send(new GetNameIdFromStructuresQuery());
         currentQuestion = new()
         {
             Options = new List<OptionModel>(),
@@ -187,7 +197,7 @@
         questionnaire = Mapper.Map<QuestionnaireModel>(questionnaireEntity);
 
         var properties = await Mediator.Send(new GetPropertiesByQuestionnaireQuery(QuestionnaireId));
-        questions = Mapper.Map<QuestionModel[]>(properties);
+        questionnaire.Questions = Mapper.Map<List<QuestionModel>>(properties);
     }
 
     private void OpenOptionDialog(QuestionModel question)

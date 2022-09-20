@@ -1,5 +1,4 @@
-﻿using Questionnaire.Blazor.Models.Questions.Tags;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Questionnaire.Blazor.Models.Questions
@@ -22,9 +21,5 @@ namespace Questionnaire.Blazor.Models.Questions
         public QuestionType QuestionType { get; set; }
 
         public List<OptionModel> Options { get; set; }
-
-        public List<HtmlTag> HtmlTags { get; set; }
-
-        public AnswerModel Answer { get; set; } = new();
     }
 }

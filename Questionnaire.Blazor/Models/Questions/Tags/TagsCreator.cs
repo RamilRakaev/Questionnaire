@@ -1,5 +1,4 @@
-﻿using Questionnaire.Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -46,7 +45,7 @@ namespace Questionnaire.Blazor.Models.Questions.Tags
                     factoryObject = CreateFactory(factoryType, question.DisplayName);
                     break;
             }
-            
+
             var factory = factoryObject as AbstractTagsFactory;
             return factory.CreateTags();
         }
