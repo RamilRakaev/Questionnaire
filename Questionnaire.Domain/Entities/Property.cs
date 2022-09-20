@@ -9,10 +9,10 @@
         public Structure CustomType { get; set; }
 
         public string DisplayName { get; set; }
-
         public string JsonName { get; set; }
 
         public PropertyType PropertyType { get; set; }
+
         public List<Option> Options { get; set; }
     }
 }

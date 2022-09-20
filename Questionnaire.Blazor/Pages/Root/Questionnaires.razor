@@ -36,7 +36,6 @@
 
 @code {
     private QuestionnaireModel[] questionnaires = Array.Empty<QuestionnaireModel>();
-    private AuthenticationState authenticationState;
 
     [Inject]
     private IMediator Mediator { get; set; }
@@ -49,11 +48,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        authenticationState = authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         if (authenticationState.User.FindFirst(RoleConstants.RoleClaim).Value != RoleConstants.Admin)
         {
             NavigationManager.NavigateTo(NavigationLinks.Login);
         }
+
         await UploadQuestionnaires();
     }
 

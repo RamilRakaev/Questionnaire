@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Questionnaire.Domain.Entities;
 using Questionnaire.Domain.Interfaces;
 using Questionnaire.Infrastructure.Queries.Requests.Structures;
@@ -16,9 +17,8 @@ namespace Questionnaire.Infrastructure.Queries.Handlers.Structures
 
         public Task<Dictionary<string, int>> Handle(GetNameIdFromStructuresQuery request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_structureRepository
-                .GetAllAsNoTracking()
-                .ToDictionary(structure => structure.DisplayName, structure => structure.Id));
+            return _structureRepository.GetAllAsNoTracking()
+                .ToDictionaryAsync(structure => structure.DisplayName, structure => structure.Id, cancellationToken);
         }
     }
 }

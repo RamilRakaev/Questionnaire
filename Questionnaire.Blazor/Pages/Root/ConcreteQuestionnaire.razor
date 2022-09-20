@@ -16,7 +16,7 @@
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 @using System.Collections.Concurrent
 
-@inherits CreateQuestion
+@inherits QuestionValidator
 
 <p class=@message.CssClass>@message.Text</p>
 
@@ -81,6 +81,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+
                 <div class="modal-body">
                     <EditForm Model=currentOption>
                         <div class="form-group">
@@ -94,6 +95,7 @@
                         </div>
                     </EditForm>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal" @onclick=CancelOptionDialog>Отмена</button>
                     <button type="button" class="btn btn-info" @onclick=AddOption>Добавить</button>
@@ -105,6 +107,7 @@
 
 @code {
     private Dictionary<string, int> nameIdDictionary = new();
+    private ConcurrentDictionary<string, int> nameIdDictionary = new();
 
     private OptionModel currentOption = new();
 
@@ -144,31 +147,24 @@
         }
     }
 
-    private async Task CreateQuestion()
-    {
-        if (CheckNameUniqueness())
+        if (ValidateQuestion())
         {
-            if (currentQuestion.QuestionType == QuestionType.Enumeration && currentQuestion.Options.Count < 2)
-            {
-                message.SetDangerText("Должно быть по крайне мере два варианта ответа");
-            }
-            else
-            {
-                currentQuestion.QuestionnaireId = QuestionnaireId;
-                questionnaire.Questions.Add(currentQuestion);
+            currentQuestion.QuestionnaireId = QuestionnaireId;
 
-                var questionEntity = Mapper.Map<Property>(currentQuestion);
-                await Mediator.Send(new CreateOrChangeEntityCommand<Property>(questionEntity));
-
-                currentQuestion = new()
-                {
-                    DisplayName = "",
-                    JsonName = "",
-                    Options = new(),
-                };
-                message.SetSuccessText("Добавлен вопрос");
-            }
+            var questionEntity = Mapper.Map<Property>(currentQuestion);
+            await Mediator.Send(new CreateOrChangeEntityCommand<Property>(questionEntity));
+            
+            questionnaire.Questions.Add(currentQuestion);
+            currentQuestion = new()
+            {
+                Id = questionEntity.Id,
+                DisplayName = "",
+                JsonName = "",
+                Options = new(),
+            };
         }
+
+        await UploadQuestionnaires();
     }
 
     private async Task ChangeQuestion(QuestionModel question)
@@ -185,9 +181,15 @@
 
     private async Task UploadQuestionnaires()
     {
-        var structures = await Mediator.Send(new GetEntitiesQuery<Structure>());
-        var questionnaires = Mapper.Map<List<QuestionnaireModel>>(structures);
-        nameIdDictionary = await Mediator.Send(new GetNameIdFromStructuresQuery());
+        questionnaire = new()
+        {
+            Questions = new(),
+        };
+
+        nameIdDictionary = new(questionnaires.ToDictionary(type => type.DisplayName, type => type.Id));
+
+        nameIdPairs = new(questionnaires.ToDictionary(type => type.DisplayName, type => type.Id));
+
         currentQuestion = new()
         {
             Options = new List<OptionModel>(),

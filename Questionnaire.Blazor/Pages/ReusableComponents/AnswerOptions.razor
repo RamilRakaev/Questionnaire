@@ -12,9 +12,10 @@
     </div>
 }
 
-<EditForm Context="OptionForm" Model=currentOption OnValidSubmit=AddOption>
+<EditForm Model=currentOption OnValidSubmit=AddOption>
     <ValidationSummary />
     <DataAnnotationsValidator />
+
     <div class="form-group">
         <label>Отображаемое имя варианта ответа</label>
         <InputText @bind-Value=currentOption.DisplayName class="form-control" />
@@ -31,10 +32,10 @@
 </EditForm>
 
 @code {
+    private OptionModel currentOption = new();
+
     [Parameter]
     public List<OptionModel> Options { get; set; }
-
-    private OptionModel currentOption = new();
 
     private void AddOption()
     {

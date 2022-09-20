@@ -36,7 +36,7 @@ namespace Questionnaire.Blazor
             services.AddServerSideBlazor();
 
             services.AddDbContext<QuestionnaireContext>(options => options.UseNpgsql(Configuration.GetConnectionString("ContextConnection"),
-                o => o.MigrationsAssembly(typeof(QuestionnaireContext).Assembly.FullName)));
+                options => options.MigrationsAssembly(typeof(QuestionnaireContext).Assembly.FullName)));
             services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = false)
                     .AddEntityFrameworkStores<QuestionnaireContext>();
 

@@ -24,13 +24,6 @@ namespace Questionnaire.Blazor.Models.Questions.Tags
             object factoryObject;
             switch (question.QuestionType)
             {
-                case QuestionType.Enumeration:
-
-                    var options = question.Options.Select(option => option.DisplayName);
-
-                    factoryObject = CreateFactory(factoryType, question.DisplayName, options);
-                    break;
-
                 case QuestionType.Custom:
 
                     List<HtmlTag> tags = new();
@@ -40,6 +33,13 @@ namespace Questionnaire.Blazor.Models.Questions.Tags
                     }
 
                     return tags;
+
+                case QuestionType.Enumeration:
+
+                    var options = question.Options.Select(option => option.DisplayName);
+
+                    factoryObject = CreateFactory(factoryType, question.DisplayName, options);
+                    break;
 
                 default:
                     factoryObject = CreateFactory(factoryType, question.DisplayName);

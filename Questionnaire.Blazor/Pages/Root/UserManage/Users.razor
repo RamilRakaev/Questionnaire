@@ -10,6 +10,7 @@
 @using Questionnaire.Infrastructure.Commands.Requests.Identity
 @using Questionnaire.Infrastructure.Conventions
 @using Questionnaire.Infrastructure.Queries.Requests.Identity
+@using System.Security.Principal
 
 <p class=@message.CssClass>@message.Text</p>
 
@@ -23,12 +24,15 @@
         <InputText @bind-Value=user.Password class="form-inline d-inline" />
 
         <button class="btn btn-warning">Изменить</button>
-        <button type="button" @onclick="() => RemoveUser(user)" class="btn btn-danger">Удалить</button>
+        @if (identity.Name != user.Email)
+        {
+            <button type="button" @onclick="() => RemoveUser(user)" class="btn btn-danger">Удалить</button>
+        }
     </EditForm>
 }
 
 @code {
-    private AuthenticationState authenticationState;
+    private IIdentity identity;
 
     private UserModel[] users = Array.Empty<UserModel>();
 
@@ -45,7 +49,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        identity = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
         await Load();
     }
 
