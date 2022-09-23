@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Questionnaire.Domain.Entities.Identity;
 using Questionnaire.Infrastructure.Commands.Requests.Identity;
-using Questionnaire.Infrastructure.Conventions;
+using Questionnaire.Conventions.Identity;
 using Questionnaire.Infrastructure.Models;
 using System.Security.Claims;
 

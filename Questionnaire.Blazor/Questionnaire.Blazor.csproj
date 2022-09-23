@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Conventions\Questionnaire.Conventions.csproj" />
     <ProjectReference Include="..\Questionnaire.Domain\Questionnaire.Domain.csproj" />
     <ProjectReference Include="..\Questionnaire.Infrastructure.DatabaseServices\Questionnaire.Infrastructure.DatabaseServices.csproj" />
     <ProjectReference Include="..\Questionnaire.Infrastructure\Questionnaire.Infrastructure.csproj" />

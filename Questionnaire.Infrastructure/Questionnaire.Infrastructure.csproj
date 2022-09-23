@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Conventions\Questionnaire.Conventions.csproj" />
     <ProjectReference Include="..\Questionnaire.Infrastructure.Database\Questionnaire.Infrastructure.Database.csproj" />
   </ItemGroup>
 
