@@ -1,0 +1,48 @@
+﻿@page "/root/answers"
+
+@using AutoMapper
+@using MediatR
+@using Questionnaire.Blazor.Models
+@using Questionnaire.Infrastructure.Queries.Requests.Answers
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Опрос</th>
+            <th>Опрашиваемый</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var answer in answers)
+        {
+            <tr>
+                <td>@answer.QuestionnaireName</td>
+                <td>@answer.Email</td>
+                <td>
+                    <button class="btn btn-primary m-2" @onclick=SendAnswers>Отправить</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private AnswerModel[] answers = Array.Empty<AnswerModel>();
+
+    [Inject]
+    private IMapper Mapper { get; set; }
+
+    [Inject]
+    private IMediator Mediator { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        var answerEntities = await Mediator.Send(new GetAnswersQuery());
+        answers = Mapper.Map<AnswerModel[]>(answerEntities);
+    }
+
+    private async Task SendAnswers()
+    {
+        
+    }
+}

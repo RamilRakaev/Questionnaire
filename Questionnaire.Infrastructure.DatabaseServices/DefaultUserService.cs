@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Questionnaire.Domain.Entities.Identity;
-using Questionnaire.Infrastructure.DatabaseServices.Conventions;
+using Questionnaire.Conventions.Identity;
 using System.Security.Claims;
 
 namespace Questionnaire.Infrastructure.DatabaseServices

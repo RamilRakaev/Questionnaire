@@ -19,5 +19,8 @@
         public long UserId { get; set; }
 
         public string Value { get; set; }
+
+        public string Email { get; set; }
+        public string QuestionnaireName { get; set; }
     }
 }

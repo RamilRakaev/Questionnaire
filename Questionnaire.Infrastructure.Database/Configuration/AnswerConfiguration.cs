@@ -9,7 +9,7 @@ namespace Questionnaire.Infrastructure.Database.Configuration
         public void Configure(EntityTypeBuilder<Answer> builder)
         {
             builder
-                .HasOne(answer => answer.Questionnaire)
+                .HasOne(answer => answer.Structure)
                 .WithMany(question => question.Answers)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasForeignKey(answer => answer.StructureId);
