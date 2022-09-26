@@ -13,8 +13,8 @@ using Questionnaire.Infrastructure.Database;
 namespace Questionnaire.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(QuestionnaireContext))]
-    [Migration("20220924164630_QrlkChat")]
-    partial class QrlkChat
+    [Migration("20220926083858_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -228,6 +228,9 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<int?>("QrlkChatId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -246,6 +249,9 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("QrlkChatId")
+                        .IsUnique();
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -304,6 +310,31 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                     b.HasIndex("StructureId");
 
                     b.ToTable("Property");
+                });
+
+            modelBuilder.Entity("Questionnaire.Domain.Entities.QrlkChat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<List<string>>("Tags")
+                        .HasColumnType("text[]");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QrlkChat");
                 });
 
             modelBuilder.Entity("Questionnaire.Domain.Entities.Structure", b =>
@@ -395,6 +426,15 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Questionnaire.Domain.Entities.Identity.ApplicationUser", b =>
+                {
+                    b.HasOne("Questionnaire.Domain.Entities.QrlkChat", "QrlkChat")
+                        .WithOne("User")
+                        .HasForeignKey("Questionnaire.Domain.Entities.Identity.ApplicationUser", "QrlkChatId");
+
+                    b.Navigation("QrlkChat");
+                });
+
             modelBuilder.Entity("Questionnaire.Domain.Entities.Option", b =>
                 {
                     b.HasOne("Questionnaire.Domain.Entities.Property", "Property")
@@ -432,6 +472,11 @@ namespace Questionnaire.Infrastructure.Database.Migrations
             modelBuilder.Entity("Questionnaire.Domain.Entities.Property", b =>
                 {
                     b.Navigation("Options");
+                });
+
+            modelBuilder.Entity("Questionnaire.Domain.Entities.QrlkChat", b =>
+                {
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Questionnaire.Domain.Entities.Structure", b =>

@@ -15,19 +15,16 @@
             </NavLink>
         </li>
         <AuthorizeView>
-            @if (context.User.IsInRole(RoleConstants.Questioned))
-            {
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" href=@NavigationLinks.QuestionedQuestionnaires>
-                        <span class="oi oi-plus" aria-hidden="true"></span> Опрашиваемый
-                    </NavLink>
-                </li>
-            }
-            else if (context.User.IsInRole(RoleConstants.Admin))
+            @if (context.User.IsInRole(RoleConstants.Admin))
             {
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href=@NavigationLinks.CreateQuestionnaire>
                         <span class="oi oi-list-rich" aria-hidden="true"></span> Создать опрос
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href=@NavigationLinks.RootAnswers>
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Ответы
                     </NavLink>
                 </li>
                 <li class="nav-item px-3">

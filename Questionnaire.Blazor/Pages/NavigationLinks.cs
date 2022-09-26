@@ -9,6 +9,7 @@
         public const string RootUsers = "/root/userManage/";
         public const string RootCreateUser = "/root/userManage/createUser";
         public const string RootAnswers = "/root/answers";
+        public const string RootAddQrlkChat = "/root/addQrlkChat";
         #endregion
 
         #region questioned

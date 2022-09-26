@@ -1,9 +1,14 @@
 ﻿@page "/root/answers"
 
+@attribute [Authorize(Roles = RoleConstants.Admin)]
+
 @using AutoMapper
 @using MediatR
 @using Questionnaire.Blazor.Models
+@using Questionnaire.Conventions.Identity
+@using Questionnaire.Infrastructure.Commands.Requests.HttpClientRequests
 @using Questionnaire.Infrastructure.Queries.Requests.Answers
+@using Questionnaire.Infrastructure.Queries.Requests.QrlkChats
 
 <table class="table">
     <thead>
@@ -13,13 +18,24 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var answer in answers)
+        @foreach (var answer in answers)
         {
             <tr>
                 <td>@answer.QuestionnaireName</td>
                 <td>@answer.Email</td>
                 <td>
-                    <button class="btn btn-primary m-2" @onclick=SendAnswers>Отправить</button>
+                    <select @bind=@answer.CurrentChatId class="custom-select">
+                        @if (answer.Chats != null)
+                        {
+                            @foreach (var chat in answer.Chats)
+                            {
+                                <option value=@chat.Id>@chat.Title</option>
+                            }
+                        }
+                    </select>
+                </td>
+                <td>
+                    <button class="btn btn-primary m-2" @onclick="() => SendAnswers(answer.Id, answer.CurrentChatId)">Отправить</button>
                 </td>
             </tr>
         }
@@ -39,10 +55,16 @@
     {
         var answerEntities = await Mediator.Send(new GetAnswersQuery());
         answers = Mapper.Map<AnswerModel[]>(answerEntities);
+
+        foreach (var answer in answers)
+        {
+            answer.Chats = await Mediator.Send(new GetChatsByUserIdQuery(answer.UserId));
+            answer.CurrentChatId = answer.Chats.FirstOrDefault().Id;
+        }
     }
 
-    private async Task SendAnswers()
+    private async Task SendAnswers(int answerId, int chatId)
     {
-        
+        await Mediator.Send(new SendNotificationToQrlkCommand(answerId, chatId));
     }
 }

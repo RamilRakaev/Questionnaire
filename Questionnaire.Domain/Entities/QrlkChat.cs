@@ -4,7 +4,7 @@ namespace Questionnaire.Domain.Entities
 {
     public class QrlkChat : BaseEntity
     {
-        public int UserId { get; set; }
+        public long UserId { get; set; }
         public ApplicationUser User { get; set; }
 
         public string Title { get; set; }

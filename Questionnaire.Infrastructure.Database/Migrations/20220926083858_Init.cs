@@ -15,7 +15,7 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -27,11 +27,63 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
+                name: "QrlkChat",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Tags = table.Column<List<string>>(type: "text[]", nullable: true),
+                    Token = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QrlkChat", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Structure",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DisplayName = table.Column<string>(type: "text", nullable: true),
+                    Options = table.Column<List<string>>(type: "text[]", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Structure", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RoleId = table.Column<long>(type: "bigint", nullable: false),
+                    ClaimType = table.Column<string>(type: "text", nullable: true),
+                    ClaimValue = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    QrlkChatId = table.Column<int>(type: "integer", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -50,25 +102,65 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_QrlkChat_QrlkChatId",
+                        column: x => x.QrlkChatId,
+                        principalTable: "QrlkChat",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
+                name: "Property",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RoleId = table.Column<int>(type: "integer", nullable: false),
-                    ClaimType = table.Column<string>(type: "text", nullable: true),
-                    ClaimValue = table.Column<string>(type: "text", nullable: true)
+                    StructureId = table.Column<int>(type: "integer", nullable: false),
+                    CustomTypeId = table.Column<int>(type: "integer", nullable: true),
+                    DisplayName = table.Column<string>(type: "text", nullable: true),
+                    JsonName = table.Column<string>(type: "text", nullable: true),
+                    PropertyType = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.PrimaryKey("PK_Property", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
+                        name: "FK_Property_Structure_CustomTypeId",
+                        column: x => x.CustomTypeId,
+                        principalTable: "Structure",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Property_Structure_StructureId",
+                        column: x => x.StructureId,
+                        principalTable: "Structure",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Answer",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    StructureId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    Value = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Answer", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Answer_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Answer_Structure_StructureId",
+                        column: x => x.StructureId,
+                        principalTable: "Structure",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -79,7 +171,7 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
                     ClaimType = table.Column<string>(type: "text", nullable: true),
                     ClaimValue = table.Column<string>(type: "text", nullable: true)
                 },
@@ -101,7 +193,7 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                     LoginProvider = table.Column<string>(type: "text", nullable: false),
                     ProviderKey = table.Column<string>(type: "text", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<int>(type: "integer", nullable: false)
+                    UserId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -118,8 +210,8 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    RoleId = table.Column<int>(type: "integer", nullable: false)
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    RoleId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -142,7 +234,7 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
                     LoginProvider = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Value = table.Column<string>(type: "text", nullable: true)
@@ -152,27 +244,6 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                     table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Answer",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Value = table.Column<string>(type: "text", nullable: true),
-                    StructureId = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Answer", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Answer_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -192,42 +263,12 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Option", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Property",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    StructureId = table.Column<int>(type: "integer", nullable: false),
-                    DisplayName = table.Column<string>(type: "text", nullable: true),
-                    JsonName = table.Column<string>(type: "text", nullable: true),
-                    Type = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Property", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Structure",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ParentPropertyId = table.Column<int>(type: "integer", nullable: true, defaultValueSql: "null"),
-                    DisplayName = table.Column<string>(type: "text", nullable: true),
-                    Options = table.Column<List<string>>(type: "text[]", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Structure", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Structure_Property_ParentPropertyId",
-                        column: x => x.ParentPropertyId,
+                        name: "FK_Option_Property_PropertyId",
+                        column: x => x.PropertyId,
                         principalTable: "Property",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -272,6 +313,12 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_QrlkChatId",
+                table: "AspNetUsers",
+                column: "QrlkChatId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -283,46 +330,18 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                 column: "PropertyId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Property_CustomTypeId",
+                table: "Property",
+                column: "CustomTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Property_StructureId",
                 table: "Property",
                 column: "StructureId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Structure_ParentPropertyId",
-                table: "Structure",
-                column: "ParentPropertyId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Answer_Structure_StructureId",
-                table: "Answer",
-                column: "StructureId",
-                principalTable: "Structure",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Option_Property_PropertyId",
-                table: "Option",
-                column: "PropertyId",
-                principalTable: "Property",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Property_Structure_StructureId",
-                table: "Property",
-                column: "StructureId",
-                principalTable: "Structure",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Property_Structure_StructureId",
-                table: "Property");
-
             migrationBuilder.DropTable(
                 name: "Answer");
 
@@ -351,10 +370,13 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Structure");
+                name: "Property");
 
             migrationBuilder.DropTable(
-                name: "Property");
+                name: "QrlkChat");
+
+            migrationBuilder.DropTable(
+                name: "Structure");
         }
     }
 }

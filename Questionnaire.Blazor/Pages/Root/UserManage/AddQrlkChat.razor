@@ -1,0 +1,92 @@
+﻿@page "/root/addQrlkChat/{userId:int}"
+
+@attribute [Authorize(Roles = RoleConstants.Admin)]
+
+@using AutoMapper
+@using MediatR
+@using Questionnaire.Blazor.Models
+@using Questionnaire.Blazor.Services.UserInterfaceDisplay
+@using Questionnaire.Conventions.Identity
+@using Questionnaire.Domain.Entities
+@using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
+
+<EditForm Model=qrlkChat OnValidSubmit=AddChat>
+    <ValidationSummary />
+    <DataAnnotationsValidator />
+    <p class=@formMessage.CssClass>@formMessage.Text</p>
+
+    <div class="form-group">
+        <label>Название</label>
+        <InputText @bind-Value=qrlkChat.Title class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Токен</label>
+        <InputText @bind-Value=qrlkChat.Token class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Тэг</label>
+        <InputText @bind-Value=currentTag class="form-control" />
+    </div>
+
+    <button type="button" class="btn btn-success d-block m-3" @onclick=AddTag>Добавить тэг</button>
+    <table class="table">
+        <tbody>
+            @foreach (var tag in qrlkChat.Tags)
+            {
+                <tr>
+                    <td>@tag</td>
+                    <td>
+                        <button type="button" class="btn btn-danger" @onclick="() => RemoveTag(tag)">Удалить</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button class="btn btn-primary m-3">Добавить чат</button>
+</EditForm>
+
+@code {
+    private QrlkChatModel qrlkChat = new();
+    private FormMessage formMessage = new();
+
+    private string currentTag;
+
+    [Parameter]
+    public int UserId { get; set; }
+
+    [Inject]
+    public IMapper Mapper { get; set; }
+
+    [Inject]
+    public IMediator Mediator { get; set; }
+
+    protected override void OnInitialized()
+    {
+        qrlkChat.Tags = new();
+        qrlkChat.UserId = UserId;
+    }
+
+    private void AddTag()
+    {
+        qrlkChat.Tags.Add(currentTag);
+        currentTag = "";
+    }
+
+    private void RemoveTag(string tag)
+    {
+        qrlkChat.Tags.Remove(tag);
+    }
+
+    private async Task AddChat()
+    {
+        var qrlkChatEntity = Mapper.Map<QrlkChat>(qrlkChat);
+        await Mediator.Send(new CreateOrChangeEntityCommand<QrlkChat>(qrlkChatEntity));
+
+        formMessage.SetSuccessText("Чат успешно добавлен");
+
+        qrlkChat.Tags = new();
+        qrlkChat.UserId = UserId;
+    }
+}

@@ -11,25 +11,39 @@
 @using Questionnaire.Conventions.Identity
 @using Questionnaire.Infrastructure.Queries.Requests.Identity
 @using System.Security.Principal
+@using Questionnaire.Infrastructure.Queries.Requests.QrlkChats
 
 <p class=@message.CssClass>@message.Text</p>
+<div class="table">
+    @foreach (var user in users)
+    {
+        <EditForm Model=user OnValidSubmit="() => ChangeUser(user)">
+            <ValidationSummary />
+            <DataAnnotationsValidator />
 
-@foreach (var user in users)
-{
-    <EditForm Model=user OnValidSubmit="() => ChangeUser(user)">
-        <ValidationSummary />
-        <DataAnnotationsValidator />
-
-        <p class="d-inline">@user.Email</p>
-        <InputText @bind-Value=user.Password class="form-inline d-inline" />
-
-        <button class="btn btn-warning">Изменить</button>
-        @if (identity.Name != user.Email)
-        {
-            <button type="button" @onclick="() => RemoveUser(user)" class="btn btn-danger">Удалить</button>
-        }
-    </EditForm>
-}
+            <div class="d-table-row">
+                <div class="d-table-cell p-2">
+                    <p class="d-inline">@user.Email</p>
+                </div>
+                <div class="d-table-cell p-2">
+                    <InputText @bind-Value=user.Password class="form-control" />
+                </div>
+                <div class="d-table-cell">
+                    <button class="btn btn-warning">Изменить</button>
+                </div>
+                <div class="d-table-cell p-2">
+                    <a href="@NavigationLinks.RootAddQrlkChat/@user.Id" class="btn btn-primary">Добавить чат</a>
+                </div>
+                <div class="d-table-cell p-2">
+                    @if (identity.Name != user.Email)
+                    {
+                        <button type="button" @onclick="() => RemoveUser(user)" class="btn btn-danger">Удалить</button>
+                    }
+                </div>
+            </div>
+        </EditForm>
+    }
+</div>
 
 @code {
     private IIdentity identity;

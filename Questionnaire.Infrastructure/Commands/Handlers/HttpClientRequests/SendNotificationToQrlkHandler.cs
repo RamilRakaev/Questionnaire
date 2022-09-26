@@ -1,8 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Questionnaire.Conventions.Qrlk;
 using Questionnaire.Domain.Entities;
-using Questionnaire.Domain.Entities.Identity;
 using Questionnaire.Domain.Interfaces;
 using Questionnaire.Infrastructure.Commands.Requests.HttpClientRequests;
 using Questionnaire.Infrastructure.Models;
@@ -16,13 +14,11 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.HttpClientRequests
     {
         private readonly IRepository<QrlkChat> _chatRepository;
         private readonly IRepository<Answer> _answerRepository;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public SendNotificationToQrlkHandler(IRepository<QrlkChat> chatRepository, IRepository<Answer> answerRepository, UserManager<ApplicationUser> userManager)
+        public SendNotificationToQrlkHandler(IRepository<QrlkChat> chatRepository, IRepository<Answer> answerRepository)
         {
             _chatRepository = chatRepository;
             _answerRepository = answerRepository;
-            _userManager = userManager;
         }
 
         public async Task<bool> Handle(SendNotificationToQrlkCommand request, CancellationToken cancellationToken)
@@ -31,14 +27,14 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.HttpClientRequests
             {
                 BaseAddress = new Uri(QrlkHttpClientConstants.BaseAddress),
             };
+
+            var chat = await _chatRepository.GetAsync(request.ChatId, cancellationToken);
             var answer = await _answerRepository.GetAsync(request.AnswerId, cancellationToken);
-            var user = await _userManager.FindByIdAsync(answer.UserId.ToString());
-            var chat = await _chatRepository.GetAsync(user.QrlkChatId, cancellationToken);
 
             NotificationToQrlk notification = new()
             {
                 Title = chat.Title,
-                Data = answer.Value,
+                Data = JsonSerializer.Deserialize<object>(answer.Value),
                 Tags = chat.Tags.ToArray(),
             };
 

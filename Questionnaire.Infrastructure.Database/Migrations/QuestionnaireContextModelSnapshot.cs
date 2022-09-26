@@ -304,6 +304,33 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                     b.ToTable("Property");
                 });
 
+            modelBuilder.Entity("Questionnaire.Domain.Entities.QrlkChat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<List<string>>("Tags")
+                        .HasColumnType("text[]");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("text");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("QrlkChat");
+                });
+
             modelBuilder.Entity("Questionnaire.Domain.Entities.Structure", b =>
                 {
                     b.Property<int>("Id")
@@ -422,9 +449,22 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                     b.Navigation("Structure");
                 });
 
+            modelBuilder.Entity("Questionnaire.Domain.Entities.QrlkChat", b =>
+                {
+                    b.HasOne("Questionnaire.Domain.Entities.Identity.ApplicationUser", "User")
+                        .WithMany("QrlkChats")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Questionnaire.Domain.Entities.Identity.ApplicationUser", b =>
                 {
                     b.Navigation("Answers");
+
+                    b.Navigation("QrlkChats");
                 });
 
             modelBuilder.Entity("Questionnaire.Domain.Entities.Property", b =>
