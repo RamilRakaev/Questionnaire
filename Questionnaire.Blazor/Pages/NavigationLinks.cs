@@ -3,18 +3,18 @@
     public class NavigationLinks
     {
         #region root
-        public const string RootQuestionnaires = "/root/";
-        public const string CreateQuestionnaire = "/root/createQuestionnaire";
-        public const string ConcreteQuestionnaire = "/root/concreteQuestionnaire";
-        public const string RootUsers = "/root/userManage/";
+        public const string RootUsers = "/root/users/";
         public const string RootCreateUser = "/root/userManage/createUser";
-        public const string RootAnswers = "/root/answers";
         public const string RootAddQrlkChat = "/root/addQrlkChat";
         #endregion
 
-        #region questioned
-        public const string PassingTheQuestionnaire = "/questioned/passingTheQuestionnaire";
-        public const string QuestionedQuestionnaires = "/questioned/";
+        #region user
+        public const string Questionnaires = "/user/questionnaires";
+        public const string CompletedQuestionnaires = "/user/completedQuestionnaires";
+        public const string PassingTheQuestionnaire = "/user/passingTheQuestionnaire";
+        public const string ConcreteQuestionnaire = "/user/concreteQuestionnaire";
+        public const string CreateQuestionnaire = "/user/createQuestionnaire";
+        public const string Answers = "/user/answers";
         #endregion
 
         #region account

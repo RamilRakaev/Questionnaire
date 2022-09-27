@@ -1,7 +1,7 @@
 ﻿@using Questionnaire.Conventions.Identity
 
 <div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Questionnaire.Blazor</a>
+    <a class="navbar-brand" href="">Опросник</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -9,24 +9,9 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Опросы
-            </NavLink>
-        </li>
         <AuthorizeView>
-            @if (context.User.IsInRole(RoleConstants.Admin))
+            @if (context.User.IsInRole(RoleConstants.AdminRole))
             {
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" href=@NavigationLinks.CreateQuestionnaire>
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> Создать опрос
-                    </NavLink>
-                </li>
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" href=@NavigationLinks.RootAnswers>
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> Ответы
-                    </NavLink>
-                </li>
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href=@NavigationLinks.RootUsers>
                         <span class="oi oi-list-rich" aria-hidden="true"></span> Пользователи
@@ -35,6 +20,29 @@
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href=@NavigationLinks.RootCreateUser>
                         <span class="oi oi-list-rich" aria-hidden="true"></span> Создать пользователя
+                    </NavLink>
+                </li>
+            }
+            else if (context.User.IsInRole(RoleConstants.UserRole))
+            {
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href=@NavigationLinks.Questionnaires>
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Опросы
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href=@NavigationLinks.CompletedQuestionnaires>
+                        <span class="oi oi-home" aria-hidden="true"></span> Пройденные опросы
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href=@NavigationLinks.CreateQuestionnaire>
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Создать опрос
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href=@NavigationLinks.Answers>
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Ответы
                     </NavLink>
                 </li>
             }

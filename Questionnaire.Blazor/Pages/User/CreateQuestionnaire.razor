@@ -1,6 +1,6 @@
-﻿@page "/root/createQuestionnaire/"
+﻿@page "/user/createQuestionnaire/"
 
-@attribute [Authorize(Roles = RoleConstants.Admin)]
+@attribute [Authorize(Roles = RoleConstants.UserRole)]
 
 @using AutoMapper
 @using MediatR

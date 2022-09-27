@@ -1,90 +1,24 @@
 ﻿@page "/"
-
-@using AutoMapper
-@using MediatR
-@using Questionnaire.Blazor.Models.Questions
-@using Questionnaire.Blazor.Models
-@using Questionnaire.Domain.Entities
-@using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
 @using Questionnaire.Conventions.Identity
-@using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
-
-@inherits QuestionnaireComponentBase
-
-@{
-    base.BuildRenderTree(__builder);
-}
-
-<h3>Опросники</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Имя опроса</th>
-            <th>Действия</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var questionnaire in questionnaires)
-        {
-            <tr>
-                <td>@questionnaire.DisplayName</td>
-                <td>
-                    <AuthorizeView>
-                        @if (context.User.IsInRole(RoleConstants.Admin))
-                        {
-                            <a class="btn btn-primary m-3" href="@NavigationLinks.ConcreteQuestionnaire/@questionnaire.Id">Перейти</a>
-                            <button class="btn btn-danger m-3" @onclick="() => OpenRemoveQuestionnaireModal(questionnaire)">Удалить</button>
-                        }
-                        else if (context.User.IsInRole(RoleConstants.Questioned))
-                        {
-                            <a class="btn btn-primary m-3" href="@NavigationLinks.PassingTheQuestionnaire/@questionnaire.Id">Перейти</a>
-                        }
-                    </AuthorizeView>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
 
 @code {
-    private List<QuestionnaireModel> questionnaires = new();
-
-    [Inject]
-    private IMediator Mediator { get; set; }
-
-    [Inject]
-    private IMapper Mapper { get; set; }
-
     [Inject]
     private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected async override Task OnInitializedAsync()
     {
-        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        if (authenticationState.User.Identity.IsAuthenticated == false)
+        var user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+        if (user.Identity.IsAuthenticated == false)
         {
             NavigationManager.NavigateTo(NavigationLinks.Login);
         }
-        else
+        if (user.IsInRole(RoleConstants.UserRole))
         {
-            await UploadQuestionnaires();
+            NavigationManager.NavigateTo(NavigationLinks.Questionnaires);
         }
-    }
-
-    private void OpenRemoveQuestionnaireModal(QuestionnaireModel questionnaire)
-    {
-        OpenDialog("Внимание", "Вы действительно хотите удалить опрос?", () => Remove(questionnaire));
-    }
-
-    private Task Remove(QuestionnaireModel questionnaire)
-    {
-        questionnaires.Remove(questionnaire);
-        return Mediator.Send(new RemoveEntityCommand<Structure>(questionnaire.Id));
-    }
-
-    private async Task UploadQuestionnaires()
-    {
-        var questionnaireEntities = await Mediator.Send(new GetEntitiesQuery<Structure>());
-        questionnaires = Mapper.Map<List<QuestionnaireModel>>(questionnaireEntities);
+        else if(user.IsInRole(RoleConstants.AdminRole))
+        {
+            NavigationManager.NavigateTo(NavigationLinks.RootUsers);
+        }
     }
 }

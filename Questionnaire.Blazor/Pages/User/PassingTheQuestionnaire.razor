@@ -1,6 +1,6 @@
-﻿@page "/questioned/passingTheQuestionnaire/{questionnaireId:int}"
+﻿@page "/user/passingTheQuestionnaire/{questionnaireId:int}"
 
-@attribute [Authorize(Roles = RoleConstants.Questioned)]
+@attribute [Authorize(Roles = RoleConstants.UserRole)]
 
 @using AutoMapper
 @using MediatR

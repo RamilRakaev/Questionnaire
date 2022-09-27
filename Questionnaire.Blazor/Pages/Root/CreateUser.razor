@@ -1,6 +1,6 @@
 ﻿@page "/root/userManage/createUser"
 
-@attribute [Authorize(Roles = RoleConstants.Admin)]
+@attribute [Authorize(Roles = RoleConstants.AdminRole)]
 
 @using AutoMapper
 @using MediatR
@@ -29,8 +29,8 @@
     <div class="form-group">
         <label>Роль</label>
         <InputSelect @bind-Value=user.Role class="custom-select">
-            <option value=@RoleConstants.Questioned>Опрашиваемый</option>
-            <option value="@RoleConstants.Admin">Администратор</option>
+            <option value=@RoleConstants.UserRole>Пользователь</option>
+            <option value="@RoleConstants.AdminRole">Администратор</option>
         </InputSelect>
     </div>
 
@@ -42,7 +42,7 @@
 
     private UserModel user = new()
     {
-        Role = RoleConstants.Questioned,
+        Role = RoleConstants.UserRole,
     };
 
     [Inject]

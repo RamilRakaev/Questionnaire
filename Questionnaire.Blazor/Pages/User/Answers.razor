@@ -1,6 +1,6 @@
-﻿@page "/root/answers"
+﻿@page "/user/answers"
 
-@attribute [Authorize(Roles = RoleConstants.Admin)]
+@attribute [Authorize(Roles = RoleConstants.UserRole)]
 
 @using AutoMapper
 @using MediatR

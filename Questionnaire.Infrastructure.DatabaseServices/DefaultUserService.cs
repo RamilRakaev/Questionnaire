@@ -11,7 +11,7 @@ namespace Questionnaire.Infrastructure.DatabaseServices
     {
         private readonly IServiceProvider _serviceProvider;
 
-        private readonly string[] roleNames = { RoleConstants.Admin, RoleConstants.Questioned };
+        private readonly string[] roleNames = { RoleConstants.AdminRole, RoleConstants.UserRole };
 
         public DefaultUserService(IServiceProvider serviceProvider)
         {
@@ -62,9 +62,9 @@ namespace Questionnaire.Infrastructure.DatabaseServices
 
                 await userManager.CreateAsync(user, "Admin1@gmail.com");
 
-                await userManager.AddToRoleAsync(user, RoleConstants.Admin);
+                await userManager.AddToRoleAsync(user, RoleConstants.AdminRole);
 
-                Claim claim = new(RoleConstants.RoleClaim, RoleConstants.Admin);
+                Claim claim = new(RoleConstants.RoleClaim, RoleConstants.AdminRole);
                 await userManager.AddClaimAsync(user, claim);
             }
         }

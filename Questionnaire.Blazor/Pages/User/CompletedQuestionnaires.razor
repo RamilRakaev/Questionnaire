@@ -1,0 +1,48 @@
+﻿@page "/user/completedQuestionnaires"
+
+@attribute [Authorize(Roles = RoleConstants.UserRole)]
+
+@using AutoMapper
+@using MediatR
+@using Questionnaire.Blazor.Models
+@using Questionnaire.Conventions.Identity
+@using Questionnaire.Infrastructure.Queries.Requests.Structures
+@using System.Security.Principal
+
+<h3>Пройденные опросники</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Имя</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var questionnaire in questionnaires)
+        {
+            <tr>
+                <td>@questionnaire.DisplayName</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private IIdentity identity;
+    private List<QuestionnaireModel> questionnaires = new();
+
+    [Inject]
+    private IMapper Mapper { get; set; }
+
+    [Inject]
+    private IMediator Mediator { get; set; }
+
+    [Inject]
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        identity = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
+        var questionnaireEntities = await Mediator.Send(new GetStructuresByUserIdQuery(identity.Name));
+        questionnaires = Mapper.Map<List<QuestionnaireModel>>(questionnaireEntities);
+    }
+}

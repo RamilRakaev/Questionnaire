@@ -1,6 +1,6 @@
-﻿@page "/root/"
+﻿@page "/user/questionnaires"
 
-@attribute [Authorize(Roles = RoleConstants.Admin)]
+@attribute [Authorize(Roles = RoleConstants.UserRole)]
 
 @using AutoMapper
 @using MediatR
@@ -10,15 +10,19 @@
 @using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
 @using Questionnaire.Conventions.Identity
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
+@using System.Security.Principal
 
 @inherits QuestionnaireComponentBase
+
+@{
+    base.BuildRenderTree(__builder);
+}
 
 <h3>Опросники</h3>
 <table class="table">
     <thead>
         <tr>
             <th>Имя опроса</th>
-            <th>Имя опроса в json</th>
             <th>Действия</th>
         </tr>
     </thead>
@@ -30,6 +34,8 @@
                 <td>
                     <a class="btn btn-primary m-3" href="@NavigationLinks.ConcreteQuestionnaire/@questionnaire.Id">Перейти</a>
                     <button class="btn btn-danger m-3" @onclick="() => OpenRemoveQuestionnaireModal(questionnaire)">Удалить</button>
+                    <a class="btn btn-primary m-3" href="@NavigationLinks.PassingTheQuestionnaire/@questionnaire.Id">Пройти</a>
+                    <button class="btn btn-primary">Ссылка на опрос</button>
                 </td>
             </tr>
         }
@@ -45,18 +51,9 @@
     [Inject]
     private IMapper Mapper { get; set; }
 
-    [Inject]
-    private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
-
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        if (authenticationState.User.FindFirst(RoleConstants.RoleClaim).Value != RoleConstants.Admin)
-        {
-            NavigationManager.NavigateTo(NavigationLinks.Login);
-        }
-
-        await UploadQuestionnaires();
+        return UploadQuestionnaires();
     }
 
     private void OpenRemoveQuestionnaireModal(QuestionnaireModel questionnaire)
