@@ -16,11 +16,17 @@
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 @using System.Collections.Concurrent
 
-@inherits QuestionValidator
+@inherits QuestionnaireFormBase
+
+@{
+    base.BuildRenderTree(__builder);
+}
 
 <p class=@message.CssClass>@message.Text</p>
-
 <EditForm Model=@questionnaire OnSubmit=ChangeNameQuestionnaire>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
     <div class="form-group">
         <label>Имя опроса</label>
         <InputText @bind-Value=questionnaire.DisplayName class="form-control" />
@@ -63,7 +69,7 @@
                         <button class="btn btn-info" @onclick="() => OpenOptionDialog(question)">Добавить вариант</button>
                     }
                     <button class="btn btn-warning" @onclick="() => ChangeQuestion(question)">Изменить</button>
-                    <button class="btn btn-danger" @onclick="() => RemoveQuestion(question.Id)">Удалить</button>
+                    <button class="btn btn-danger" @onclick="() => OpenRemoveQuestionModal(question.Id)">Удалить</button>
                 </td>
             </tr>
         }
@@ -152,7 +158,9 @@
 
             var questionEntity = Mapper.Map<Property>(currentQuestion);
             await Mediator.Send(new CreateOrChangeEntityCommand<Property>(questionEntity));
-            
+
+            currentQuestion.Id = questionEntity.Id;
+
             questionnaire.Questions.Add(currentQuestion);
             currentQuestion = new()
             {
@@ -170,9 +178,14 @@
         await Mediator.Send(new CreateOrChangeEntityCommand<Property>(questionEntity));
     }
 
-    private async Task RemoveQuestion(int questionnaireId)
+    private void OpenRemoveQuestionModal(int questionId)
     {
-        await Mediator.Send(new RemoveEntityCommand<Property>(questionnaireId));
+        OpenDialog("Внимание", "Вы действительно хотите удалить вопрос?", () => RemoveQuestion(questionId));
+    }
+
+    private async Task RemoveQuestion(int questionId)
+    {
+        await Mediator.Send(new RemoveEntityCommand<Property>(questionId));
         await UploadQuestionnaires();
     }
 

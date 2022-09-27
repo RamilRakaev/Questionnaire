@@ -6,15 +6,25 @@
 @using MediatR
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Conventions.Identity
+@using Questionnaire.Domain.Entities
 @using Questionnaire.Infrastructure.Commands.Requests.HttpClientRequests
+@using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
 @using Questionnaire.Infrastructure.Queries.Requests.Answers
 @using Questionnaire.Infrastructure.Queries.Requests.QrlkChats
+
+@inherits QuestionnaireComponentBase
+
+@{
+    base.BuildRenderTree(__builder);
+}
 
 <table class="table">
     <thead>
         <tr>
             <th>Опрос</th>
             <th>Опрашиваемый</th>
+            <th>Чат для отправки</th>
+            <th>Действия</th>
         </tr>
     </thead>
     <tbody>
@@ -36,6 +46,7 @@
                 </td>
                 <td>
                     <button class="btn btn-primary m-2" @onclick="() => SendAnswers(answer.Id, answer.CurrentChatId)">Отправить</button>
+                    <button class="btn btn-danger m-2" @onclick="() => OpenRemoveAnswerModal(answer)">Удалить</button>
                 </td>
             </tr>
         }
@@ -43,7 +54,7 @@
 </table>
 
 @code {
-    private AnswerModel[] answers = Array.Empty<AnswerModel>();
+    private List<AnswerModel> answers = new();
 
     [Inject]
     private IMapper Mapper { get; set; }
@@ -54,7 +65,7 @@
     protected async override Task OnInitializedAsync()
     {
         var answerEntities = await Mediator.Send(new GetAnswersQuery());
-        answers = Mapper.Map<AnswerModel[]>(answerEntities);
+        answers = Mapper.Map<List<AnswerModel>>(answerEntities);
 
         foreach (var answer in answers)
         {
@@ -66,5 +77,16 @@
     private async Task SendAnswers(int answerId, int chatId)
     {
         await Mediator.Send(new SendNotificationToQrlkCommand(answerId, chatId));
+    }
+
+    private void OpenRemoveAnswerModal(AnswerModel answer)
+    {
+        OpenDialog("Внимание", "Вы действительно хотите удалить ответы?", () => RemoveAnswer(answer));
+    }
+
+    private Task RemoveAnswer(AnswerModel answer)
+    {
+        answers.Remove(answer);
+        return Mediator.Send(new RemoveEntityCommand<Answer>(answer.Id));
     }
 }

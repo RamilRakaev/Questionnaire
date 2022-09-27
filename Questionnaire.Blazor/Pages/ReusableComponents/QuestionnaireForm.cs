@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
-using Questionnaire.Blazor.Models;
+﻿using Questionnaire.Blazor.Models;
 using Questionnaire.Blazor.Models.Questions;
 using Questionnaire.Blazor.Services.UserInterfaceDisplay;
 using System.Linq;
 
-namespace Questionnaire.Blazor.Pages.Root
+namespace Questionnaire.Blazor.Pages.ReusableComponents
 {
-    public class QuestionValidator : ComponentBase
+    public abstract class QuestionnaireFormBase : QuestionnaireComponentBase
     {
         protected QuestionnaireModel questionnaire = new();
         protected QuestionModel currentQuestion = new();
@@ -50,7 +49,7 @@ namespace Questionnaire.Blazor.Pages.Root
                 message.SetDangerText("Json-имя уже занято");
                 nameIsUniqueness = false;
             }
-            
+
             return nameIsUniqueness;
         }
 

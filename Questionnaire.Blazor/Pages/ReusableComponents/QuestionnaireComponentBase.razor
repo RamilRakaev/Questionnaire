@@ -1,0 +1,61 @@
+﻿@using Questionnaire.Blazor.Pages.Root
+
+@if (openModalDialog)
+{
+    <div class="modal d-block" tabindex="-1" role="dialog" style="display:block">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick=CloseDialog>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p>@text</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" @onclick=CloseDialog>Отмена</button>
+                    <button type="button" class="btn btn-info" @onclick=Confirm>Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool openModalDialog;
+
+    private string title;
+    private string text;
+
+    private Func<Task> ConfirmAction { get; set; }
+
+    private async Task Confirm()
+    {
+        await ConfirmAction();
+        CloseDialog();
+    }
+
+    public void OpenDialog(string title, string text, Func<Task> confirmAction)
+    {
+        this.title = title;
+        this.text = text;
+
+        openModalDialog = true;
+
+        ConfirmAction = confirmAction;
+    }
+
+    private void CloseDialog()
+    {
+        openModalDialog = false;
+
+        title = "";
+        text = "";
+
+        ConfirmAction = null;
+    }
+}

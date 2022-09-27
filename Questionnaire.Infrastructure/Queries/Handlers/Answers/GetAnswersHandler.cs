@@ -6,7 +6,7 @@ using Questionnaire.Infrastructure.Queries.Requests.Answers;
 
 namespace Questionnaire.Infrastructure.Queries.Handlers.Answers
 {
-    public class GetAnswersHandler : IRequestHandler<GetAnswersQuery, Answer[]>
+    public class GetAnswersHandler : IRequestHandler<GetAnswersQuery, List<Answer>>
     {
         private readonly IRepository<Answer> _answerRepository;
 
@@ -15,12 +15,12 @@ namespace Questionnaire.Infrastructure.Queries.Handlers.Answers
             _answerRepository = answerRepository;
         }
 
-        public Task<Answer[]> Handle(GetAnswersQuery request, CancellationToken cancellationToken)
+        public Task<List<Answer>> Handle(GetAnswersQuery request, CancellationToken cancellationToken)
         {
             return _answerRepository.GetAllAsNoTracking()
                 .Include(answer => answer.User)
                 .Include(answer => answer.Structure)
-                .ToArrayAsync(cancellationToken);
+                .ToListAsync(cancellationToken);
         }
     }
 }

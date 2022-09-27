@@ -11,6 +11,8 @@
 @using Questionnaire.Conventions.Identity
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 
+@inherits QuestionnaireComponentBase
+
 <h3>Опросники</h3>
 <table class="table">
     <thead>
@@ -27,7 +29,7 @@
                 <td>@questionnaire.DisplayName</td>
                 <td>
                     <a class="btn btn-primary m-3" href="@NavigationLinks.ConcreteQuestionnaire/@questionnaire.Id">Перейти</a>
-                    <button class="btn btn-danger m-3" @onclick="() => Remove(questionnaire.Id)">Удалить</button>
+                    <button class="btn btn-danger m-3" @onclick="() => OpenRemoveQuestionnaireModal(questionnaire)">Удалить</button>
                 </td>
             </tr>
         }
@@ -35,7 +37,7 @@
 </table>
 
 @code {
-    private QuestionnaireModel[] questionnaires = Array.Empty<QuestionnaireModel>();
+    private List<QuestionnaireModel> questionnaires = new();
 
     [Inject]
     private IMediator Mediator { get; set; }
@@ -57,15 +59,20 @@
         await UploadQuestionnaires();
     }
 
-    private async Task Remove(int questionnaireId)
+    private void OpenRemoveQuestionnaireModal(QuestionnaireModel questionnaire)
     {
-        await Mediator.Send(new RemoveEntityCommand<Structure>(questionnaireId));
-        await UploadQuestionnaires();
+        OpenDialog("Внимание", "Вы действительно хотите удалить опрос?", () => Remove(questionnaire));
+    }
+
+    private Task Remove(QuestionnaireModel questionnaire)
+    {
+        questionnaires.Remove(questionnaire);
+        return Mediator.Send(new RemoveEntityCommand<Structure>(questionnaire.Id));
     }
 
     private async Task UploadQuestionnaires()
     {
         var questionnaireEntities = await Mediator.Send(new GetEntitiesQuery<Structure>());
-        questionnaires = Mapper.Map<QuestionnaireModel[]>(questionnaireEntities);
+        questionnaires = Mapper.Map<List<QuestionnaireModel>>(questionnaireEntities);
     }
 }
