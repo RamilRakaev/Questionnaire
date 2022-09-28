@@ -45,7 +45,16 @@
                     </select>
                 </td>
                 <td>
-                    <button class="btn btn-primary m-2" @onclick="() => SendAnswers(answer.Id, answer.CurrentChatId)">Отправить</button>
+                    @if (answer.CurrentChatId == 0)
+                    {
+                        <p>Нет доступных чатов для отправки</p>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary m-2" @onclick="() => SendAnswers(answer.Id, answer.CurrentChatId)">Отправить</button>
+                    }
+                </td>
+                <td>
                     <button class="btn btn-danger m-2" @onclick="() => OpenRemoveAnswerModal(answer)">Удалить</button>
                 </td>
             </tr>
@@ -70,7 +79,7 @@
         foreach (var answer in answers)
         {
             answer.Chats = await Mediator.Send(new GetChatsByUserIdQuery(answer.UserId));
-            answer.CurrentChatId = answer.Chats.FirstOrDefault().Id;
+            answer.CurrentChatId = answer.Chats.Select(chat => chat.Id).FirstOrDefault();
         }
     }
 
