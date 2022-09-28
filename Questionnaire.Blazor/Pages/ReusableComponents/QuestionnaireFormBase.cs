@@ -12,7 +12,12 @@ namespace Questionnaire.Blazor.Pages.ReusableComponents
 
         protected readonly FormMessage message = new();
 
-        protected bool ValidateQuestion()
+        protected override void OnInitialized()
+        {
+            message.AfterTime = () => InvokeAsync(StateHasChanged);
+        }
+
+        protected bool ValidateQuestion(QuestionModel currentQuestion, string successMessage = "Добавлен вопрос")
         {
             message.Reset();
 
@@ -26,7 +31,7 @@ namespace Questionnaire.Blazor.Pages.ReusableComponents
 
             if (questionIsCorrect)
             {
-                message.SetSuccessText("Добавлен вопрос");
+                message.SetSuccessText(successMessage);
             }
 
             return questionIsCorrect;

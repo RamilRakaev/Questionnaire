@@ -78,7 +78,7 @@
 
     private Task CreateQuestion()
     {
-        if (ValidateQuestion())
+        if (ValidateQuestion(currentQuestion))
         {
             questionnaire.Questions.Add(currentQuestion);
             currentQuestion = new()

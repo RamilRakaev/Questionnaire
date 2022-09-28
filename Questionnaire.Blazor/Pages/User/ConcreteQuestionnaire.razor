@@ -15,6 +15,7 @@
 @using Questionnaire.Infrastructure.Queries.Requests.Structures
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 @using System.Collections.Concurrent
+@using System.Timers
 
 @inherits QuestionnaireFormBase
 
@@ -152,7 +153,7 @@
 
     private async Task CreateQuestion()
     {
-        if (ValidateQuestion())
+        if (ValidateQuestion(currentQuestion))
         {
             currentQuestion.QuestionnaireId = QuestionnaireId;
 
@@ -174,8 +175,11 @@
 
     private async Task ChangeQuestion(QuestionModel question)
     {
-        var questionEntity = Mapper.Map<Property>(question);
-        await Mediator.Send(new CreateOrChangeEntityCommand<Property>(questionEntity));
+        if (ValidateQuestion(question, "Вопрос изменён"))
+        {
+            var questionEntity = Mapper.Map<Property>(question);
+            await Mediator.Send(new CreateOrChangeEntityCommand<Property>(questionEntity));
+        }
     }
 
     private void OpenRemoveQuestionModal(int questionId)

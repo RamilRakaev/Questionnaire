@@ -1,9 +1,15 @@
-﻿namespace Questionnaire.Blazor.Services.UserInterfaceDisplay
+﻿using System;
+using System.Threading;
+
+namespace Questionnaire.Blazor.Services.UserInterfaceDisplay
 {
     public class FormMessage
     {
-        public string CssClass { get; private set; }
+        private Timer timer;
 
+        public Action AfterTime { get; set; }
+
+        public string CssClass { get; private set; }
         public string Text { get; private set; }
 
         public void ActionNotification(string messageTest, bool successed)
@@ -30,11 +36,24 @@
         {
             Text = text;
             CssClass = "text-success";
+            SetTimer();
+        }
+
+        private void SetTimer()
+        {
+            timer = new(TimerWork, null, 5000, 0);
+        }
+
+        private void TimerWork(object sender)
+        {
+            Reset();
+            AfterTime?.Invoke();
         }
 
         public void Reset()
         {
             Text = "";
+            timer?.Dispose();
         }
     }
 }
