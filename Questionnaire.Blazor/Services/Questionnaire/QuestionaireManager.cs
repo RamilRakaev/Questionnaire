@@ -9,7 +9,7 @@ namespace Questionnaire.Blazor.Services.Questionnaire
 {
     public static class QuestionaireManager
     {
-        public static void PrepareQuestionnaireToDisplay(QuestionnaireModel modifiableQuestionnaire, long userId)
+        public static void PrepareQuestionnaireToDisplay(QuestionnaireModel modifiableQuestionnaire, long? userId)
         {
             modifiableQuestionnaire.QuestionAnswers = new();
             foreach (var question in modifiableQuestionnaire.Questions)
@@ -18,7 +18,7 @@ namespace Questionnaire.Blazor.Services.Questionnaire
             }
         }
 
-        private static QuestionAnswerModel CreateQuestionAnswer(QuestionModel question, long userId, int questionnaireId)
+        private static QuestionAnswerModel CreateQuestionAnswer(QuestionModel question, long? userId, int questionnaireId)
         {
             QuestionAnswerModel questionAnswer = new()
             {

@@ -1,6 +1,5 @@
-﻿@page "/user/passingTheQuestionnaire/{questionnaireId:int}"
-
-@attribute [Authorize(Roles = RoleConstants.UserRole)]
+﻿@page "/user/passingTheQuestionnaire/{questionnaireId:int}/{token}"
+@page "/user/passingTheQuestionnaire/{questionnaireId:int}"
 
 @using AutoMapper
 @using MediatR
@@ -8,6 +7,7 @@
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Blazor.Models.Questions.Tags
+@using Questionnaire.Blazor.Services
 @using Questionnaire.Blazor.Services.Questionnaire
 @using Questionnaire.Blazor.Services.UserInterfaceDisplay
 @using Questionnaire.Domain.Entities
@@ -16,32 +16,33 @@
 @using Questionnaire.Conventions.Identity
 @using Questionnaire.Infrastructure.Models
 @using Questionnaire.Infrastructure.Queries.Requests.Properties
+@using Questionnaire.Infrastructure.Queries.Requests.QuestionnaireLinks
 @using Questionnaire.Infrastructure.Queries.Requests.Structures
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
-@using Microsoft.AspNetCore.Components.Authorization
-@using System.Security.Principal
+@using System.Security.Claims
 
 <h3>@questionnaire.DisplayName</h3>
 <p class=@message.CssClass>@message.Text</p>
 <EditForm Model=questionnaire OnValidSubmit=SendAnswersQuestions>
     <QuestionnaireDisplay Questionnaire=questionnaire />
-    <button class="btn btn-success" @attributes=@sendButtonAttributes>Отправить</button>
+    <button class="btn btn-success" disabled=@sendIsDisabled>Отправить</button>
 </EditForm>
 
-    @code {
+@code {
     private QuestionnaireModel questionnaire = new();
+    private List<HtmlTag> htmlTags = new();
     private Dictionary<QuestionModel, AnswerModel> questionsAnswers = new();
+
+    private bool sendIsDisabled;
     private FormMessage message = new();
 
-    private List<HtmlTag> htmlTags = new();
-
-    private IIdentity identity;
-
-    private bool answersIsSended;
-    private Dictionary<string, object> sendButtonAttributes = new();
+    private ClaimsPrincipal userClaims;
 
     [Parameter]
     public int QuestionnaireId { get; set; }
+
+    [Parameter]
+    public string Token { get; set; }
 
     [Inject]
     private IMapper Mapper { get; set; }
@@ -57,14 +58,26 @@
 
     protected async override Task OnInitializedAsync()
     {
-        identity = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
-
-        var userEntity = await UserManager.FindByNameAsync(identity.Name);
-        var user = Mapper.Map<UserModel>(userEntity);
+        userClaims = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
 
         var questionnaireEntity = await Mediator.Send(new GetStructureQuery(QuestionnaireId));
         questionnaire = Mapper.Map<QuestionnaireModel>(questionnaireEntity);
-        QuestionaireManager.PrepareQuestionnaireToDisplay(questionnaire, user.Id);
+        questionnaire.QuestionAnswers = new();
+
+        if (userClaims.IsInRole(RoleConstants.UserRole))
+        {
+            var userEntity = await UserManager.FindByNameAsync(userClaims.Identity.Name);
+            var user = Mapper.Map<UserModel>(userEntity);
+            QuestionaireManager.PrepareQuestionnaireToDisplay(questionnaire, user.Id);
+        }
+        else if (await Mediator.Send(new CheckAccessQuery(Token)))
+        {
+            QuestionaireManager.PrepareQuestionnaireToDisplay(questionnaire, null);
+        }
+        else
+        {
+            NavigationManager.NavigateTo(NavigationLinks.AccesksDenied);
+        }
 
         foreach (var question in questionnaire.Questions)
         {
@@ -77,14 +90,18 @@
 
     private async Task SendAnswersQuestions()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = await UserManager.FindByNameAsync(identity.Name);
+        long? userId = null;
+        if (userClaims.Identity.IsAuthenticated)
+        {
+            var user = await UserManager.FindByNameAsync(userClaims.Identity.Name);
+            userId = user.Id;
+        }
 
         var questionsAnswers = Mapper.Map<List<PropertyAnswer>>(questionnaire.QuestionAnswers);
 
-        await Mediator.Send(new SaveAnswersCommand(questionsAnswers, questionnaire.Id, user.Id));
+        await Mediator.Send(new SaveAnswersCommand(questionsAnswers, questionnaire.Id, userId));
 
         message.SetSuccessText("Ответы отправлены");
-        sendButtonAttributes.Add("disabled", true);
+        sendIsDisabled = true;
     }
 }

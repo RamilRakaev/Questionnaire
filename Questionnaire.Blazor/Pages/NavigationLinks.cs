@@ -17,8 +17,10 @@
         public const string Answers = "/user/answers";
         #endregion
 
-        #region account
+        #region access
         public const string Login = "/Identity/Account/Login";
+        public const string AccesksDenied = "/accessDenied";
         #endregion
+
     }
 }

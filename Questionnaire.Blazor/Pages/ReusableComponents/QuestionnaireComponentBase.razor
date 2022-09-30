@@ -1,6 +1,4 @@
-﻿@using Questionnaire.Blazor.Pages.Root
-
-@if (openModalDialog)
+﻿@if (openModalDialog)
 {
     <div class="modal d-block" tabindex="-1" role="dialog" style="display:block">
         <div class="modal-dialog" role="document">
@@ -18,7 +16,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal" @onclick=CloseDialog>Отмена</button>
-                    <button type="button" class="btn btn-info" @onclick=Confirm>Удалить</button>
+                    <button type="button" class="btn btn-info" @onclick=Confirm>Подтвердить</button>
                 </div>
             </div>
         </div>
@@ -31,22 +29,25 @@
     private string title;
     private string text;
 
-    private Func<Task> ConfirmAction { get; set; }
+    private Func<Task> confirmAction;
 
-    private async Task Confirm()
-    {
-        await ConfirmAction();
-        CloseDialog();
-    }
-
-    public void OpenDialog(string title, string text, Func<Task> confirmAction)
+    public void OpenDialog(string title, string text, Func<Task> confirmAction = null)
     {
         this.title = title;
         this.text = text;
 
         openModalDialog = true;
 
-        ConfirmAction = confirmAction;
+        this.confirmAction = confirmAction;
+    }
+
+    private async Task Confirm()
+    {
+        if (confirmAction != null)
+        {
+            await confirmAction();
+        }
+        CloseDialog();
     }
 
     private void CloseDialog()
@@ -56,6 +57,6 @@
         title = "";
         text = "";
 
-        ConfirmAction = null;
+        confirmAction = null;
     }
 }

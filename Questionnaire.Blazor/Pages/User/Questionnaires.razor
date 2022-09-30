@@ -4,9 +4,12 @@
 
 @using AutoMapper
 @using MediatR
+@using Microsoft.AspNetCore.Http
 @using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Blazor.Models
+@using Questionnaire.Blazor.Services
 @using Questionnaire.Domain.Entities
+@using Questionnaire.Infrastructure.Commands.Requests.QuestionnaireLinks
 @using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
 @using Questionnaire.Conventions.Identity
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
@@ -35,7 +38,7 @@
                     <a class="btn btn-primary m-3" href="@NavigationLinks.ConcreteQuestionnaire/@questionnaire.Id">Перейти</a>
                     <button class="btn btn-danger m-3" @onclick="() => OpenRemoveQuestionnaireModal(questionnaire)">Удалить</button>
                     <a class="btn btn-primary m-3" href="@NavigationLinks.PassingTheQuestionnaire/@questionnaire.Id">Пройти</a>
-                    <button class="btn btn-primary">Ссылка на опрос</button>
+                    <button class="btn btn-primary" @onclick="async () => await GetQuestionnaireLink(questionnaire.Id)">Ссылка на опрос</button>
                 </td>
             </tr>
         }
@@ -51,6 +54,9 @@
     [Inject]
     private IMapper Mapper { get; set; }
 
+    [Inject]
+    private IHttpContextAccessor HttpContextAccessor { get; set; }
+
     protected override Task OnInitializedAsync()
     {
         return UploadQuestionnaires();
@@ -65,6 +71,16 @@
     {
         questionnaires.Remove(questionnaire);
         return Mediator.Send(new RemoveEntityCommand<Structure>(questionnaire.Id));
+    }
+
+    private async Task GetQuestionnaireLink(int questionnireId)
+    {
+        var link = await Mediator.Send(
+            new CreateQuestionnaireLinkCommand(
+                HttpContextAccessor.HttpContext.Request,
+                NavigationLinks.PassingTheQuestionnaire, questionnireId));
+
+        OpenDialog("Скопируйте ссылку для прохождения опроса", link);
     }
 
     private async Task UploadQuestionnaires()

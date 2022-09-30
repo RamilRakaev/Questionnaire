@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Questionnaire.Infrastructure.Database;
@@ -12,9 +13,10 @@ using Questionnaire.Infrastructure.Database;
 namespace Questionnaire.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(QuestionnaireContext))]
-    partial class QuestionnaireContextModelSnapshot : ModelSnapshot
+    [Migration("20220930105944_NullableAnswerUserId")]
+    partial class NullableAnswerUserId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -329,34 +331,6 @@ namespace Questionnaire.Infrastructure.Database.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("QrlkChat");
-                });
-
-            modelBuilder.Entity("Questionnaire.Domain.Entities.QuestionnaireLink", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("BaseAddress")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("DateOfCreation")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("PageAddress")
-                        .HasColumnType("text");
-
-                    b.Property<int>("QuestionnaireId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("QuestionnaireLink");
                 });
 
             modelBuilder.Entity("Questionnaire.Domain.Entities.Structure", b =>

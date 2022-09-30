@@ -78,14 +78,17 @@
 
         foreach (var answer in answers)
         {
-            answer.Chats = await Mediator.Send(new GetChatsByUserIdQuery(answer.UserId));
-            answer.CurrentChatId = answer.Chats.Select(chat => chat.Id).FirstOrDefault();
+            if (answer.UserId != null)
+            {
+                answer.Chats = await Mediator.Send(new GetChatsByUserIdQuery(answer.UserId.Value));
+                answer.CurrentChatId = answer.Chats.Select(chat => chat.Id).FirstOrDefault();
+            }
         }
     }
 
-    private async Task SendAnswers(int answerId, int chatId)
+    private Task SendAnswers(int answerId, int chatId)
     {
-        await Mediator.Send(new SendNotificationToQrlkCommand(answerId, chatId));
+        return Mediator.Send(new SendNotificationToQrlkCommand(answerId, chatId));
     }
 
     private void OpenRemoveAnswerModal(AnswerModel answer)

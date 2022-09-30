@@ -42,6 +42,8 @@ namespace Questionnaire.Blazor
 
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
 
+            services.AddHttpContextAccessor();
+
             services.AddHostedService<MigrationService>();
             services.AddHostedService<DefaultUserService>();
 

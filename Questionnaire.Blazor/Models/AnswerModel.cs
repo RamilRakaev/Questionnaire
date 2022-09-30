@@ -8,7 +8,7 @@ namespace Questionnaire.Blazor.Models
         {
         }
 
-        public AnswerModel(long userId, int questionnaireId)
+        public AnswerModel(long? userId, int questionnaireId)
         {
             UserId = userId;
             QuestionnaireId = questionnaireId;
@@ -17,7 +17,7 @@ namespace Questionnaire.Blazor.Models
         public int Id { get; set; }
 
         public int QuestionnaireId { get; set; }
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
 
         public string Value { get; set; }
 

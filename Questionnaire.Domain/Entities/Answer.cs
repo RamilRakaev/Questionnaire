@@ -7,7 +7,7 @@ namespace Questionnaire.Domain.Entities
         public int StructureId { get; set; }
         public Structure Structure { get; set; }
 
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
         public ApplicationUser User { get; set; }
 
         public string Value { get; set; }
