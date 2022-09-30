@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Questionnaire.Blazor.Models.Questions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Questionnaire.Blazor.Models.Questions.Tags
+namespace Questionnaire.Blazor.Services.Questionnaire.Tags
 {
     public class TagsCreator
     {

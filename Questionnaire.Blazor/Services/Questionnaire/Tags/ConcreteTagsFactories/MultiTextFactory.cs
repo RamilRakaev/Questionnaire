@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
+namespace Questionnaire.Blazor.Services.Questionnaire.Tags.ConcreteTagsFactories
 {
-    public class EnumerationFactory : AbstractTagsFactory
+    public class MultiTextFactory : AbstractTagsFactory
     {
-        private readonly IEnumerable<string> _options;
-
-        public EnumerationFactory(string displayName, IEnumerable<string> options) : base(displayName)
+        public MultiTextFactory(string displayName) : base(displayName)
         {
-            _cssClass = "custom-select";
-            _options = options;
         }
 
         public override List<HtmlTag> CreateTags()
@@ -35,30 +30,21 @@ namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
                             Value = _displayName,
                             Attrubutes = new()
                             {
-                                { "for", inputId }
+                                { "for", inputId },
                             }
                         },
                         new()
                         {
-                            TagName = TagName.Select,
+                            TagName = TagName.MultiText,
                             Attrubutes = new()
                             {
-                                { "class", _cssClass },
+                                { "class", "form-control" },
                                 { "id", inputId },
+                                { "rows", 5 },
                             },
-                            ChildTags = _options
-                                .Select(option => new HtmlTag()
-                                {
-                                    Value = option,
-                                    Attrubutes = new()
-                                    {
-                                        { "value", option }
-                                    },
-                                })
-                                .ToList(),
                         },
                     },
-                },
+                }
             };
         }
     }

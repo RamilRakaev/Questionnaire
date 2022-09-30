@@ -1,6 +1,6 @@
 ﻿@using Questionnaire.Blazor.Models
 @using Questionnaire.Blazor.Models.Questions
-@using Questionnaire.Blazor.Models.Questions.Tags
+@using Questionnaire.Blazor.Services.Questionnaire.Tags
 
 <div class="form-group col-6">
     @Display(HtmlTags)
@@ -41,6 +41,14 @@
                             Answer.Value = tag.Value;
                         }
                         <input @attributes=tag.Attrubutes @onchange=ChangeAnswer />
+                        break;
+
+                    case TagName.MultiText:
+                        if (Answer.Value == null)
+                        {
+                            Answer.Value = tag.Value;
+                        }
+                        <textarea @bind=Answer.Value @attributes=tag.Attrubutes></textarea>
                         break;
 
                     case TagName.Select:

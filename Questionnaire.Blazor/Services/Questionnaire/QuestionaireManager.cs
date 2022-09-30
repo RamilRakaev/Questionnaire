@@ -1,6 +1,6 @@
 ﻿using Questionnaire.Blazor.Models;
 using Questionnaire.Blazor.Models.Questions;
-using Questionnaire.Blazor.Models.Questions.Tags;
+using Questionnaire.Blazor.Services.Questionnaire.Tags;
 using System;
 using System.Collections.Generic;
 using System.Linq;

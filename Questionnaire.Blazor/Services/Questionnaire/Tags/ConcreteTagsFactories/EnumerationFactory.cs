@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
+namespace Questionnaire.Blazor.Services.Questionnaire.Tags.ConcreteTagsFactories
 {
-    public abstract class AbstractInputFactory : AbstractTagsFactory
+    public class EnumerationFactory : AbstractTagsFactory
     {
-        protected string _type = "text";
-        protected string defaultValue = "";
+        private readonly IEnumerable<string> _options;
 
-        protected AbstractInputFactory(string displayName) : base(displayName)
+        public EnumerationFactory(string displayName, IEnumerable<string> options) : base(displayName)
         {
+            _cssClass = "custom-select";
+            _options = options;
         }
 
-        protected List<HtmlTag> CreateInput()
+        public override List<HtmlTag> CreateTags()
         {
             var inputId = Guid.NewGuid().ToString();
 
@@ -33,20 +35,27 @@ namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
                             Value = _displayName,
                             Attrubutes = new()
                             {
-                                { "for", inputId },
-                            },
+                                { "for", inputId }
+                            }
                         },
-
                         new()
                         {
-                            TagName = TagName.Input,
+                            TagName = TagName.Select,
                             Attrubutes = new()
                             {
-                                { "type", _type },
                                 { "class", _cssClass },
                                 { "id", inputId },
                             },
-                            Value = defaultValue,
+                            ChildTags = _options
+                                .Select(option => new HtmlTag()
+                                {
+                                    Value = option,
+                                    Attrubutes = new()
+                                    {
+                                        { "value", option }
+                                    },
+                                })
+                                .ToList(),
                         },
                     },
                 },

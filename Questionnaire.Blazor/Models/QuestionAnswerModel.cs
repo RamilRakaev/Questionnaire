@@ -1,5 +1,5 @@
 ﻿using Questionnaire.Blazor.Models.Questions;
-using Questionnaire.Blazor.Models.Questions.Tags;
+using Questionnaire.Blazor.Services.Questionnaire.Tags;
 using System.Collections.Generic;
 
 namespace Questionnaire.Blazor.Models

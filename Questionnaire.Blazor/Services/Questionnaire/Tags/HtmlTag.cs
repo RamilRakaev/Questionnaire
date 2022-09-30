@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Questionnaire.Blazor.Models.Questions.Tags
+namespace Questionnaire.Blazor.Services.Questionnaire.Tags
 {
     public class HtmlTag
     {

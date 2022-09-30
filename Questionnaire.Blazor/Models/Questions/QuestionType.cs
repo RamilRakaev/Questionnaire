@@ -2,6 +2,6 @@
 {
     public enum QuestionType
     {
-        Text, Boolean, Number, DateTime, Enumeration, Custom
+        Text, Boolean, Number, DateTime, Enumeration, Custom, MultiText
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Questionnaire.Blazor.Models.Questions.Tags.ConcreteTagsFactories
+namespace Questionnaire.Blazor.Services.Questionnaire.Tags.ConcreteTagsFactories
 {
     public class DateTimeFactory : AbstractInputFactory
     {
