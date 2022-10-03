@@ -54,7 +54,7 @@
                     case TagName.Select:
                         if (Answer.Value == null)
                         {
-                            Answer.Value = tag.ChildTags.FirstOrDefault().Value;
+                            Answer.Value = tag.ChildTags.FirstOrDefault()?.Value;
                         }
 
                         <select @attributes=tag.Attrubutes @bind=Answer.Value>

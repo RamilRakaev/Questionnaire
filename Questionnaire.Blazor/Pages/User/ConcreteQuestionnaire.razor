@@ -6,7 +6,6 @@
 @using MediatR
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Blazor.Models.Questions
-@using Questionnaire.Blazor.Services.Questionnaire.Tags
 @using Questionnaire.Blazor.Services.UserInterfaceDisplay
 @using Questionnaire.Domain.Entities
 @using Questionnaire.Infrastructure.Commands.Requests.UniversalCommands
@@ -14,8 +13,6 @@
 @using Questionnaire.Infrastructure.Queries.Requests.Properties
 @using Questionnaire.Infrastructure.Queries.Requests.Structures
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
-@using System.Collections.Concurrent
-@using System.Timers
 
 @inherits QuestionnaireFormBase
 
@@ -23,21 +20,24 @@
     base.BuildRenderTree(__builder);
 }
 
-<p class=@message.CssClass>@message.Text</p>
-<EditForm Model=@questionnaire OnSubmit=ChangeNameQuestionnaire>
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<div class="row justify-content-start">
+    <div class="col-10">
+        <p class=@message.CssClass>@message.Text</p>
+        <EditForm Model=@questionnaire OnSubmit=ChangeNameQuestionnaire>
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-    <div class="form-group">
-        <label>Имя опроса</label>
-        <InputText @bind-Value=questionnaire.DisplayName class="form-control" />
+            <div class="form-group row">
+                <label class="col-12 col-sm-12 col-md-3 col-lg-2">Имя опроса</label>
+                <InputText @bind-Value=questionnaire.DisplayName class="form-control col-12 col-sm-12 col-md-9 col-lg-10" />
+            </div>
+
+            <button class="btn btn-warning">Изменить опросник</button>
+        </EditForm>
+
+        <QuestionForm CurrentQuestion=@currentQuestion CreateQuestion=CreateQuestion CustomTypes=nameIdDictionary />
     </div>
-
-    <button class="btn btn-warning">Изменить опросник</button>
-</EditForm>
-
-<QuestionForm CurrentQuestion=@currentQuestion CreateQuestion=CreateQuestion CustomTypes=nameIdDictionary />
-
+</div>
 <table class="table">
     <thead class="thead-light">
         <tr>

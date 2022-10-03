@@ -18,36 +18,39 @@
 @inherits QuestionnaireFormBase
 
 <div class="container-fluid">
-    <div class="row justify-content-center">
-        <EditForm Model=questionnaire OnValidSubmit=Send class="my-3 col-6">
-            <p class=@message.CssClass>@message.Text</p>
-            <ValidationSummary />
-            <DataAnnotationsValidator />
-
-            <div class="form-group">
-                <label>Отображаемое имя опросника</label>
-                <InputText @bind-Value=questionnaire.DisplayName class="form-control" />
-            </div>
-
-            @foreach (var question in questionnaire.Questions)
-            {
-                <div class="form-group">
-                    <label>Отображаемое имя вопроса</label>
-                    <InputText @bind-Value=question.DisplayName class="form-control" />
-                </div>
+    <div class="row justify-content-around">
+        <div class="col-4">
+            <EditForm Model=questionnaire OnValidSubmit=Send class="my-3">
+                <p class=@message.CssClass>@message.Text</p>
+                <ValidationSummary />
+                <DataAnnotationsValidator />
 
                 <div class="form-group">
-                    <label>Имя вопроса в json</label>
-                    <InputText @bind-Value=question.JsonName class="form-control" />
+                    <label>Отображаемое имя опросника</label>
+                    <InputText @bind-Value=questionnaire.DisplayName class="form-control" />
                 </div>
 
-                <p>Тип: @question.QuestionType</p>
-            }
+                @foreach (var question in questionnaire.Questions)
+                {
+                    <div class="form-group">
+                        <label>Отображаемое имя вопроса</label>
+                        <InputText @bind-Value=question.DisplayName class="form-control" />
+                    </div>
 
-            <button class="btn btn-success">Создать опросник</button>
-        </EditForm>
+                    <div class="form-group">
+                        <label>Имя вопроса в json</label>
+                        <InputText @bind-Value=question.JsonName class="form-control" />
+                    </div>
 
-        <QuestionForm CurrentQuestion=@currentQuestion CreateQuestion=CreateQuestion CustomTypes=nameIdDictionary />
+                    <p>Тип: @question.QuestionType</p>
+                }
+
+                <button class="btn btn-success">Создать опросник</button>
+            </EditForm>
+        </div>
+        <div class="col-7">
+            <QuestionForm CurrentQuestion=@currentQuestion CreateQuestion=CreateQuestion CustomTypes=nameIdDictionary />
+        </div>
     </div>
 </div>
 

@@ -23,7 +23,7 @@ namespace Questionnaire.Blazor.Services.Questionnaire.Tags.ConcreteTagsFactories
                     TagName = TagName.Div,
                     Attrubutes = new()
                     {
-                        { "class", "form-group" },
+                        { "class", "form-group row justify-content-around" },
                     },
                     ChildTags = new()
                     {
@@ -33,6 +33,7 @@ namespace Questionnaire.Blazor.Services.Questionnaire.Tags.ConcreteTagsFactories
                             Value = _displayName,
                             Attrubutes = new()
                             {
+                                { "class", "col-lg-2" },
                                 { "for", inputId },
                             },
                         },
@@ -43,7 +44,7 @@ namespace Questionnaire.Blazor.Services.Questionnaire.Tags.ConcreteTagsFactories
                             Attrubutes = new()
                             {
                                 { "type", _type },
-                                { "class", _cssClass },
+                                { "class", $"{_cssClass} col-lg-9" },
                                 { "id", inputId },
                             },
                             Value = defaultValue,

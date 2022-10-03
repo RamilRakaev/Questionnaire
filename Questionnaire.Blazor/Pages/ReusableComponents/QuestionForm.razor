@@ -6,53 +6,59 @@
 @using Questionnaire.Infrastructure.Queries.Requests.UniversalQueries
 @using System.Collections.Concurrent
 
-<EditForm Model=CurrentQuestion OnValidSubmit=CreateQuestion class="my-3 col-6">
+<EditForm Model=CurrentQuestion OnValidSubmit=CreateQuestion class="my-3">
     <ValidationSummary />
     <DataAnnotationsValidator />
 
-    <div class="form-group">
-        <label>Отображаемое имя вопроса</label>
-        <InputText @bind-Value=CurrentQuestion.DisplayName class="form-control" />
+    <div class="form-group row">
+        <label class="col-12 col-sm-5 col-md-4 col-lg-2">Отображаемое имя вопроса</label>
+        <InputText @bind-Value=CurrentQuestion.DisplayName class="form-control col-12 col-sm-5 col-md-8 col-lg-10" />
     </div>
 
-    <div class="form-group">
-        <label>Имя вопроса в json</label>
-        <InputText @bind-Value=CurrentQuestion.JsonName class="form-control" />
+    <div class="form-group row">
+        <label class="col-12 col-sm-5 col-md-4 col-lg-2">Имя вопроса в json</label>
+        <InputText @bind-Value=CurrentQuestion.JsonName class="form-control col-12 col-sm-5 col-md-8 col-lg-10" />
     </div>
 
-    <InputRadioGroup @bind-Value=CurrentQuestion.QuestionType class="form-check d-block">
-        Тип вопроса
-        <div>
-            <InputRadio Value="QuestionType.Text" id="Text" />
-            <label for="Text">Текст</label>
+    <fieldset class="form-group">
+        <div class="row">
+            <InputRadioGroup @bind-Value=CurrentQuestion.QuestionType>
+                <lageng class="col-form-label col-2">Тип вопроса</lageng>
+                <div class="col-10">
+                    <div class="form-check">
+                        <InputRadio Value="QuestionType.Text" id="Text" />
+                        <label for="Text">Текст</label>
+                    </div>
+                    <div class="form-check">
+                        <InputRadio Value="QuestionType.MultiText" id="MultiText" />
+                        <label for="MultiText">Мульти текст</label>
+                    </div>
+                    <div class="form-check">
+                        <InputRadio Value="QuestionType.Boolean" id="Boolean" />
+                        <label for="Boolean">Чекбокс</label>
+                    </div>
+                    <div class="form-check">
+                        <InputRadio Value="@QuestionType.Number" id="Number" />
+                        <label for="Number">Номер</label>
+                    </div>
+                    <div class="form-check">
+                        <InputRadio Value="@QuestionType.DateTime" id="DateTime" />
+                        <label for="DateTime">Дата время</label>
+                    </div>
+                    <div class="form-check">
+                        <InputRadio Value="QuestionType.Enumeration" id="Enumeration" />
+                        <label for="Enumeration">Перечисление</label>
+                    </div>
+                    <div class="form-check">
+                        <InputRadio Value="QuestionType.Custom" id="Custom" />
+                        <label for="Custom">Пользовательский</label>
+                    </div>
+                </div>
+            </InputRadioGroup>
         </div>
-        <div>
-            <InputRadio Value="QuestionType.MultiText" id="MultiText" />
-            <label for="MultiText">Мульти текст</label>
-        </div>
-        <div>
-            <InputRadio Value="QuestionType.Boolean" id="Boolean" />
-            <label for="Boolean">Чекбокс</label>
-        </div>
-        <div>
-            <InputRadio Value="@QuestionType.Number" id="Number" />
-            <label for="Number">Номер</label>
-        </div>
-        <div>
-            <InputRadio Value="@QuestionType.DateTime" id="DateTime" />
-            <label for="DateTime">Дата время</label>
-        </div>
-        <div>
-            <InputRadio Value="QuestionType.Enumeration" id="Enumeration" />
-            <label for="Enumeration">Перечисление</label>
-        </div>
-        <div>
-            <InputRadio Value="QuestionType.Custom" id="Custom" />
-            <label for="Custom">Пользовательский</label>
-        </div>
-    </InputRadioGroup>
+    </fieldset>
 
-    <button class="btn btn-success">Добавить вопрос</button>
+    <button class="btn btn-success my-3">Добавить вопрос</button>
 
     @if (CurrentQuestion.QuestionType == QuestionType.Enumeration)
     {

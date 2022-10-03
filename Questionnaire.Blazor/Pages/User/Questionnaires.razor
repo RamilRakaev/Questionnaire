@@ -35,7 +35,7 @@
             <tr>
                 <td>@questionnaire.DisplayName</td>
                 <td>
-                    <a class="btn btn-primary m-3" href="@NavigationLinks.ConcreteQuestionnaire/@questionnaire.Id">Перейти</a>
+                    <a class="btn btn-warning m-3" href="@NavigationLinks.ConcreteQuestionnaire/@questionnaire.Id">Редактировать</a>
                     <button class="btn btn-danger m-3" @onclick="() => OpenRemoveQuestionnaireModal(questionnaire)">Удалить</button>
                     <a class="btn btn-primary m-3" href="@NavigationLinks.PassingTheQuestionnaire/@questionnaire.Id">Пройти</a>
                     <button class="btn btn-primary" @onclick="async () => await GetQuestionnaireLink(questionnaire.Id)">Ссылка на опрос</button>
