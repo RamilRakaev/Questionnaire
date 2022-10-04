@@ -1,0 +1,28 @@
+﻿@using Questionnaire.Blazor.Models
+@using Questionnaire.Blazor.Models.Questions
+@using Questionnaire.Blazor.Pages.ReusableComponents.Questions
+
+<DynamicComponent Type="typeof(TextComponent)" Parameters="parameters" />
+
+@code {
+    [Parameter]
+    public AnswerModel Answer { get; set; }
+
+    [Parameter]
+    public QuestionModel Question { get; set; }
+
+    private Dictionary<string, object> parameters = new();
+
+    protected override void OnInitialized()
+    {
+        var componentType = typeof(QuestionComponentDisplay).Assembly
+                .GetTypes()
+                .FirstOrDefault(type => type.Name == Question.QuestionType.ToString() + "Component");
+
+        parameters = new()
+        {
+            { "label", Question.DisplayName },
+            { "value", Answer.Value },
+        };
+    }
+}
