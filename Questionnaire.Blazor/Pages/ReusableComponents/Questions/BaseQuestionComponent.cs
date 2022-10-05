@@ -1,27 +1,24 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Threading.Tasks;
+using Questionnaire.Blazor.Models;
+using System;
 
 namespace Questionnaire.Blazor.Pages.ReusableComponents.Questions
 {
-    public abstract class BaseQuestionComponent<T> : ComponentBase
+    public abstract class BaseQuestionComponent : ComponentBase
     {
-        [Parameter]
-        public string Label { get; set; }
+        protected string id;
 
-        [Parameter]
-        public T Value { get; set; }
+        [CascadingParameter]
+        public QuestionAnswerModel QuestionAnswer { get; set; }
 
-        public EventCallback<T> ValueChanged { get; set; }
-
-        protected async Task SetValue(ChangeEventArgs eventArgs)
+        protected virtual void Input(ChangeEventArgs args)
         {
-            if (TryParse(eventArgs.Value.ToString(), out T newValue))
-            {
-                Value = newValue;
-                await ValueChanged.InvokeAsync(newValue);
-            }
+            QuestionAnswer.Answer.Value = args.Value.ToString();
         }
 
-        protected abstract bool TryParse(string original, out T result);
+        protected override void OnInitialized()
+        {
+            id = Guid.NewGuid().ToString();
+        }
     }
 }

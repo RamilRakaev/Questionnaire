@@ -1,5 +1,4 @@
 ﻿using Questionnaire.Blazor.Models.Questions;
-using Questionnaire.Blazor.Services.Questionnaire.Tags;
 using System.Collections.Generic;
 
 namespace Questionnaire.Blazor.Models
@@ -10,7 +9,5 @@ namespace Questionnaire.Blazor.Models
         public AnswerModel Answer { get; set; }
 
         public List<QuestionAnswerModel> QuestionAnswers { get; set; }
-
-        public List<HtmlTag> HtmlTags { get; set; }
     }
 }

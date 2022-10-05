@@ -1,0 +1,14 @@
+﻿@inherits BaseQuestionComponent
+
+<label for="@id" class="col-lg-2">@QuestionAnswer.Question.DisplayName</label>
+<input id="@id" type="datetime-local" class="form-control col-lg-9" @oninput=Input />
+
+@code{
+    protected override void Input(ChangeEventArgs args)
+    {
+        if (DateTime.TryParse(args.Value.ToString(), out var dateTime))
+        {
+            QuestionAnswer.Answer.Value = dateTime.ToString("G");
+        }
+    }
+}

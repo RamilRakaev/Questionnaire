@@ -2,27 +2,22 @@
 @using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Blazor.Pages.ReusableComponents.Questions
 
-<DynamicComponent Type="typeof(TextComponent)" Parameters="parameters" />
+<div class="form-group row justify-content-around">
+    <CascadingValue Value="QuestionAnswer">
+        <DynamicComponent Type="componentType" />
+    </CascadingValue>
+</div>
 
 @code {
-    [Parameter]
-    public AnswerModel Answer { get; set; }
+    private Type componentType;
 
     [Parameter]
-    public QuestionModel Question { get; set; }
-
-    private Dictionary<string, object> parameters = new();
+    public QuestionAnswerModel QuestionAnswer { get; set; }
 
     protected override void OnInitialized()
     {
-        var componentType = typeof(QuestionComponentDisplay).Assembly
-                .GetTypes()
-                .FirstOrDefault(type => type.Name == Question.QuestionType.ToString() + "Component");
-
-        parameters = new()
-        {
-            { "label", Question.DisplayName },
-            { "value", Answer.Value },
-        };
+        componentType = typeof(QuestionComponentDisplay).Assembly
+            .GetTypes()
+            .FirstOrDefault(type => type.Name == QuestionAnswer.Question.QuestionType.ToString() + "QuestionComponent");
     }
 }

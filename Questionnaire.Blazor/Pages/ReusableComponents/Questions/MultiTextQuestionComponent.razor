@@ -1,0 +1,6 @@
+﻿@inherits BaseQuestionComponent
+
+<label for="@id" class="col-lg-2">@QuestionAnswer.Question.DisplayName</label>
+<textarea id="@id" class="form-control col-lg-9" @oninput=Input>
+    @QuestionAnswer.Answer.Value
+</textarea>

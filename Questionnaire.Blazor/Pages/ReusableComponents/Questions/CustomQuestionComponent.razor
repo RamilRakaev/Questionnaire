@@ -1,0 +1,11 @@
+﻿@inherits BaseQuestionComponent
+
+<div class="col-12">
+    @foreach (var questionAnswer in QuestionAnswer.QuestionAnswers)
+    {
+        <div class="border border-info p-3 mb-3">
+            <h3>@QuestionAnswer.Question.CustomType.DisplayName</h3>
+            <QuestionComponentDisplay QuestionAnswer="@questionAnswer" />
+        </div>
+    }
+</div>

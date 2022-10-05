@@ -6,7 +6,6 @@
 @using Microsoft.AspNetCore.Identity
 @using Questionnaire.Blazor.Models
 @using Questionnaire.Blazor.Models.Questions
-@using Questionnaire.Blazor.Services.Questionnaire.Tags
 @using Questionnaire.Blazor.Services
 @using Questionnaire.Blazor.Services.Questionnaire
 @using Questionnaire.Blazor.Services.UserInterfaceDisplay
@@ -30,8 +29,6 @@
 
 @code {
     private QuestionnaireModel questionnaire = new();
-    private List<HtmlTag> htmlTags = new();
-    private Dictionary<QuestionModel, AnswerModel> questionsAnswers = new();
 
     private bool sendIsDisabled;
     private FormMessage message = new();
@@ -77,14 +74,6 @@
         else
         {
             NavigationManager.NavigateTo(NavigationLinks.AccesksDenied);
-        }
-
-        foreach (var question in questionnaire.Questions)
-        {
-            if (question.QuestionType == QuestionType.Custom)
-            {
-                htmlTags.AddRange(TagsCreator.CreateTags(question));
-            }
         }
     }
 
