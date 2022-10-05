@@ -1,0 +1,17 @@
+﻿@page "/user/concreteAnswer/{answerId:int}"
+
+@using MediatR
+@using Questionnaire.Infrastructure.Queries.Requests.Answers
+
+@code {
+    [Parameter]
+    public int AnswerId { get; set; }
+
+    [Inject]
+    private IMediator Mediator { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var answers = await Mediator.Send(new GetAnswerOnQuestionnaireQuery(AnswerId));
+    }
+}

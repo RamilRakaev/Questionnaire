@@ -3,12 +3,7 @@ using Questionnaire.Domain.Entities;
 using Questionnaire.Domain.Interfaces;
 using Questionnaire.Infrastructure.Models;
 using Questionnaire.Infrastructure.Queries.Requests.Answers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Questionnaire.Infrastructure.Queries.Handlers.Answers
 {
@@ -24,27 +19,40 @@ namespace Questionnaire.Infrastructure.Queries.Handlers.Answers
         public async Task<List<PropertyAnswer>> Handle(GetAnswerOnQuestionnaireQuery request, CancellationToken cancellationToken)
         {
             var answer = await _answerRepository.GetAsync(request.AnswerId, cancellationToken);
-
             var dictionary = JsonSerializer.Deserialize<Dictionary<string, object>>(answer.Value);
+
+            return ConvertToNestedDictionary(dictionary);
+        }
+
+        private List<PropertyAnswer> ConvertToNestedDictionary(Dictionary<string, string> dictionary)
+        {
             List<PropertyAnswer> propertyAnswers = new();
+
             foreach (var propertyAnswerInJson in dictionary)
             {
-                PropertyAnswer propertyAnswer = new()
+                //var nestedDictionary = JsonSerializer.<Dictionary<string, string>>(propertyAnswerInJson.Value);
+                if (propertyAnswerInJson.Value is Dictionary<string, string>)
                 {
-                    Property = new()
-                    {
-                        q
-                    },
-                    Answer = new()
-                    {
-                        Value = propertyAnswerInJson.Value.ToString(),
-                    },
-                };
-                if (propertyAnswerInJson.Value is Dictionary<string, object>)
+                    propertyAnswers.AddRange(ConvertToNestedDictionary(nestedDictionary));
+                }
+                else
                 {
-
+                    PropertyAnswer propertyAnswer = new()
+                    {
+                        Property = new()
+                        {
+                            JsonName = propertyAnswerInJson.Key,
+                        },
+                        Answer = new()
+                        {
+                            Value = propertyAnswerInJson.Value?.ToString(),
+                        },
+                    };
+                    propertyAnswers.Add(propertyAnswer);
                 }
             }
+
+            return propertyAnswers;
         }
     }
 }

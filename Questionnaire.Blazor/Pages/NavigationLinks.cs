@@ -15,6 +15,7 @@
         public const string ConcreteQuestionnaire = "/user/concreteQuestionnaire";
         public const string CreateQuestionnaire = "/user/createQuestionnaire";
         public const string Answers = "/user/answers";
+        public const string ConcreteAnswers = "/user/concreteAnswer/";
         #endregion
 
         #region access
