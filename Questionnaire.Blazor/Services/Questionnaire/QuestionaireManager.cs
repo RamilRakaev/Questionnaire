@@ -1,17 +1,20 @@
 ﻿using Questionnaire.Blazor.Models;
 using Questionnaire.Blazor.Models.Questions;
+using System.Collections.Generic;
 
 namespace Questionnaire.Blazor.Services.Questionnaire
 {
-    public static class QuestionaireManager
+    public static class QuestionaireExtensions
     {
-        public static void PrepareQuestionnaireToDisplay(QuestionnaireModel modifiableQuestionnaire, long? userId)
+        public static List<QuestionAnswerModel> GetQuestionAnswerPairs(this QuestionnaireModel modifiableQuestionnaire, long? userId)
         {
-            modifiableQuestionnaire.QuestionAnswers = new();
+            List<QuestionAnswerModel> questionAnswers = new();
             foreach (var question in modifiableQuestionnaire.Questions)
             {
                 modifiableQuestionnaire.QuestionAnswers.Add(CreateQuestionAnswer(question, userId, modifiableQuestionnaire.Id));
             }
+
+            return questionAnswers;
         }
 
         private static QuestionAnswerModel CreateQuestionAnswer(QuestionModel question, long? userId, int questionnaireId)

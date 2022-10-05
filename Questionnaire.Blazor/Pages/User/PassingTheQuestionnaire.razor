@@ -65,11 +65,11 @@
         {
             var userEntity = await UserManager.FindByNameAsync(userClaims.Identity.Name);
             var user = Mapper.Map<UserModel>(userEntity);
-            QuestionaireManager.PrepareQuestionnaireToDisplay(questionnaire, user.Id);
+            questionnaire.GetQuestionAnswerPairs(user.Id);
         }
         else if (await Mediator.Send(new CheckAccessQuery(Token)))
         {
-            QuestionaireManager.PrepareQuestionnaireToDisplay(questionnaire, null);
+            questionnaire.QuestionAnswers = questionnaire.GetQuestionAnswerPairs(null);
         }
         else
         {

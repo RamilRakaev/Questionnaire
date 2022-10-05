@@ -1,4 +1,4 @@
 ﻿@inherits BaseQuestionComponent
 
-<label for="@id" class="col-lg-2">@QuestionAnswer.Question.DisplayName</label>
-<input id="@id" type="text" class="form-control col-lg-9" @bind-value="QuestionAnswer.Answer.Value" />
+<label class="col-lg-2" for="@id">@QuestionAnswer.Question.DisplayName</label>
+<input type="text" class="form-control col-lg-9" id="@id" @bind-value="QuestionAnswer.Answer.Value" />

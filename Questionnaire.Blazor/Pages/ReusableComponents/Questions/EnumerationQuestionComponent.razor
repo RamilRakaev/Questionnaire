@@ -1,7 +1,7 @@
 ﻿@inherits BaseQuestionComponent
 
-<label for="@id" class="col-lg-2">@QuestionAnswer.Question.DisplayName</label>
-<select id="@id" class="custom-select col-lg-9" @oninput=Input>
+<label class="col-lg-2" for="@id">@QuestionAnswer.Question.DisplayName</label>
+<select class="custom-select col-lg-9" id="@id" @oninput=Input>
     @foreach (var option in QuestionAnswer.Question.Options)
     {
         <option value="@option.DisplayName">@option.DisplayName</option>
