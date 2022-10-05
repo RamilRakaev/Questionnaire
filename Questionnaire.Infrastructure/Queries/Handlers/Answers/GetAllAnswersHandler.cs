@@ -6,16 +6,16 @@ using Questionnaire.Infrastructure.Queries.Requests.Answers;
 
 namespace Questionnaire.Infrastructure.Queries.Handlers.Answers
 {
-    public class GetAnswersHandler : IRequestHandler<GetAnswersQuery, List<Answer>>
+    public class GetAllAnswersHandler : IRequestHandler<GetAllAnswersQuery, List<Answer>>
     {
         private readonly IRepository<Answer> _answerRepository;
 
-        public GetAnswersHandler(IRepository<Answer> answerRepository)
+        public GetAllAnswersHandler(IRepository<Answer> answerRepository)
         {
             _answerRepository = answerRepository;
         }
 
-        public Task<List<Answer>> Handle(GetAnswersQuery request, CancellationToken cancellationToken)
+        public Task<List<Answer>> Handle(GetAllAnswersQuery request, CancellationToken cancellationToken)
         {
             return _answerRepository.GetAllAsNoTracking()
                 .Include(answer => answer.User)

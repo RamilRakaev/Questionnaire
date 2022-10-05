@@ -73,7 +73,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        var answerEntities = await Mediator.Send(new GetAnswersQuery());
+        var answerEntities = await Mediator.Send(new GetAllAnswersQuery());
         answers = Mapper.Map<List<AnswerModel>>(answerEntities);
 
         foreach (var answer in answers)
