@@ -1,9 +1,14 @@
 ﻿@page "/user/concreteAnswer/{answerId:int}"
 
 @using MediatR
+@using Questionnaire.Infrastructure.Models
 @using Questionnaire.Infrastructure.Queries.Requests.Answers
 
+@DisplayAnswers(answers)
+
 @code {
+    private List<JsonAnswer> answers = new();
+
     [Parameter]
     public int AnswerId { get; set; }
 
@@ -12,6 +17,26 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var answers = await Mediator.Send(new GetAnswerOnQuestionnaireQuery(AnswerId));
+        answers = await Mediator.Send(new GetAnswerOnQuestionnaireQuery(AnswerId));
+    }
+
+    private RenderFragment DisplayAnswers(List<JsonAnswer> jsonAnswers)
+    {
+        return __builder =>
+        {
+            <ol>
+                @foreach (var jsonAnswer in jsonAnswers)
+                {
+                    @if (jsonAnswer.Value != null)
+                    {
+                        <li>@jsonAnswer.Value</li>
+                    }
+                    else
+                    {
+                        @DisplayAnswers(jsonAnswer.Answers)
+                    }
+                }
+            </ol>
+        };
     }
 }

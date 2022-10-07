@@ -182,10 +182,9 @@
         }
     }
 
-    private void OpenRemoveQuestionModal(int questionId)
-    {
+    private void OpenRemoveQuestionModal(int questionId) =>
         OpenDialog("Внимание", "Вы действительно хотите удалить вопрос?", () => RemoveQuestion(questionId));
-    }
+    
 
     private async Task RemoveQuestion(int questionId)
     {

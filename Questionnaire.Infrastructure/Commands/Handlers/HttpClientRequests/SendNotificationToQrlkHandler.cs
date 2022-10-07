@@ -31,10 +31,12 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.HttpClientRequests
             var chat = await _chatRepository.GetAsync(request.ChatId, cancellationToken);
             var answer = await _answerRepository.GetAsync(request.AnswerId, cancellationToken);
 
+            var jsonAnswers = JsonSerializer.Deserialize<List<JsonAnswer>>(answer.Value);
+
             NotificationToQrlk notification = new()
             {
                 Title = chat.Title,
-                Data = JsonSerializer.Deserialize<object>(answer.Value),
+                Data = PrepareAnswersToSentOnQrlk(jsonAnswers),
                 Tags = chat.Tags.ToArray(),
             };
 
@@ -46,6 +48,25 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.HttpClientRequests
             client.Dispose();
 
             return result.IsSuccessStatusCode;
+        }
+
+        private static object PrepareAnswersToSentOnQrlk(List<JsonAnswer> jsonAnswers)
+        {
+            Dictionary<string, object> answersToSending = new();
+
+            foreach (var jsonAnswer in jsonAnswers)
+            {
+                if (jsonAnswer.Answers != null && jsonAnswer.Answers.Count > 0)
+                {
+                    answersToSending.Add(jsonAnswer.Name, PrepareAnswersToSentOnQrlk(jsonAnswer.Answers));
+                }
+                else
+                {
+                    answersToSending.Add(jsonAnswer.Name, jsonAnswer.Value);
+                }
+            }
+
+            return answersToSending;
         }
 
         private static ByteArrayContent CreateContent(NotificationToQrlk notification, string token)

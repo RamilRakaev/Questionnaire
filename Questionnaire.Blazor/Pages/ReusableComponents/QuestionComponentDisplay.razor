@@ -2,10 +2,18 @@
 @using Questionnaire.Blazor.Models.Questions
 @using Questionnaire.Blazor.Pages.ReusableComponents.Questions
 
-<div class="form-group row justify-content-around">
-    <CascadingValue Value="QuestionAnswer">
-        <DynamicComponent Type="componentType" />
-    </CascadingValue>
+<div class="form-group row">
+
+    @if (componentType != null)
+    {
+        <CascadingValue Value="QuestionAnswer">
+            <DynamicComponent Type="componentType" />
+        </CascadingValue>
+    }
+    else
+    {
+        <p>Не удалось отобразить вопрос</p>
+    }
 </div>
 
 @code {

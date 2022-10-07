@@ -1,11 +1,17 @@
 ﻿@inherits BaseQuestionComponent
 
-<div class="col-12">
-    @foreach (var questionAnswer in QuestionAnswer.QuestionAnswers)
-    {
-        <div class="border border-info p-3 mb-3">
-            <h3>@QuestionAnswer.Question.CustomType.DisplayName</h3>
-            <QuestionComponentDisplay QuestionAnswer="@questionAnswer" />
+<div class="col-11 p-3 border border-info">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-11">
+                @foreach (var questionAnswer in QuestionAnswer.QuestionAnswers)
+                {
+                    <div>
+                        <h3>@QuestionAnswer.Question.CustomType.DisplayName</h3>
+                        <QuestionComponentDisplay QuestionAnswer="@questionAnswer" />
+                    </div>
+                }
+            </div>
         </div>
-    }
+    </div>
 </div>

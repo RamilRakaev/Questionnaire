@@ -44,24 +44,27 @@ namespace Questionnaire.Infrastructure.Commands.Handlers.Answers
             throw new Exception("Dictionary of questions and answers is empty");
         }
 
-        private object CreateObjectForJson(List<PropertyAnswer> propertyAnswers)
+        private List<JsonAnswer> CreateObjectForJson(List<PropertyAnswer> propertyAnswers)
         {
-            Dictionary<string, object> properties = new();
+            List<JsonAnswer> answers = new();
 
             foreach (var propertyAnswer in propertyAnswers)
             {
-                if (propertyAnswer.Property.PropertyType == PropertyType.Custom)
+                JsonAnswer answer = new()
                 {
-                    var answers = CreateObjectForJson(propertyAnswer.PropertyAnswers);
-                    properties.Add(propertyAnswer.Property.JsonName, answers);
-                }
-                else
+                    Name = propertyAnswer.Property.JsonName,
+                    Value = propertyAnswer.Answer.Value,
+                };
+
+                answers.Add(answer);
+
+                if (propertyAnswer.PropertyAnswers != null)
                 {
-                    properties.Add(propertyAnswer.Property.JsonName, propertyAnswer.Answer.Value);
+                    answer.Answers = CreateObjectForJson(propertyAnswer.PropertyAnswers);
                 }
             }
 
-            return properties;
+            return answers;
         }
     }
 }

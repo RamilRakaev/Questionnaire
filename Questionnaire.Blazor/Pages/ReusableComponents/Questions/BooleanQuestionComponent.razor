@@ -1,8 +1,6 @@
 ﻿@inherits BaseQuestionComponent
 
-<div class="form-check col-11">
-    <div class="row">
-        <label class="form-check-label" for="@id">@QuestionAnswer.Question.DisplayName</label>
-        <input class="form-check-input" type="checkbox" id="@id" @oninput=Input>
-    </div>
+<div class="form-check p-0 col-11">
+    <label for="@id">@QuestionAnswer.Question.DisplayName</label>
+    <input type="checkbox" id="@id" @oninput=Input>
 </div>
